@@ -41,14 +41,35 @@ dependencies {
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'jacoco'
 
-
+def coverageSourceDirs = [
+        'src/main/java',
+]
 
 task jacocoTestReport (type: JacocoReport){
-    group = "Reporting"
+    group = 'Reporting'
     reports {
         xml.enabled true
         csv.enabled false
         html.enabled true
-        html.destination "${buildDir}/reports/coverage"
+    }
+    classDirectories = fileTree(
+            dir: './build/intermediates/classes/debug',
+            excludes: ['**/R*.class',
+                       '**/*$InjectAdapter.class',
+                       '**/*$ModuleAdapter.class',
+                       '**/*$ViewInjector*.class',
+                       '**/BuildConfig.class',
+                       '**/Manifest.class',
+                       '**/Manifest*.class'
+            ])
+    sourceDirectories = files(coverageSourceDirs)
+    executionData = files("$buildDir/jacoco/testDebugUnitTest.exec","$buildDir/jacoco/testReleaseUnitTest.exec")
+
+    doFirst {
+        new File("$buildDir/intermediates/classes/").eachFileRecurse { file ->
+            if (file.name.contains('$$')) {
+                file.renameTo(file.path.replace('$$', '$'))
+            }
+        }
     }
 }
