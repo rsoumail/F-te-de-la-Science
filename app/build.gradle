@@ -16,6 +16,9 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            testCoverageEnabled = true
+        }
     }
     testOptions {
         unitTests {
@@ -45,6 +48,7 @@ task jacocoTestReport (type: JacocoReport){
     reports {
         xml.enabled true
         csv.enabled false
+        html.enabled true
         html.destination "${buildDir}/reports/coverage"
     }
 }
