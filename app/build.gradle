@@ -36,4 +36,15 @@ dependencies {
 }
 
 apply plugin: 'com.google.gms.google-services'
-apply plugin: "jacoco"
+apply plugin: 'jacoco'
+
+
+
+task jacocoTestReport (type: JacocoReport){
+    group = "Reporting"
+    reports {
+        xml.enabled true
+        csv.enabled false
+        html.destination "${buildDir}/reports/coverage"
+    }
+}
