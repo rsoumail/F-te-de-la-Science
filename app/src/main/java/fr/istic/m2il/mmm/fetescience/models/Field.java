@@ -1,15 +1,12 @@
-package fr.istic.m2il.mmm.fetescience.model;
-
-import android.os.Parcel;
-import android.os.Parcelable;
+package fr.istic.m2il.mmm.fetescience.models;
 
 /**
- * Created by ismael on 29/12/17.
+ * Created by ismael on 03/01/18.
  */
 
-public class Event implements Parcelable{
+public class Field {
 
-    private String lieu;
+    private String nom_du_lieu;
     private String date_debut;
     private String date_fin;
     private String identifiant;
@@ -21,13 +18,31 @@ public class Event implements Parcelable{
     private String adresse;
     private String inscription_necessaire;
     private String statut;
+    private String organisateur;
+    private String apercu;
 
-    public String getLieu() {
-        return lieu;
+    public String getNom_du_lieu() {
+        return nom_du_lieu;
     }
 
-    public void setLieu(String lieu) {
-        this.lieu = lieu;
+    public void setNom_du_lieu(String nom_du_lieu) {
+        this.nom_du_lieu = nom_du_lieu;
+    }
+
+    public String getOrganisateur() {
+        return organisateur;
+    }
+
+    public void setOrganisateur(String organisateur) {
+        this.organisateur = organisateur;
+    }
+
+    public String getApercu() {
+        return apercu;
+    }
+
+    public void setApercu(String apercu) {
+        this.apercu = apercu;
     }
 
     public String getDate_debut() {
@@ -117,57 +132,4 @@ public class Event implements Parcelable{
     public void setStatut(String statut) {
         this.statut = statut;
     }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.identifiant);
-        dest.writeString(this.titre_fr);
-        dest.writeString(this.adresse);
-        dest.writeString(this.date_debut);
-        dest.writeString(this.date_fin);
-        dest.writeString(this.description_fr);
-        dest.writeString(this.inscription_necessaire);
-        dest.writeString(this.lien);
-        dest.writeString(this.lieu);
-        dest.writeString(this.mots_cles_fr);
-        dest.writeString(this.statut);
-        dest.writeString(this.thematiques);
-
-    }
-
-    public Event() {
-    }
-
-    public Event(Parcel in){
-        this.identifiant = in.readString();
-        this.titre_fr = in.readString();
-        this.adresse = in.readString();
-        this.date_debut = in.readString();
-        this.date_fin = in.readString();
-        this.description_fr = in.readString();
-        this.inscription_necessaire = in.readString();
-        this.lien = in.readString();
-        this.lieu = in.readString();
-        this.mots_cles_fr = in.readString();
-        this.statut = in.readString();
-        this.thematiques = in.readString();
-    }
-
-    public static final Parcelable.Creator<Event> CREATOR = new Parcelable.Creator<Event>() {
-        @Override
-        public Event createFromParcel(Parcel source) {
-            return new Event(source);
-        }
-
-        @Override
-        public Event[] newArray(int size) {
-            return new Event[size];
-        }
-    };
-
 }

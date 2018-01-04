@@ -1,4 +1,4 @@
-package fr.istic.m2il.mmm.fetescience.service;
+package fr.istic.m2il.mmm.fetescience.services;
 
 /**
  * Created by ismael on 02/01/18.

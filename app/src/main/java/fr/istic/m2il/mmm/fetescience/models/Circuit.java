@@ -1,4 +1,4 @@
-package fr.istic.m2il.mmm.fetescience.model;
+package fr.istic.m2il.mmm.fetescience.models;
 
 /**
  * Created by ismael on 29/12/17.
