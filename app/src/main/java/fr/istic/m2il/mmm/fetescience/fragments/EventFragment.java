@@ -54,15 +54,15 @@ public class EventFragment extends Fragment {
     }
 
     public void update(Event item){
-        if(item.getFields().getApercu() != null){
-            Picasso.with(getContext()).load(item.getFields().getApercu()).into(imageView);
+        if(item.getApercu() != null){
+            Picasso.with(getContext()).load(item.getApercu()).into(imageView);
         }
 
-        titleTexteView.setText(item.getFields().getTitre_fr());
-        themeTexteView.setText(item.getFields().getThematiques());
-        descriptionTexteView.setText(item.getFields().getDescription_fr());
-        dateDebutTexteView.setText(item.getFields().getDate_debut());
-        dateFinTexteView.setText(item.getFields().getDate_fin());
+        titleTexteView.setText(item.getTitre_fr());
+        themeTexteView.setText(item.getThematiques());
+        descriptionTexteView.setText(item.getDescription_fr());
+        //dateDebutTexteView.setText(item.getDate_debut());
+        //dateFinTexteView.setText(item.getDate_fin());
     }
 
     @Override
