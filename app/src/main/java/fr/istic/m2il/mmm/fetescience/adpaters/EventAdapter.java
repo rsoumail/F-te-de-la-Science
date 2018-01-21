@@ -62,5 +62,4 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             themeTextView = itemView.findViewById(R.id.theme);
         }
     }
-
 }
