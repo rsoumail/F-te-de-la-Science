@@ -21,6 +21,7 @@ import java.util.List;
 
 import fr.istic.m2il.mmm.fetescience.R;
 import fr.istic.m2il.mmm.fetescience.adpaters.EventAdapter;
+import fr.istic.m2il.mmm.fetescience.helpers.DBManagerHelper;
 import fr.istic.m2il.mmm.fetescience.models.Event;
 
 /**
@@ -32,6 +33,7 @@ import fr.istic.m2il.mmm.fetescience.models.Event;
  */
 public class EventListFragment extends Fragment {
 
+    private static final String TAG = EventListFragment.class.getSimpleName();
     private RecyclerView recyclerView;
     private EventAdapter eventAdapter;
     private List<Event> events = new ArrayList<>();
@@ -50,11 +52,12 @@ public class EventListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.event_list_layout, container, false);
+        events = DBManagerHelper.getInstance().getAllEvents();
+        Log.i(TAG, "Total events : " + String.valueOf(events.size()));
         recyclerView = view.findViewById(R.id.event_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         eventAdapter = new EventAdapter(getActivity().getApplication().getApplicationContext(), events);
         recyclerView.setAdapter(eventAdapter);
-        loadData();
         return view;
     }
 
@@ -83,7 +86,7 @@ public class EventListFragment extends Fragment {
 
     private void loadData(){
 
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("").child("");
+        /*DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("").child("");
 
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -104,7 +107,7 @@ public class EventListFragment extends Fragment {
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });
+        });*/
     }
 
     /**

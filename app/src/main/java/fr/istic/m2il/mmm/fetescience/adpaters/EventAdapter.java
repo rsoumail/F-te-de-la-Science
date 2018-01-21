@@ -37,10 +37,10 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     @Override
     public void onBindViewHolder(EventViewHolder holder, int position) {
         Event event = events.get(position);
-        holder.titleTextView.setText(event.getFields().getTitre_fr().length() >= 35 ? event.getFields().getTitre_fr().substring(0,34) + " ..." : event.getFields().getTitre_fr());
-        holder.descriptionTextView.setText(event.getFields().getDescription_fr().length() >= 50 ? event.getFields().getDescription_fr().substring(0,49) + " ..." : event.getFields().getDescription_fr());
-        if(event.getFields().getThematiques() != null){
-            holder.themeTextView.setText(event.getFields().getThematiques().length() >= 40 ? event.getFields().getThematiques().substring(0,39) + " ..." : event.getFields().getThematiques());
+        holder.titleTextView.setText(event.getTitre_fr().length() >= 35 ? event.getTitre_fr().substring(0,34) + " ..." : event.getTitre_fr());
+        holder.descriptionTextView.setText(event.getDescription_fr().length() >= 50 ? event.getDescription_fr().substring(0,49) + " ..." : event.getDescription_fr());
+        if(event.getThematiques() != null){
+            holder.themeTextView.setText(event.getThematiques().length() >= 40 ? event.getThematiques().substring(0,39) + " ..." : event.getThematiques());
         }
     }
 
