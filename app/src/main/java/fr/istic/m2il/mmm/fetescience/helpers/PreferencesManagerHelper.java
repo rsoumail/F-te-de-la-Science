@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 /**
- * @author ismael
+ * @author Ramadan Soumaila
  */
 
 public class PreferencesManagerHelper {

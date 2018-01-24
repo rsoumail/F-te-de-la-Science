@@ -23,7 +23,7 @@ import fr.istic.m2il.mmm.fetescience.models.Event;
 import android.util.Log;
 
 /**
- * @author ismael
+ * @author Ramadan Soumaila
  */
 
 public class GsonHelper {

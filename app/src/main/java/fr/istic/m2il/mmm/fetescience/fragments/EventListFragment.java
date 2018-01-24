@@ -9,12 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import android.widget.SearchView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,10 +32,12 @@ public class EventListFragment extends Fragment {
     private RecyclerView recyclerView;
     private EventAdapter eventAdapter;
     private List<Event> events = new ArrayList<>();
+    private List<Event> allEvents = new ArrayList<>();
     private List<String> keys = new ArrayList<>();
+    private SearchView searchView;
 
 
-    private OnFragmentInteractionListener mListener;
+    private OnEventListFragmentInteractionListener mListener;
 
     public EventListFragment() {
         // Required empty public constructor
@@ -51,13 +48,48 @@ public class EventListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.event_list_layout, container, false);
+        View view = inflater.inflate(R.layout.fragment_event_list, container, false);
         events = DBManagerHelper.getInstance().getAllEvents();
+        allEvents.addAll(events);
         Log.i(TAG, "Total events : " + String.valueOf(events.size()));
         recyclerView = view.findViewById(R.id.event_recycler_view);
+        searchView = view.findViewById(R.id.search_bar);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         eventAdapter = new EventAdapter(getActivity().getApplication().getApplicationContext(), events);
+        eventAdapter.setOnEventClickListener(event -> {
+            onItemSelected(event);
+        });
         recyclerView.setAdapter(eventAdapter);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String query) {
+                final List<Event> filteredEvents = new ArrayList<>();
+                Log.i(TAG, "Events Size " + events.size());
+                query = query.toLowerCase();
+                if(query.length() != 0){
+                    for(Event event: events){
+                        if(event.getTitre_fr() != null){
+                            if(event.getTitre_fr().toLowerCase().contains(query))
+                                filteredEvents.add(event);
+                        }
+                    }
+                }
+                else{
+                    filteredEvents.addAll(allEvents);
+                }
+
+
+                eventAdapter.setFiltered(filteredEvents);
+                return true;
+            }
+        });
         return view;
     }
 
@@ -70,8 +102,8 @@ public class EventListFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof OnEventListFragmentInteractionListener) {
+            mListener = (OnEventListFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -110,6 +142,9 @@ public class EventListFragment extends Fragment {
         });*/
     }
 
+
+
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -120,7 +155,7 @@ public class EventListFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
+    public interface OnEventListFragmentInteractionListener {
         void onItemSelected(Event item);
     }
 }

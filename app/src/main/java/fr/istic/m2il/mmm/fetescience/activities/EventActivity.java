@@ -1,5 +1,6 @@
 package fr.istic.m2il.mmm.fetescience.activities;
 
+import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -10,9 +11,12 @@ import android.view.animation.LinearInterpolator;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.j256.ormlite.table.TableUtils;
+
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 import fr.istic.m2il.mmm.fetescience.R;
@@ -27,15 +31,13 @@ import fr.istic.m2il.mmm.fetescience.utils.Utils;
 
 import static fr.istic.m2il.mmm.fetescience.helpers.DBManagerHelper.getInstance;
 
-public class EventActivity extends FragmentActivity implements EventListFragment.OnFragmentInteractionListener {
+public class EventActivity extends FragmentActivity implements EventListFragment.OnEventListFragmentInteractionListener, EventFragment.OnEventFragmentInteractionListener {
 
 
     private FragmentManager fragmentManager;
     private LinearLayout linearLayout;
-    private EventAdapter eventAdapter;
     private PreferencesManagerHelper preferencesManagerHelper;
     private String screenType;
-    EventFragment eventFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,9 +45,11 @@ public class EventActivity extends FragmentActivity implements EventListFragment
         setContentView(R.layout.activity_event);
 
         DBManagerHelper dbManagerHelper = Utils.initDatabase(this);
+        //dbManagerHelper.delete();
+        //dbManagerHelper.deleteAllEvents(dbManagerHelper.getAllEvents());
         preferencesManagerHelper = new PreferencesManagerHelper(this);
 
-        if (preferencesManagerHelper.isFirstTimeLaunch()) {
+      if (preferencesManagerHelper.isFirstTimeLaunch()) {
             try {
                 GsonHelper.jsonToSqlite(dbManagerHelper, this);
             } catch (IOException e) {
@@ -54,7 +58,7 @@ public class EventActivity extends FragmentActivity implements EventListFragment
                 e.printStackTrace();
             }
             preferencesManagerHelper.setFirstTimeLaunchToFalse();
-        }
+      }
 
         fragmentManager = getSupportFragmentManager();
 
@@ -111,6 +115,11 @@ public class EventActivity extends FragmentActivity implements EventListFragment
         fragmentTransaction.commit();
         fragmentManager.executePendingTransactions();
         eventFragment.update(item);
+
+    }
+
+    @Override
+    public void onEventInteraction(Uri uri) {
 
     }
 }
