@@ -6,6 +6,17 @@
     <string name="search_title">Rechercher</string>
     <string name="action_settings">Paramètre</string>
 
+    <!-- String related to Filtered queries -->
+
+    <string-array name="query_filters">
+        <item>Lieu</item>
+        <item>Thème</item>
+        <item>Date</item>
+        <item>Mot clés</item>
+    </string-array>
+
+    <string name="label_filter">Filtrer par : </string>
+
 
     <!-- String related to Event Info -->
     <string name="label_theme">THÉMATIQUE(S) : </string>

@@ -7,7 +7,7 @@ package fr.istic.m2il.mmm.fetescience.helpers;
 public class ConstantsHelper {
 
     public static final String SQLITE_DATABASE_NAME = "FeteScience";
-    public static final Integer SQLITE_DATABASE_VERSION = 10;
+    public static final Integer SQLITE_DATABASE_VERSION = 11;
 
     public static final Integer PREFERENCE_MODE = 0;
     public static final String PREFERENCE_FILE_NAME = "fete_science_preferences_file";

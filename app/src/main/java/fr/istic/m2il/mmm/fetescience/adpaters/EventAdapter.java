@@ -68,9 +68,10 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         this.onEventClickListener = onEventClickListener;
     }
 
-    public void setFiltered(List<Event> filteredEvents){
+    public void swapData(List<Event> data){
         events.clear(); // add this so that it will clear old data
-        events.addAll(filteredEvents);
+        if(data != null)
+            events.addAll(data);
         notifyDataSetChanged();
     }
 

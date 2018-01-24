@@ -79,6 +79,12 @@ public class Event {
     private String lien;
 
     @DatabaseField
+    private String dates;
+
+    @DatabaseField
+    private String mots_cles_fr;
+
+    @DatabaseField
     private String accessibilite_fr;
 
     @DatabaseField(dataType=DataType.SERIALIZABLE)
@@ -289,6 +295,22 @@ public class Event {
 
     public void setNb_evenements(Integer nb_evenements) {
         this.nb_evenements = nb_evenements;
+    }
+
+    public String getDates() {
+        return dates;
+    }
+
+    public void setDates(String dates) {
+        this.dates = dates;
+    }
+
+    public String getMots_cles_fr() {
+        return mots_cles_fr;
+    }
+
+    public void setMots_cles_fr(String mots_cles_fr) {
+        this.mots_cles_fr = mots_cles_fr;
     }
 
     @Override
