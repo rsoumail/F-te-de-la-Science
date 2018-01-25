@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.Spinner;
 
@@ -43,6 +44,7 @@ public class EventListFragment extends Fragment implements AdapterView.OnItemSel
     private List<String> keys = new ArrayList<>();
     private SearchView searchView;
     private Spinner filterSpinner;
+    private ProgressBar progressBar;
     private int selectedFilter = 0;
     private String currentQuery;
 
@@ -60,6 +62,8 @@ public class EventListFragment extends Fragment implements AdapterView.OnItemSel
         View view = inflater.inflate(R.layout.fragment_event_list, container, false);
         recyclerView = view.findViewById(R.id.event_recycler_view);
         searchView = view.findViewById(R.id.search_bar);
+        progressBar = view.findViewById(R.id.progressBar_cyclic);
+        recyclerView.setVisibility(View.GONE);
 
         filterSpinner = view.findViewById(R.id.key_words_filter);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
@@ -151,6 +155,8 @@ public class EventListFragment extends Fragment implements AdapterView.OnItemSel
     public void onLoadFinished(Loader<List<Event>> loader, List<Event> data) {
         eventAdapter.swapData(data);
         cachedEvents.addAll(data);
+        progressBar.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.VISIBLE);
     }
 
 

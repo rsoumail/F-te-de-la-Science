@@ -4,6 +4,7 @@
     android:id="@+id/event_cardview_container"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
+    android:background="#fff"
     >
 
     <View android:layout_height="1px" android:layout_width="match_parent" android:background="#000000"/>

@@ -1,5 +1,6 @@
 package fr.istic.m2il.mmm.fetescience.activities;
 
+
 import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -8,17 +9,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.LinearLayout;
 
-
-import com.j256.ormlite.table.TableUtils;
-
 import org.json.JSONException;
 
 import java.io.IOException;
-import java.sql.SQLException;
-import java.util.List;
 
 import fr.istic.m2il.mmm.fetescience.R;
-import fr.istic.m2il.mmm.fetescience.adpaters.EventAdapter;
 import fr.istic.m2il.mmm.fetescience.fragments.EventFragment;
 import fr.istic.m2il.mmm.fetescience.fragments.EventListFragment;
 import fr.istic.m2il.mmm.fetescience.helpers.DBManagerHelper;
@@ -26,8 +21,6 @@ import fr.istic.m2il.mmm.fetescience.helpers.GsonHelper;
 import fr.istic.m2il.mmm.fetescience.helpers.PreferencesManagerHelper;
 import fr.istic.m2il.mmm.fetescience.models.Event;
 import fr.istic.m2il.mmm.fetescience.utils.Utils;
-
-import static fr.istic.m2il.mmm.fetescience.helpers.DBManagerHelper.getInstance;
 
 public class EventActivity extends FragmentActivity implements EventListFragment.OnEventListFragmentInteractionListener, EventFragment.OnEventFragmentInteractionListener {
 {
@@ -49,16 +42,18 @@ public class EventActivity extends FragmentActivity implements EventListFragment
         preferencesManagerHelper = new PreferencesManagerHelper(this);
 
 
-      if (preferencesManagerHelper.isFirstTimeLaunch()) {
+        if (preferencesManagerHelper.isFirstTimeLaunch()) {
             try {
-                GsonHelper.jsonToSqlite(dbManagerHelper, this);
+               GsonHelper gsonHelper = new GsonHelper();
+               gsonHelper.jsonToSqlite(dbManagerHelper, this);
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+          //  getLoaderManager().initLoader(1, null, this);
             preferencesManagerHelper.setFirstTimeLaunchToFalse();
-      }
+        }
 
         fragmentManager = getSupportFragmentManager();
 
