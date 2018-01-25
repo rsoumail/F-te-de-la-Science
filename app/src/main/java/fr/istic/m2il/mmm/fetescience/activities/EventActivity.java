@@ -12,6 +12,8 @@ import org.json.JSONException;
 
 import java.io.IOException;
 
+import javax.annotation.Nullable;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -27,7 +29,7 @@ import fr.istic.m2il.mmm.fetescience.utils.Utils;
 public class EventActivity extends FragmentActivity implements EventListFragment.OnEventListFragmentInteractionListener, EventFragment.OnEventFragmentInteractionListener {
 
     FragmentManager fragmentManager;
-    @BindView(R.id.event_large) LinearLayout linearLayout;
+    @Nullable @BindView(R.id.event_large) LinearLayout linearLayout;
     String screenType;
 
 

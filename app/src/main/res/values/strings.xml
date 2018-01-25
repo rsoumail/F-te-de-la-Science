@@ -21,6 +21,7 @@
     <!-- String related to Event Info -->
     <string name="label_theme">THÉMATIQUE(S) : </string>
     <string name="label_hour">HORAIRE(S) : </string>
+    <string name="label_lien">LIEN : </string>
     <string name="label_description">DESCRIPTION : </string>
     <string name="label_period">PÉRIODE : </string>
     <string name="label_organisateur">ORGANISATEUR(S) : </string>

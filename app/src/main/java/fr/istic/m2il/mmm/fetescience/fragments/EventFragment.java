@@ -1,6 +1,7 @@
 package fr.istic.m2il.mmm.fetescience.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,15 +13,33 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Unbinder;
 import fr.istic.m2il.mmm.fetescience.R;
 import fr.istic.m2il.mmm.fetescience.models.Event;
 
 
 public class EventFragment extends Fragment {
 
-    private TextView titleTexteView, themeTexteView, descriptionTexteView, dateDebutTexteView, dateFinTexteView,
-            adressTextView, animationTextView, hourTextView, organisateurTextView;
-    private ImageView imageImageView;
+    @BindView(R.id.title) TextView titleTexteView;
+    @BindView(R.id.theme) TextView themeTexteView;
+    @BindView(R.id.description) TextView descriptionTexteView;
+    @BindView(R.id.date_debut) TextView dateStartTexteView;
+    @BindView(R.id.date_fin) TextView dateEndTexteView;
+    @BindView(R.id.adress) TextView addressTextView;
+    @BindView(R.id.animation) TextView animationTextView;
+    @BindView(R.id.hour) TextView hourTextView;
+    @BindView(R.id.organisateur) TextView organisatorTextView;
+    //@BindView(R.id.date) TextView datesTextView;
+    @BindView(R.id.lien) TextView linkTextView;
+
+    //@BindView(R.id.ima) TextView
+
+
+    @BindView(R.id.image) ImageView imageImageView;
+    private Unbinder unbinder;
     private OnEventFragmentInteractionListener mListener;
 
     public EventFragment() {
@@ -38,7 +57,7 @@ public class EventFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_event_info, container, false);
-        adressTextView = view.findViewById(R.id.adress);
+        /*adressTextView = view.findViewById(R.id.adress);
         organisateurTextView = view.findViewById(R.id.organisateur);
         animationTextView = view.findViewById(R.id.animation);
         hourTextView = view.findViewById(R.id.hour);
@@ -47,7 +66,9 @@ public class EventFragment extends Fragment {
         themeTexteView = view.findViewById(R.id.theme);
         descriptionTexteView = view.findViewById(R.id.description);
         dateDebutTexteView = view.findViewById(R.id.date_debut);
-        dateFinTexteView = view.findViewById(R.id.date_fin);
+        dateFinTexteView = view.findViewById(R.id.date_fin);*/
+
+        unbinder = ButterKnife.bind(this, view);
         return view;
     }
 
@@ -64,13 +85,13 @@ public class EventFragment extends Fragment {
         }
 
         if(item.getOrganisateur() != null)
-            organisateurTextView.setText(item.getOrganisateur());
+            organisatorTextView.setText(item.getOrganisateur());
         if(item.getType_d_animation() != null)
             animationTextView.setText(item.getType_d_animation().toUpperCase());
         if(item.getHoraires_detailles_fr() != null)
             hourTextView.setText(item.getHoraires_detailles_fr());
         if(item.getAdresse() != null)
-            adressTextView.setText(item.getAdresse());
+            addressTextView.setText(item.getAdresse());
         if(item.getTitre_fr() != null)
             titleTexteView.setText(item.getTitre_fr());
         if(item.getThematiques() != null)
@@ -78,9 +99,18 @@ public class EventFragment extends Fragment {
         if(item.getDescription_longue_fr() != null)
             descriptionTexteView.setText(item.getDescription_longue_fr());
         if(item.getDate_debut() != null)
-            dateDebutTexteView.setText("Du " + item.getDate_debut() +" au");
+            dateStartTexteView.setText("Du " + item.getDate_debut() +" au");
         if(item.getDate_fin() != null)
-            dateFinTexteView.setText(item.getDate_fin());
+            dateEndTexteView.setText(item.getDate_fin());
+        if(item.getLien() != null)
+            linkTextView.setText(item.getLien());
+
+    }
+
+    @OnClick(R.id.lien)
+    public void openBrowser(View view){
+        Intent i  = new Intent("android.intent.action.VIEW", Uri.parse(linkTextView.getText().toString()));
+        startActivity(i);
     }
 
     @Override
@@ -113,5 +143,11 @@ public class EventFragment extends Fragment {
     public interface OnEventFragmentInteractionListener {
         // TODO: Update argument type and name
         void onEventInteraction(Uri uri);
+    }
+
+    @Override
+    public void onDestroyView(){
+        super.onDestroyView();
+        unbinder.unbind();
     }
 }

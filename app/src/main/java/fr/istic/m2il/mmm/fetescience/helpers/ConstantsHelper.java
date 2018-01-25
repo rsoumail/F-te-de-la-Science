@@ -14,10 +14,4 @@ public class ConstantsHelper {
     public static final String PREFERENCE_KEY_FIRST_LAUNCH = "isFirstLaunch";
     public static final Boolean PREFERENCE_DEFAULT_VALUE_FIRST_LAUNCH = true;
 
-    public static final String TABLE_NAME = "evenements";
-    public static final String COLUMN_DATASETID = "dataseid";
-    public static final String COLUMN_RECORDID = "recordid";
-    public static final String COLUMN_GEOMETRY = "geometry";
-    public static final String COLUMN_RECORD = "record_timestamp";
-
 }
