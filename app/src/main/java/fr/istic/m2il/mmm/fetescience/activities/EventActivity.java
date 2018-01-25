@@ -23,7 +23,7 @@ import fr.istic.m2il.mmm.fetescience.models.Event;
 import fr.istic.m2il.mmm.fetescience.utils.Utils;
 
 public class EventActivity extends FragmentActivity implements EventListFragment.OnEventListFragmentInteractionListener, EventFragment.OnEventFragmentInteractionListener {
-{
+
 
     private FragmentManager fragmentManager;
     private LinearLayout linearLayout;
@@ -42,7 +42,8 @@ public class EventActivity extends FragmentActivity implements EventListFragment
         preferencesManagerHelper = new PreferencesManagerHelper(this);
 
 
-        if (preferencesManagerHelper.isFirstTimeLaunch()) {
+       // if (preferencesManagerHelper.isFirstTimeLaunch()) {
+            System.out.println("TTTTTTTTEEEEEEEESSSSSTTTTT");
             try {
                GsonHelper gsonHelper = new GsonHelper();
                gsonHelper.jsonToSqlite(dbManagerHelper, this);
@@ -52,8 +53,8 @@ public class EventActivity extends FragmentActivity implements EventListFragment
                 e.printStackTrace();
             }
           //  getLoaderManager().initLoader(1, null, this);
-            preferencesManagerHelper.setFirstTimeLaunchToFalse();
-        }
+         //   preferencesManagerHelper.setFirstTimeLaunchToFalse();
+       // }
 
         fragmentManager = getSupportFragmentManager();
 
