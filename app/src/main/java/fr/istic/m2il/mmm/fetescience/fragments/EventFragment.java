@@ -18,9 +18,10 @@ import fr.istic.m2il.mmm.fetescience.models.Event;
 
 public class EventFragment extends Fragment {
 
-    private TextView titleTexteView, themeTexteView, descriptionTexteView, dateDebutTexteView, dateFinTexteView;
-    private ImageView imageView;
-    private OnEventInteractionListener mListener;
+    private TextView titleTexteView, themeTexteView, descriptionTexteView, dateDebutTexteView, dateFinTexteView,
+            adressTextView, animationTextView, hourTextView, organisateurTextView;
+    private ImageView imageImageView;
+    private OnEventFragmentInteractionListener mListener;
 
     public EventFragment() {
         // Required empty public constructor
@@ -36,8 +37,12 @@ public class EventFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.event_info_layout, container, false);
-        imageView = view.findViewById(R.id.imageView);
+        View view = inflater.inflate(R.layout.fragment_event_info, container, false);
+        adressTextView = view.findViewById(R.id.adress);
+        organisateurTextView = view.findViewById(R.id.organisateur);
+        animationTextView = view.findViewById(R.id.animation);
+        hourTextView = view.findViewById(R.id.hour);
+        imageImageView = view.findViewById(R.id.image);
         titleTexteView = view.findViewById(R.id.title);
         themeTexteView = view.findViewById(R.id.theme);
         descriptionTexteView = view.findViewById(R.id.description);
@@ -54,22 +59,35 @@ public class EventFragment extends Fragment {
     }
 
     public void update(Event item){
-        if(item.getApercu() != null){
-            Picasso.with(getContext()).load(item.getApercu()).into(imageView);
+        if(item.getImage() != null){
+            Picasso.with(getContext()).load(item.getImage()).into(imageImageView);
         }
 
-        titleTexteView.setText(item.getTitre_fr());
-        themeTexteView.setText(item.getThematiques());
-        descriptionTexteView.setText(item.getDescription_fr());
-        //dateDebutTexteView.setText(item.getDate_debut());
-        //dateFinTexteView.setText(item.getDate_fin());
+        if(item.getOrganisateur() != null)
+            organisateurTextView.setText(item.getOrganisateur());
+        if(item.getType_d_animation() != null)
+            animationTextView.setText(item.getType_d_animation().toUpperCase());
+        if(item.getHoraires_detailles_fr() != null)
+            hourTextView.setText(item.getHoraires_detailles_fr());
+        if(item.getAdresse() != null)
+            adressTextView.setText(item.getAdresse());
+        if(item.getTitre_fr() != null)
+            titleTexteView.setText(item.getTitre_fr());
+        if(item.getThematiques() != null)
+            themeTexteView.setText(item.getThematiques());
+        if(item.getDescription_longue_fr() != null)
+            descriptionTexteView.setText(item.getDescription_longue_fr());
+        if(item.getDate_debut() != null)
+            dateDebutTexteView.setText("Du " + item.getDate_debut() +" au");
+        if(item.getDate_fin() != null)
+            dateFinTexteView.setText(item.getDate_fin());
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnEventInteractionListener) {
-            mListener = (OnEventInteractionListener) context;
+        if (context instanceof OnEventFragmentInteractionListener) {
+            mListener = (OnEventFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -92,7 +110,7 @@ public class EventFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnEventInteractionListener {
+    public interface OnEventFragmentInteractionListener {
         // TODO: Update argument type and name
         void onEventInteraction(Uri uri);
     }

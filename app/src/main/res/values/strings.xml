@@ -6,6 +6,14 @@
     <string name="search_title">Rechercher</string>
     <string name="action_settings">Paramètre</string>
 
+
+    <!-- String related to Event Info -->
+    <string name="label_theme">THÉMATIQUE(S) : </string>
+    <string name="label_hour">HORAIRE(S) : </string>
+    <string name="label_description">DESCRIPTION : </string>
+    <string name="label_period">PÉRIODE : </string>
+    <string name="label_organisateur">ORGANISATEUR(S) : </string>
+
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password (optional)</string>

@@ -39,6 +39,7 @@ public class SQLiteHelper  extends OrmLiteSqliteOpenHelper {
     public void onUpgrade(SQLiteDatabase database, ConnectionSource connectionSource, int oldVersion, int newVersion) {
         try {
             TableUtils.dropTable(connectionSource, Event.class, true);
+            Log.i(TAG, "SQLiteHelper onUpgrade done successfully");
             onCreate(database, connectionSource);
         } catch (SQLException e) {
             e.printStackTrace();
