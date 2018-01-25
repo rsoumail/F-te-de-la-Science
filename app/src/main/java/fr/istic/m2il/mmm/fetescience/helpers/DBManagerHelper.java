@@ -27,7 +27,7 @@ public class DBManagerHelper {
         return instance;
     }
 
-    private DBManagerHelper(Context context) {
+    public DBManagerHelper(Context context) {
         helper = new SQLiteHelper(context);
     }
 

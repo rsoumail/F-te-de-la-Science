@@ -1,6 +1,7 @@
 package fr.istic.m2il.mmm.fetescience.adpaters;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -21,6 +22,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
     private Context context;
     private List<Event> events;
+    private Cursor mCursor = null;
 
     public EventAdapter(Context context, List<Event> events) {
         this.context = context;
@@ -47,6 +49,11 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     @Override
     public int getItemCount() {
         return events.size();
+    }
+
+    public void setData(Cursor cursor){
+        mCursor = cursor;
+        notifyDataSetChanged();
     }
 
     class EventViewHolder extends RecyclerView.ViewHolder{

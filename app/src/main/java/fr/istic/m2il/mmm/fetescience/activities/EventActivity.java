@@ -1,19 +1,23 @@
 package fr.istic.m2il.mmm.fetescience.activities;
 
+
+import android.database.Cursor;
+import android.net.Uri;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.util.Log;
-import android.view.animation.LinearInterpolator;
 import android.widget.LinearLayout;
-import android.widget.Toast;
+
 
 import org.json.JSONException;
 
 import java.io.IOException;
-import java.util.List;
+
 
 import fr.istic.m2il.mmm.fetescience.R;
 import fr.istic.m2il.mmm.fetescience.adpaters.EventAdapter;
@@ -23,19 +27,21 @@ import fr.istic.m2il.mmm.fetescience.helpers.DBManagerHelper;
 import fr.istic.m2il.mmm.fetescience.helpers.GsonHelper;
 import fr.istic.m2il.mmm.fetescience.helpers.PreferencesManagerHelper;
 import fr.istic.m2il.mmm.fetescience.models.Event;
+import fr.istic.m2il.mmm.fetescience.providers.EventContentProvider;
 import fr.istic.m2il.mmm.fetescience.utils.Utils;
 
-import static fr.istic.m2il.mmm.fetescience.helpers.DBManagerHelper.getInstance;
 
-public class EventActivity extends FragmentActivity implements EventListFragment.OnFragmentInteractionListener {
-
+public class EventActivity extends FragmentActivity implements EventListFragment.OnFragmentInteractionListener
+{
 
     private FragmentManager fragmentManager;
     private LinearLayout linearLayout;
-    private EventAdapter eventAdapter;
     private PreferencesManagerHelper preferencesManagerHelper;
     private String screenType;
     EventFragment eventFragment;
+    private EventAdapter eventAdapter;
+    private int id = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +50,7 @@ public class EventActivity extends FragmentActivity implements EventListFragment
 
         DBManagerHelper dbManagerHelper = Utils.initDatabase(this);
         preferencesManagerHelper = new PreferencesManagerHelper(this);
+
 
         if (preferencesManagerHelper.isFirstTimeLaunch()) {
             try {

@@ -88,5 +88,4 @@ public class Event {
                 ", description='" + description_fr + '\'' +
                 '}';
     }
-
 }
