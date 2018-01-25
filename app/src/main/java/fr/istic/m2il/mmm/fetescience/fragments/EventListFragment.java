@@ -18,13 +18,20 @@ import android.widget.SearchView;
 import android.widget.Spinner;
 
 
+import org.json.JSONException;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import fr.istic.m2il.mmm.fetescience.R;
 import fr.istic.m2il.mmm.fetescience.adpaters.EventAdapter;
+import fr.istic.m2il.mmm.fetescience.helpers.DBManagerHelper;
+import fr.istic.m2il.mmm.fetescience.helpers.GsonHelper;
+import fr.istic.m2il.mmm.fetescience.helpers.PreferencesManagerHelper;
 import fr.istic.m2il.mmm.fetescience.loaders.AsyncEventLoader;
 import fr.istic.m2il.mmm.fetescience.models.Event;
+import fr.istic.m2il.mmm.fetescience.utils.Utils;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -47,6 +54,7 @@ public class EventListFragment extends Fragment implements AdapterView.OnItemSel
     private ProgressBar progressBar;
     private int selectedFilter = 0;
     private String currentQuery;
+    private PreferencesManagerHelper preferencesManagerHelper;
 
     private OnEventListFragmentInteractionListener mListener;
 
@@ -64,6 +72,26 @@ public class EventListFragment extends Fragment implements AdapterView.OnItemSel
         searchView = view.findViewById(R.id.search_bar);
         progressBar = view.findViewById(R.id.progressBar_cyclic);
         recyclerView.setVisibility(View.GONE);
+
+        DBManagerHelper dbManagerHelper = Utils.initDatabase(getActivity());
+        //dbManagerHelper.delete();
+        //dbManagerHelper.deleteAllEvents(dbManagerHelper.getAllEvents());
+        preferencesManagerHelper = new PreferencesManagerHelper(getActivity());
+
+
+        if (preferencesManagerHelper.isFirstTimeLaunch()) {
+
+            GsonHelper gsonHelper = new GsonHelper();
+            try {
+                gsonHelper.jsonToSqlite(dbManagerHelper, getActivity());
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            preferencesManagerHelper.setFirstTimeLaunchToFalse();
+
+        }
 
         filterSpinner = view.findViewById(R.id.key_words_filter);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),

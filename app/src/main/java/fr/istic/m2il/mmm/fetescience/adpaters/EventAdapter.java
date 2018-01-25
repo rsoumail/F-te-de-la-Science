@@ -14,6 +14,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import fr.istic.m2il.mmm.fetescience.R;
 import fr.istic.m2il.mmm.fetescience.listeners.OnEventClickListener;
 import fr.istic.m2il.mmm.fetescience.models.Event;
@@ -77,17 +79,15 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
     class EventViewHolder extends RecyclerView.ViewHolder{
 
-        CardView cardView;
-        TextView titleTextView, descriptionTextView, themeTextView;
-        ImageView apercuImageView;
+        @BindView(R.id.event_cardview_container)CardView cardView;
+        @BindView(R.id.title) TextView titleTextView;
+        @BindView(R.id.description) TextView descriptionTextView;
+        @BindView(R.id.theme) TextView themeTextView;
+        @BindView(R.id.apercu) ImageView apercuImageView;
 
         public EventViewHolder(View itemView) {
             super(itemView);
-            cardView = itemView.findViewById(R.id.event_cardview_container);
-            titleTextView = itemView.findViewById(R.id.title);
-            descriptionTextView = itemView.findViewById(R.id.description);
-            themeTextView = itemView.findViewById(R.id.theme);
-            //apercuImageView = itemView.findViewById(R.id.apercu);
+            ButterKnife.bind(this, itemView);
         }
 
         public void bind(final Event event, final OnEventClickListener onEventClickListener){
