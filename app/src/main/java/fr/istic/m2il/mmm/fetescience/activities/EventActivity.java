@@ -23,12 +23,11 @@ import fr.istic.m2il.mmm.fetescience.models.Event;
 import fr.istic.m2il.mmm.fetescience.utils.Utils;
 
 public class EventActivity extends FragmentActivity implements EventListFragment.OnEventListFragmentInteractionListener, EventFragment.OnEventFragmentInteractionListener {
-{
 
-    private FragmentManager fragmentManager;
-    private LinearLayout linearLayout;
-    private PreferencesManagerHelper preferencesManagerHelper;
-    private String screenType;
+    FragmentManager fragmentManager;
+    LinearLayout linearLayout;
+    PreferencesManagerHelper preferencesManagerHelper;
+    String screenType;
 
 
     @Override
@@ -43,16 +42,17 @@ public class EventActivity extends FragmentActivity implements EventListFragment
 
 
         if (preferencesManagerHelper.isFirstTimeLaunch()) {
+
+            GsonHelper gsonHelper = new GsonHelper();
             try {
-               GsonHelper gsonHelper = new GsonHelper();
-               gsonHelper.jsonToSqlite(dbManagerHelper, this);
+                gsonHelper.jsonToSqlite(dbManagerHelper, this);
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-          //  getLoaderManager().initLoader(1, null, this);
             preferencesManagerHelper.setFirstTimeLaunchToFalse();
+
         }
 
         fragmentManager = getSupportFragmentManager();
@@ -61,7 +61,6 @@ public class EventActivity extends FragmentActivity implements EventListFragment
 
         if(linearLayout != null){
             screenType = "large";
-            Log.i("SIZE " , screenType);
             if(findViewById(R.id.large_event_list) != null && findViewById(R.id.large_event_item) != null){
                 if(savedInstanceState != null){
                     return;
@@ -78,7 +77,6 @@ public class EventActivity extends FragmentActivity implements EventListFragment
         }
         else {
             screenType = "normal";
-            Log.i("SIZE " , screenType);
             if(findViewById(R.id.normal_event_list) != null){
                 if(savedInstanceState != null){
                     return;
