@@ -39,6 +39,8 @@ public class EventActivity extends FragmentActivity implements EventListFragment
         setContentView(R.layout.activity_event);
         ButterKnife.bind(this);
 
+
+
         fragmentManager = getSupportFragmentManager();
 
         //linearLayout = findViewById(R.id.event_large);

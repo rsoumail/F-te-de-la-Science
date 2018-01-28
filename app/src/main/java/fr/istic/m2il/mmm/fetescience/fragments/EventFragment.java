@@ -4,10 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.CalendarContract;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CalendarView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,13 +37,10 @@ public class EventFragment extends Fragment {
     @BindView(R.id.animation) TextView animationTextView;
     @BindView(R.id.hour) TextView hourTextView;
     @BindView(R.id.organisateur) TextView organisatorTextView;
-    //@BindView(R.id.date) TextView datesTextView;
     @BindView(R.id.lien) TextView linkTextView;
-
-    //@BindView(R.id.ima) TextView
-
-
     @BindView(R.id.image) ImageView imageImageView;
+    @BindView(R.id.agenda) Button agendaButtonView;
+    @BindView(R.id.imageButton) ImageButton imageButton;
     private Unbinder unbinder;
     private OnEventFragmentInteractionListener mListener;
 
@@ -104,6 +106,8 @@ public class EventFragment extends Fragment {
             dateEndTexteView.setText(item.getDate_fin());
         if(item.getLien() != null)
             linkTextView.setText(item.getLien());
+        //if(item.getDates() != null)
+          //  linkTextView.setText(item.getDates());
 
     }
 
@@ -111,6 +115,21 @@ public class EventFragment extends Fragment {
     public void openBrowser(View view){
         Intent i  = new Intent("android.intent.action.VIEW", Uri.parse(linkTextView.getText().toString()));
         startActivity(i);
+    }
+
+
+    @OnClick(R.id.agenda)
+    public void openSaveInAgenda(){
+        Intent calIntent = new Intent(Intent.ACTION_INSERT);
+        calIntent.setData(CalendarContract.Events.CONTENT_URI);
+        startActivity(calIntent);
+    }
+
+
+    @OnClick(R.id.imageButton)
+    public void openFacebook(){
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW,Uri.parse("http://www.facebook.com/"));
+        startActivity(browserIntent);
     }
 
     @Override
