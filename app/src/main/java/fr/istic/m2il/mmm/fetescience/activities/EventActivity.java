@@ -10,6 +10,9 @@ import android.view.animation.LinearInterpolator;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+// à enlever avant de push
+import android.content.Intent;
+
 import org.json.JSONException;
 
 import java.io.IOException;
@@ -112,5 +115,11 @@ public class EventActivity extends FragmentActivity implements EventListFragment
         fragmentManager.executePendingTransactions();
         eventFragment.update(item);
 
+    }
+
+    // à enelever avant de push
+    public void pass2Map(){
+        Intent i = new Intent(this, EventMapActivity.class);
+        startActivity(i);
     }
 }
