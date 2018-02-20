@@ -5,18 +5,26 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CalendarView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,6 +46,7 @@ public class EventFragment extends Fragment {
     @BindView(R.id.hour) TextView hourTextView;
     @BindView(R.id.organisateur) TextView organisatorTextView;
     @BindView(R.id.lien) TextView linkTextView;
+    @BindView(R.id.dates) TextView datesTextView;
     @BindView(R.id.image) ImageView imageImageView;
     @BindView(R.id.agenda) Button agendaButtonView;
     @BindView(R.id.imageButton) ImageButton imageButton;
@@ -106,9 +115,8 @@ public class EventFragment extends Fragment {
             dateEndTexteView.setText(item.getDate_fin());
         if(item.getLien() != null)
             linkTextView.setText(item.getLien());
-        //if(item.getDates() != null)
-          //  linkTextView.setText(item.getDates());
-
+        if(item.getDates() != null)
+            datesTextView.setText(item.getDates());
     }
 
     @OnClick(R.id.lien)
@@ -117,14 +125,30 @@ public class EventFragment extends Fragment {
         startActivity(i);
     }
 
-
     @OnClick(R.id.agenda)
     public void openSaveInAgenda(){
         Intent calIntent = new Intent(Intent.ACTION_INSERT);
-        calIntent.setData(CalendarContract.Events.CONTENT_URI);
+
+//        SimpleDateFormat sdf = new SimpleDateFormat();
+//        Calendar c = Calendar.getInstance();
+//        calIntent.setType("vnd.android.cursor.item/event");
+//        calIntent.putExtra(CalendarContract.Events.TITLE, "My House Party");
+//        calIntent.putExtra(CalendarContract.Events.DESCRIPTION, "A Pig Roast on the Beach");
+          //CalendarContract.Events.
+
         startActivity(calIntent);
     }
 
+    private List<Date> parseEventsDaysToJavaDate(Event event){
+        List<Date> dates = new ArrayList<>();
+        String[] datesString = event.getDates().split(";");
+        for(String d: datesString){
+            String[] dParts = d.split("-");
+            Date date = new Date(Integer.parseInt(dParts[0]), Integer.parseInt(dParts[1]), Integer.parseInt(dParts[2]));
+            dates.add(date);
+        }
+        return dates;
+    }
 
     @OnClick(R.id.imageButton)
     public void openFacebook(){
