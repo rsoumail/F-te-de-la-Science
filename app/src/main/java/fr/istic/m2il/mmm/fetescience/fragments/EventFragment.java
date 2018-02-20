@@ -59,17 +59,6 @@ public class EventFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_event_info, container, false);
-        /*adressTextView = view.findViewById(R.id.adress);
-        organisateurTextView = view.findViewById(R.id.organisateur);
-        animationTextView = view.findViewById(R.id.animation);
-        hourTextView = view.findViewById(R.id.hour);
-        imageImageView = view.findViewById(R.id.image);
-        titleTexteView = view.findViewById(R.id.title);
-        themeTexteView = view.findViewById(R.id.theme);
-        descriptionTexteView = view.findViewById(R.id.description);
-        dateDebutTexteView = view.findViewById(R.id.date_debut);
-        dateFinTexteView = view.findViewById(R.id.date_fin);*/
-
         unbinder = ButterKnife.bind(this, view);
         return view;
     }
