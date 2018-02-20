@@ -23,15 +23,15 @@ import fr.istic.m2il.mmm.fetescience.models.Event;
 import android.util.Log;
 
 /**
- * @author ismael
+ * @author Ramadan Soumaila
  */
 
 public class GsonHelper {
 
     private static final String TAG = GsonHelper.class.getSimpleName();
 
-    public static void jsonToSqlite(DBManagerHelper manager, Context context) throws IOException, JSONException {
-        Gson gson = new GsonBuilder().create();
+    public void jsonToSqlite(DBManagerHelper manager, Context context) throws IOException, JSONException {
+       Gson gson = new GsonBuilder().create();
         JsonParser jsonParser = new JsonParser();
         StringBuilder sb = new StringBuilder();
 
@@ -44,6 +44,7 @@ public class GsonHelper {
                 sb.append(line).append("\n");
             }
             result = sb.toString();
+
             JSONArray json = new JSONArray(result);
 
             for (int i = 0; i < json.length(); i++) {
@@ -56,10 +57,12 @@ public class GsonHelper {
             }
         } catch (IOException | JSONException e) {
             e.printStackTrace();
+        } finally {
+            if (inputStream != null) {
+                inputStream.close();
+            }
         }
+
     }
-
-
-
 
 }

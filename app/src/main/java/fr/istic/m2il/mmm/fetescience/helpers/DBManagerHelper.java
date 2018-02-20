@@ -2,6 +2,8 @@ package fr.istic.m2il.mmm.fetescience.helpers;
 
 import android.content.Context;
 
+import com.j256.ormlite.table.TableUtils;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +11,7 @@ import java.util.List;
 import fr.istic.m2il.mmm.fetescience.models.Event;
 
 /**
- * @author ismael
+ * @author Ramadan Soumaila
  */
 
 public class DBManagerHelper {
@@ -27,7 +29,7 @@ public class DBManagerHelper {
         return instance;
     }
 
-    private DBManagerHelper(Context context) {
+    public DBManagerHelper(Context context) {
         helper = new SQLiteHelper(context);
     }
 
@@ -36,7 +38,6 @@ public class DBManagerHelper {
     }
 
 
-    /** Methods [Event] **/
 
     public List<Event> getAllEvents() {
         try {
@@ -63,6 +64,11 @@ public class DBManagerHelper {
         }
     }
 
-
-
+    public void delete(){
+        try {
+            TableUtils.dropTable(getHelper().getConnectionSource(),Event.class, true);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

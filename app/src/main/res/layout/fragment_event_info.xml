@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent" android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="520dp"
+            android:layout_height="250dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="10dp"
+            app:srcCompat="@drawable/common_google_signin_btn_icon_dark_normal_background" />
+
+        <TextView
+            android:id="@+id/adress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="italic"
+            android:textSize="17sp"
+            android:textColor="#f29c1c"
+            android:layout_alignLeft="@+id/image"
+            android:layout_below="@+id/image"
+            android:layout_marginTop="10dp"/>
+
+        <TextView
+            android:id="@+id/animation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textColor="#000"
+            android:layout_alignLeft="@+id/image"
+            android:layout_below="@+id/adress"
+            android:layout_marginTop="10dp"/>
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_alignLeft="@+id/image"
+            android:textStyle="bold"
+            android:textColor="#01a9d2"
+            android:textSize="20sp"
+            android:layout_below="@+id/animation"/>
+
+        <RelativeLayout
+            android:id="@+id/layout_theme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/image"
+            android:layout_below="@+id/title"
+            android:layout_marginTop="10dp">
+            <TextView
+                android:id="@+id/label_theme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:textColor="#01a9d2"
+                android:text="@string/label_theme"/>
+            <TextView
+                android:id="@+id/theme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/label_theme"
+                android:layout_below="@+id/label_theme"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout_period"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/image"
+            android:layout_below="@+id/layout_theme"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:id="@+id/label_period"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:textColor="#01a9d2"
+                android:text="@string/label_period"
+                />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/linearLayout"
+                android:layout_below="@+id/label_period"
+                android:layout_marginTop="5dp">
+                <TextView
+                    android:id="@+id/date_debut"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+                <TextView
+                    android:id="@+id/date_fin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/date_debut"
+                    android:layout_alignStart="@+id/date_debut"
+                    android:layout_marginLeft="5dp"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout_hour"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/image"
+            android:layout_below="@+id/layout_period"
+            android:layout_marginTop="10dp">
+            <TextView
+                android:id="@+id/label_hour"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:textColor="#01a9d2"
+                android:text="@string/label_hour"/>
+            <TextView
+                android:id="@+id/hour"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/label_hour"
+                android:layout_below="@+id/label_hour"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout_organisateur"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/image"
+            android:layout_below="@+id/layout_hour"
+            android:layout_marginTop="10dp">
+            <TextView
+                android:id="@+id/label_organisateur"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:textColor="#01a9d2"
+                android:text="@string/label_organisateur"/>
+            <TextView
+                android:id="@+id/organisateur"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/label_organisateur"
+                android:layout_marginTop="10dp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout_lien"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/image"
+            android:layout_below="@+id/layout_organisateur"
+            android:layout_marginTop="10dp">
+            <TextView
+                android:id="@+id/label_lien"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:textColor="#01a9d2"
+                android:text="@string/label_lien"/>
+            <TextView
+                android:id="@+id/lien"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/label_lien"
+                android:layout_marginTop="10dp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/image"
+            android:layout_below="@+id/layout_lien"
+            android:layout_marginTop="10dp">
+            <TextView
+                android:id="@+id/label_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:textColor="#01a9d2"
+                android:text="@string/label_description"/>
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/label_description"
+                android:layout_marginTop="10dp" />
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout_agenda"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/layout_description"
+            android:layout_marginTop="10dp">
+
+            <Button
+                android:id="@+id/agenda"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:textColor="#01a9d2"
+                android:text="@string/label_agenda" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout_share"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/layout_agenda"
+            android:layout_marginTop="10dp">
+            <TextView
+                android:id="@+id/label_share"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:textColor="#01a9d2"
+                android:text="@string/label_share"/>
+
+        </RelativeLayout>
+
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/layout_agenda"
+            android:layout_toEndOf="@+id/layout_share"
+            android:layout_toRightOf="@+id/layout_share"
+            android:src="@drawable/com_facebook_button_icon_blue" />
+
+    </RelativeLayout>
+
+</ScrollView>
