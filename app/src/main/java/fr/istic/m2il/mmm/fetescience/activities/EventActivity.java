@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.LinearLayout;
 
 import org.json.JSONException;
@@ -26,7 +27,7 @@ import fr.istic.m2il.mmm.fetescience.helpers.PreferencesManagerHelper;
 import fr.istic.m2il.mmm.fetescience.models.Event;
 import fr.istic.m2il.mmm.fetescience.utils.Utils;
 
-public class EventActivity extends FragmentActivity implements EventListFragment.OnEventListFragmentInteractionListener, EventFragment.OnEventFragmentInteractionListener {
+public class EventActivity extends AppCompatActivity implements EventListFragment.OnEventListFragmentInteractionListener, EventFragment.OnEventFragmentInteractionListener {
 
     FragmentManager fragmentManager;
     @Nullable @BindView(R.id.event_large) LinearLayout linearLayout;
