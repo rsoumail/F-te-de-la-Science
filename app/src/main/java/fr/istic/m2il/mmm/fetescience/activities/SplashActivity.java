@@ -1,8 +1,8 @@
 package fr.istic.m2il.mmm.fetescience.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import org.json.JSONException;
@@ -15,7 +15,7 @@ import fr.istic.m2il.mmm.fetescience.helpers.PreferencesManagerHelper;
 import fr.istic.m2il.mmm.fetescience.utils.Utils;
 
 
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends Activity {
 
     private static final Integer DEFAULT_DELAY = new Integer(1000);
     private PreferencesManagerHelper preferencesManagerHelper;
@@ -35,15 +35,15 @@ public class SplashActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
             preferencesManagerHelper.setFirstTimeLaunchToFalse();
-        } else {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Intent intent = new Intent(SplashActivity.this, EventActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
-            }, DEFAULT_DELAY);
+
         }
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(SplashActivity.this, EventActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        }, DEFAULT_DELAY);
     }
 }
