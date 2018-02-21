@@ -112,6 +112,7 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
     @Override
     public void onLoadFinished(Loader<List<Event>> loader, List<Event> data) {
         events = data;
+        addMarkers();
     }
 
     @Override
@@ -136,33 +137,42 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
 
     @Override
     public void onMapReady(GoogleMap map) {
-
+        // on initialise la carte pour l'utiliser plus tard
         mMap = map;
+    }
+
+    public void addMarkers(){
+
+        // init sur Paris
+        LatLng pEvent = new LatLng(48.8534,2.3488);
 
         for (Event event : events){
+
+            //Log.v("event name","hello");
 
             // on récupère la liste de la localistion de l'evt
             // et on créé le latlng
             List<Double> locEvent = event.getGeolocalisation();
-            LatLng pEvent = new LatLng(locEvent.get(0),locEvent.get(1));
 
-            // on créé le nouveau marker
-            mMap.addMarker(new MarkerOptions()
-                    .title(event.getTitre_fr())
-                    .snippet(event.getDescription_fr())
-                    .position(pEvent));
+            // on vérifie que l'evenement possède une localisation précise
+            if(locEvent != null){
+
+                //Log.v("event name est passé",event.getTitre_fr());
+
+                // on récupère la localisation
+                pEvent = new LatLng(locEvent.get(0),locEvent.get(1));
+
+                // on créé le nouveau marker
+                mMap.addMarker(new MarkerOptions()
+                        .title(event.getTitre_fr())
+                        .snippet(event.getDescription_fr())
+                        .position(pEvent));
+
+            }
         }
 
-        LatLng sydney = new LatLng(48.8534, 2.3488);
-
-        //map.setMyLocationEnabled(true);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 13));
-
-        Log.v("event info",events.toString());
-
-        mMap.addMarker(new MarkerOptions()
-                .title("1")
-                .snippet("2")
-                .position(sydney));
+        // on se fixe sur le dernier evt vu
+        // à garder pour la fin ?
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pEvent, 6));
     }
 }
