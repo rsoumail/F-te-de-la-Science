@@ -16,8 +16,13 @@ import android.widget.LinearLayout;
 
 import javax.annotation.Nullable;
 
+import javax.annotation.Nullable;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import butterknife.Optional;
+import butterknife.Unbinder;
 import fr.istic.m2il.mmm.fetescience.R;
 import fr.istic.m2il.mmm.fetescience.fragments.EventFragment;
 import fr.istic.m2il.mmm.fetescience.fragments.EventListFragment;
@@ -35,8 +40,6 @@ public class EventActivity extends AppCompatActivity implements EventListFragmen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
         ButterKnife.bind(this);
-
-
 
         fragmentManager = getSupportFragmentManager();
 

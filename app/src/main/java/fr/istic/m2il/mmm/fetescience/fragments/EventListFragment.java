@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
 import fr.istic.m2il.mmm.fetescience.R;
 import fr.istic.m2il.mmm.fetescience.adpaters.EventAdapter;
 import fr.istic.m2il.mmm.fetescience.helpers.DBManagerHelper;
@@ -44,17 +45,19 @@ import fr.istic.m2il.mmm.fetescience.utils.Utils;
 public class EventListFragment extends Fragment implements AdapterView.OnItemSelectedListener, SearchView.OnQueryTextListener, LoaderManager.LoaderCallbacks<List<Event>> {
 
     private static final String TAG = EventListFragment.class.getSimpleName();
-    private RecyclerView recyclerView;
+
+    @BindView(R.id.event_recycler_view) RecyclerView recyclerView;
+    @BindView(R.id.search_bar) SearchView searchView;
+    @BindView(R.id.progressBar_cyclic) ProgressBar progressBar;
+    @BindView(R.id.key_words_filter) Spinner filterSpinner;
+
     private EventAdapter eventAdapter;
     private List<Event> events = new ArrayList<>();
     private List<Event> cachedEvents = new ArrayList<>();
     private List<String> keys = new ArrayList<>();
-    private SearchView searchView;
-    private Spinner filterSpinner;
-    private ProgressBar progressBar;
+
     private int selectedFilter = 0;
     private String currentQuery;
-    private PreferencesManagerHelper preferencesManagerHelper;
 
     private OnEventListFragmentInteractionListener mListener;
 
@@ -62,18 +65,12 @@ public class EventListFragment extends Fragment implements AdapterView.OnItemSel
         // Required empty public constructor
     }
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_event_list, container, false);
-        recyclerView = view.findViewById(R.id.event_recycler_view);
-        searchView = view.findViewById(R.id.search_bar);
-        progressBar = view.findViewById(R.id.progressBar_cyclic);
-        recyclerView.setVisibility(View.GONE);
-        filterSpinner = view.findViewById(R.id.key_words_filter);
 
+        recyclerView.setVisibility(View.GONE);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
                 R.array.query_filters, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -156,6 +153,7 @@ public class EventListFragment extends Fragment implements AdapterView.OnItemSel
 
     @Override
     public Loader<List<Event>> onCreateLoader(int id, Bundle args) {
+
         return new AsyncEventLoader(getActivity());
     }
 
