@@ -25,7 +25,7 @@ public class Utils {
         return manager;
     }
 
-    public List<Date> parseEventsDaysToJavaDate(Event event){
+    public static List<Date> parseDates(Event event){
         List<Date> dates = new ArrayList<>();
         String[] datesString = event.getDates().split(";");
         for(String d: datesString){

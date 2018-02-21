@@ -18,12 +18,16 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.Date;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import fr.istic.m2il.mmm.fetescience.R;
 import fr.istic.m2il.mmm.fetescience.models.Event;
+import fr.istic.m2il.mmm.fetescience.utils.Utils;
 
 
 public class EventFragment extends Fragment {
@@ -43,6 +47,7 @@ public class EventFragment extends Fragment {
     @BindView(R.id.imageButton) ImageButton imageButton;
     private Unbinder unbinder;
     private OnEventFragmentInteractionListener mListener;
+    private Event event;
 
     public EventFragment() {
         // Required empty public constructor
@@ -71,6 +76,7 @@ public class EventFragment extends Fragment {
     }
 
     public void update(Event item){
+        this.event = item;
         if(item.getImage() != null){
             Picasso.with(getContext()).load(item.getImage()).into(imageImageView);
         }
@@ -112,6 +118,9 @@ public class EventFragment extends Fragment {
         Intent calIntent = new Intent(Intent.ACTION_INSERT);
         calIntent.setData(CalendarContract.Events.CONTENT_URI);
         startActivity(calIntent);
+        List<Date> dates = Utils.parseDates(this.event);
+        calIntent.putExtra(CalendarContract.Events.DTSTART, dates.get(0));
+        calIntent.putExtra(CalendarContract.Events.DTEND, dates.get(dates.size()));
     }
 
 
