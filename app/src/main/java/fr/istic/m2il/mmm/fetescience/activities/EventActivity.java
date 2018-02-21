@@ -1,31 +1,27 @@
 package fr.istic.m2il.mmm.fetescience.activities;
 
 
+import android.content.Intent;
 import android.net.Uri;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.LinearLayout;
-
-import org.json.JSONException;
-
-import java.io.IOException;
 
 import javax.annotation.Nullable;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import fr.istic.m2il.mmm.fetescience.R;
 import fr.istic.m2il.mmm.fetescience.fragments.EventFragment;
 import fr.istic.m2il.mmm.fetescience.fragments.EventListFragment;
-import fr.istic.m2il.mmm.fetescience.helpers.DBManagerHelper;
-import fr.istic.m2il.mmm.fetescience.helpers.GsonHelper;
-import fr.istic.m2il.mmm.fetescience.helpers.PreferencesManagerHelper;
 import fr.istic.m2il.mmm.fetescience.models.Event;
-import fr.istic.m2il.mmm.fetescience.utils.Utils;
 
 public class EventActivity extends AppCompatActivity implements EventListFragment.OnEventListFragmentInteractionListener, EventFragment.OnEventFragmentInteractionListener {
 
@@ -44,8 +40,6 @@ public class EventActivity extends AppCompatActivity implements EventListFragmen
 
         fragmentManager = getSupportFragmentManager();
 
-        //linearLayout = findViewById(R.id.event_large);
-
         if(linearLayout != null){
             screenType = "large";
             if(findViewById(R.id.large_event_list) != null && findViewById(R.id.large_event_item) != null){
@@ -56,9 +50,8 @@ public class EventActivity extends AppCompatActivity implements EventListFragmen
                 EventListFragment eventListFragment = new EventListFragment();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.large_event_list, eventListFragment);
-                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.addToBackStack("event_list");
                 fragmentTransaction.commit();
-                //eventListFragment.onAttach(this);
                 fragmentManager.executePendingTransactions();
             }
         }
@@ -71,10 +64,41 @@ public class EventActivity extends AppCompatActivity implements EventListFragmen
                 EventListFragment eventListFragment = new EventListFragment();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.normal_event_list, eventListFragment);
-                fragmentTransaction.addToBackStack("normal_event_list");
+                fragmentTransaction.addToBackStack("event_list");
                 fragmentTransaction.commit();
                 fragmentManager.executePendingTransactions();
             }
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.action_map:
+                Intent intent = new Intent(EventActivity.this, EventMapActivity.class);
+                startActivity(intent);
+                return true;
+            /*case R.id.help:
+                showHelp();
+                return true;*/
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 
@@ -91,15 +115,13 @@ public class EventActivity extends AppCompatActivity implements EventListFragmen
                 fragmentTransaction.replace(R.id.normal_event_list, eventFragment);
                 break;
         }
-        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.addToBackStack("event_info");
         fragmentTransaction.commit();
         fragmentManager.executePendingTransactions();
         eventFragment.update(item);
-
     }
 
     @Override
     public void onEventInteraction(Uri uri) {
-
     }
 }

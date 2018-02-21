@@ -23,20 +23,14 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
 import java.util.TimeZone;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import fr.istic.m2il.mmm.fetescience.R;
 import fr.istic.m2il.mmm.fetescience.models.Event;
-import fr.istic.m2il.mmm.fetescience.utils.Utils;
 
 
 public class EventFragment extends Fragment {
@@ -72,11 +66,10 @@ public class EventFragment extends Fragment {
     private Unbinder unbinder;
     private OnEventFragmentInteractionListener mListener;
     private Event event;
-    private static final String TAG = EventFragment.class.getSimpleName();
 
-    public EventFragment() {
+    private static final String TAG = EventFragment.class.getSimpleName();
         // Required empty public constructor
-    }
+
 
 
     @Override
@@ -165,7 +158,7 @@ public class EventFragment extends Fragment {
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
-            Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, values);
+            cr.insert(CalendarContract.Events.CONTENT_URI, values);
             Log.i(TAG, "Enregistrer");
 
         }

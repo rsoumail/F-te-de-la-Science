@@ -72,28 +72,8 @@ public class EventListFragment extends Fragment implements AdapterView.OnItemSel
         searchView = view.findViewById(R.id.search_bar);
         progressBar = view.findViewById(R.id.progressBar_cyclic);
         recyclerView.setVisibility(View.GONE);
-
-        DBManagerHelper dbManagerHelper = Utils.initDatabase(getActivity());
-        //dbManagerHelper.delete();
-        //dbManagerHelper.deleteAllEvents(dbManagerHelper.getAllEvents());
-        preferencesManagerHelper = new PreferencesManagerHelper(getActivity());
-
-
-        if (preferencesManagerHelper.isFirstTimeLaunch()) {
-
-            GsonHelper gsonHelper = new GsonHelper();
-            try {
-                gsonHelper.jsonToSqlite(dbManagerHelper, getActivity());
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            preferencesManagerHelper.setFirstTimeLaunchToFalse();
-
-        }
-
         filterSpinner = view.findViewById(R.id.key_words_filter);
+
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
                 R.array.query_filters, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

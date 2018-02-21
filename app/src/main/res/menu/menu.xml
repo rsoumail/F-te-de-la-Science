@@ -3,13 +3,18 @@
 xmlns:app="http://schemas.android.com/apk/res-auto"
 xmlns:tools="http://schemas.android.com/tools"
 tools:context="fr.istic.m2il.mmm.fetescience.activities.EventActivity">
-<item android:id="@+id/search_item"
-    android:title="@string/search_title"
-    android:icon="@android:drawable/ic_menu_search"
-    app:showAsAction="always" />
-<item
-    android:id="@+id/action_settings"
-    android:orderInCategory="100"
-    android:title="@string/action_settings"
-    app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_events"
+        android:icon="@drawable/ic_events"
+        android:title="@string/action_list">
+
+    </item>
+
+    <item
+        android:id="@+id/action_map"
+        android:icon="@drawable/ic_map"
+        android:title="@string/action_map">
+
+    </item>
 </menu>
