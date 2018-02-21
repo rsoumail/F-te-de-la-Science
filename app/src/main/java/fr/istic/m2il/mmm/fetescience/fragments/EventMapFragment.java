@@ -139,6 +139,20 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
 
         mMap = map;
 
+        for (Event event : events){
+
+            // on récupère la liste de la localistion de l'evt
+            // et on créé le latlng
+            List<Double> locEvent = event.getGeolocalisation();
+            LatLng pEvent = new LatLng(locEvent.get(0),locEvent.get(1));
+
+            // on créé le nouveau marker
+            mMap.addMarker(new MarkerOptions()
+                    .title(event.getTitre_fr())
+                    .snippet(event.getDescription_fr())
+                    .position(pEvent));
+        }
+
         LatLng sydney = new LatLng(-33.867, 151.206);
 
         //map.setMyLocationEnabled(true);
