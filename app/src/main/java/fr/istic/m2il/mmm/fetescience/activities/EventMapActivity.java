@@ -43,6 +43,8 @@ public class EventMapActivity extends AppCompatActivity implements EventMapFragm
     @BindView(R.id.map_event) FrameLayout frameLayout;
     FragmentManager fragmentManager;
 
+    //private MyLocationOverlay myLocation = null;
+
     private PreferencesManagerHelper preferencesManagerHelper;
     private List<Event> events = new ArrayList<>();
 

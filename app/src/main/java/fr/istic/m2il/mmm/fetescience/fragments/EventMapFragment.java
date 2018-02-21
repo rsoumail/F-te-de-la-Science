@@ -153,7 +153,7 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
                     .position(pEvent));
         }
 
-        LatLng sydney = new LatLng(-33.867, 151.206);
+        LatLng sydney = new LatLng(48.8534, 2.3488);
 
         //map.setMyLocationEnabled(true);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 13));
