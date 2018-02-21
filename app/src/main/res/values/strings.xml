@@ -4,9 +4,12 @@
 
     <string name="title_event">Évenements</string>
     <string name="search_title">Rechercher</string>
+
+    <!-- String related to menu -->
     <string name="action_settings">Paramètre</string>
     <string name="action_map">Carte</string>
     <string name="action_list">Liste</string>
+    <string name="action_path">Parcours</string>
 
     <!-- String related to Filtered queries -->
 

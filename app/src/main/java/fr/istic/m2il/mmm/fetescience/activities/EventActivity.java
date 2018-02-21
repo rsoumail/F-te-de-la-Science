@@ -15,14 +15,9 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import javax.annotation.Nullable;
-
-import javax.annotation.Nullable;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import butterknife.Optional;
-import butterknife.Unbinder;
 import fr.istic.m2il.mmm.fetescience.R;
 import fr.istic.m2il.mmm.fetescience.fragments.EventFragment;
 import fr.istic.m2il.mmm.fetescience.fragments.EventListFragment;
@@ -53,7 +48,7 @@ public class EventActivity extends AppCompatActivity implements EventListFragmen
                 EventListFragment eventListFragment = new EventListFragment();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.large_event_list, eventListFragment);
-                fragmentTransaction.addToBackStack("event_list");
+                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
                 fragmentManager.executePendingTransactions();
             }
@@ -91,15 +86,13 @@ public class EventActivity extends AppCompatActivity implements EventListFragmen
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
+
         switch (item.getItemId()) {
             case R.id.action_map:
                 Intent intent = new Intent(EventActivity.this, EventMapActivity.class);
                 startActivity(intent);
                 return true;
-            /*case R.id.help:
-                showHelp();
-                return true;*/
+
             default:
                 return super.onOptionsItemSelected(item);
         }

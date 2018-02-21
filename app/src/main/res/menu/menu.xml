@@ -17,4 +17,11 @@ tools:context="fr.istic.m2il.mmm.fetescience.activities.EventActivity">
         android:title="@string/action_map">
 
     </item>
+
+    <item
+        android:id="@+id/action_path"
+        android:icon="@drawable/ic_path"
+        android:title="@string/action_path">
+
+    </item>
 </menu>
