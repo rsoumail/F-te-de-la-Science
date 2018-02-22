@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,9 +19,12 @@ import javax.annotation.Nullable;
 
 import butterknife.BindView;
 import fr.istic.m2il.mmm.fetescience.R;
+import fr.istic.m2il.mmm.fetescience.fragments.EventFragment;
+import fr.istic.m2il.mmm.fetescience.fragments.EventListFragment;
 import fr.istic.m2il.mmm.fetescience.fragments.EventMapFragment;
+import fr.istic.m2il.mmm.fetescience.models.Event;
 
-public class EventMapActivity extends AppCompatActivity implements EventMapFragment.OnFragmentInteractionListener {
+public class EventMapActivity extends AppCompatActivity implements EventMapFragment.OnFragmentInteractionListener, EventFragment.OnEventFragmentInteractionListener {
 
     @Nullable
     @BindView(R.id.map_event) FrameLayout frameLayout;
@@ -36,6 +40,7 @@ public class EventMapActivity extends AppCompatActivity implements EventMapFragm
         fragmentManager = getSupportFragmentManager();
 
         EventMapFragment eventMapFragment = new EventMapFragment();
+        eventMapFragment.setEMA(this);
         eventMapFragment.getMapAsync(eventMapFragment);
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.map_event, eventMapFragment);
@@ -45,6 +50,20 @@ public class EventMapActivity extends AppCompatActivity implements EventMapFragm
     }
 
     @Override
+    public void onItemSelected(Event item) {
+        Log.i("TEST " , item.getDates());
+        EventFragment eventFragment = new EventFragment();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.map_event, eventFragment);
+        fragmentTransaction.addToBackStack("event_info");
+        fragmentTransaction.commit();
+        fragmentManager.executePendingTransactions();
+        eventFragment.update(item);
+    }
+
+    @Override
+    public void onEventInteraction(Uri uri) {}
+
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
@@ -70,11 +89,6 @@ public class EventMapActivity extends AppCompatActivity implements EventMapFragm
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
     }
 }
 
