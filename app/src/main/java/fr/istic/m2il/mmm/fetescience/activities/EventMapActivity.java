@@ -40,29 +40,27 @@ public class EventMapActivity extends AppCompatActivity implements EventMapFragm
         fragmentManager = getSupportFragmentManager();
 
         EventMapFragment eventMapFragment = new EventMapFragment();
-        eventMapFragment.setEMA(this);
         eventMapFragment.getMapAsync(eventMapFragment);
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.map_event, eventMapFragment);
-        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.addToBackStack("event_map");
         fragmentTransaction.commit();
         fragmentManager.executePendingTransactions();
     }
 
     @Override
-    public void onItemSelected(Event item) {
-        Log.i("TEST " , item.getDates());
+    public void onItemSelected(Event event) {
         EventFragment eventFragment = new EventFragment();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.map_event, eventFragment);
-        fragmentTransaction.addToBackStack("event_info");
+        fragmentTransaction.addToBackStack("event_info_from_map");
         fragmentTransaction.commit();
         fragmentManager.executePendingTransactions();
-        eventFragment.update(item);
+        eventFragment.update(event);
     }
 
     @Override
-    public void onEventInteraction(Uri uri) {}
+    public void onEventInteraction(Event event) {}
 
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();

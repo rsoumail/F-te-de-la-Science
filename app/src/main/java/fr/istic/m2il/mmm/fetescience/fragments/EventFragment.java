@@ -47,31 +47,22 @@ import fr.istic.m2il.mmm.fetescience.utils.Utils;
 
 public class EventFragment extends Fragment {
 
-    @BindView(R.id.title)
-    TextView titleTexteView;
-    @BindView(R.id.theme)
-    TextView themeTexteView;
-    @BindView(R.id.description)
-    TextView descriptionTexteView;
-    @BindView(R.id.date_debut)
-    TextView dateStartTexteView;
-    @BindView(R.id.date_fin)
-    TextView dateEndTexteView;
-    @BindView(R.id.adress)
-    TextView addressTextView;
-    @BindView(R.id.animation)
-    TextView animationTextView;
-    @BindView(R.id.hour)
-    TextView hourTextView;
-    @BindView(R.id.organisateur)
-    TextView organisatorTextView;
-    @BindView(R.id.lien)
-    TextView linkTextView;
-    @BindView(R.id.image)
-    ImageView imageImageView;
-    @BindView(R.id.add_to_agenda_btn)
-    IconTextView agendaButtonView;
+    @BindView(R.id.title) TextView titleTexteView;
+    @BindView(R.id.theme) TextView themeTexteView;
+    @BindView(R.id.description) TextView descriptionTexteView;
+    @BindView(R.id.date_debut) TextView dateStartTexteView;
+    @BindView(R.id.date_fin) TextView dateEndTexteView;
+    @BindView(R.id.adress) TextView addressTextView;
+    @BindView(R.id.animation) TextView animationTextView;
+    @BindView(R.id.hour) TextView hourTextView;
+    @BindView(R.id.organisateur) TextView organisatorTextView;
+    @BindView(R.id.lien) TextView linkTextView;
+    @BindView(R.id.dates) TextView datesTextView;
+    @BindView(R.id.image) ImageView imageImageView;
+    @BindView(R.id.add_to_agenda_btn) IconTextView agendaButtonView;
     @BindView(R.id.share_facebook_btn) IconTextView shareFacebookBtn;
+
+
     private Unbinder unbinder;
     private OnEventFragmentInteractionListener mListener;
     private Event event;
@@ -84,7 +75,6 @@ public class EventFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
