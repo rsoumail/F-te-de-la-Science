@@ -7,9 +7,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.joanzapata.iconify.widget.IconTextView;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -21,15 +23,13 @@ import fr.istic.m2il.mmm.fetescience.listeners.OnEventClickListener;
 import fr.istic.m2il.mmm.fetescience.models.Event;
 
 /**
- * Created by ismael on 30/12/17.
+ * @author Ramadan Soumaila
  */
 
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
 
     private Context context;
     private List<Event> events;
-
-    private Cursor mCursor = null;
     private OnEventClickListener onEventClickListener;
 
     public EventAdapter(Context context, List<Event> events) {
@@ -84,6 +84,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         @BindView(R.id.description) TextView descriptionTextView;
         @BindView(R.id.theme) TextView themeTextView;
         @BindView(R.id.apercu) ImageView apercuImageView;
+        @BindView(R.id.event_checkbox) CheckBox eventCheckBox;
 
         public EventViewHolder(View itemView) {
             super(itemView);

@@ -107,9 +107,9 @@ public class EventFragment extends Fragment {
     }
 
     // TODO: Rename method, update argument and hook method into UI event
-    public void onEventIntercation(Uri uri) {
+    public void onEventIntercation(Event event) {
         if (mListener != null) {
-            mListener.onEventInteraction(uri);
+            mListener.onEventInteraction(event);
         }
     }
 
@@ -211,7 +211,7 @@ public class EventFragment extends Fragment {
      */
     public interface OnEventFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onEventInteraction(Uri uri);
+        void onEventInteraction(Event event);
     }
 
     @Override

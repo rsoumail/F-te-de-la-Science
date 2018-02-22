@@ -4,6 +4,7 @@
 
     <string name="title_event">Évenements</string>
     <string name="search_title">Rechercher</string>
+    <string name="title_path">Parcours</string>
 
     <!-- String related to menu -->
     <string name="action_settings">Paramètre</string>

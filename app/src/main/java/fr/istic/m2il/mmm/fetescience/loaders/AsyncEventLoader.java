@@ -11,7 +11,7 @@ import fr.istic.m2il.mmm.fetescience.helpers.DBManagerHelper;
 import fr.istic.m2il.mmm.fetescience.models.Event;
 
 /**
- * @author ismael
+ * @author Ramadan Soumaila
  */
 
 public class AsyncEventLoader extends AsyncTaskLoader<List<Event>> {
@@ -25,24 +25,8 @@ public class AsyncEventLoader extends AsyncTaskLoader<List<Event>> {
     @Override
     public List<Event> loadInBackground() {
         List<Event> events = DBManagerHelper.getInstance().getAllEvents();
-        Log.i(TAG, "loadInBackground successful");
+        Log.i(TAG, "All events was loaded successful");
         return events;
     }
 
-    /*@Override
-    protected void onStartLoading() {
-        *//*if (takeContentChanged())
-            forceLoad();
-        else if (hasResult)
-            deliverResult(mData);*//*
-        Log.i(TAG, "StartLoading call " + this.filter + " " + this.query);
-        //super.onStartLoading();
-    }
-
-    @Override
-    public void deliverResult(final List<Event> data) {
-        //mData = data;
-        //hasResult = true;
-        super.deliverResult(data);
-    }*/
 }

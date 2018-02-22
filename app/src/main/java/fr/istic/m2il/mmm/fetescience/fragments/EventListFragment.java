@@ -13,25 +13,34 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.Spinner;
 
+import com.joanzapata.iconify.Iconify;
+import com.joanzapata.iconify.fonts.EntypoModule;
+import com.joanzapata.iconify.fonts.FontAwesomeModule;
+import com.joanzapata.iconify.fonts.IoniconsModule;
+import com.joanzapata.iconify.fonts.MaterialCommunityModule;
+import com.joanzapata.iconify.fonts.MaterialModule;
+import com.joanzapata.iconify.fonts.MeteoconsModule;
+import com.joanzapata.iconify.fonts.SimpleLineIconsModule;
+import com.joanzapata.iconify.fonts.TypiconsModule;
+import com.joanzapata.iconify.fonts.WeathericonsModule;
 
-import org.json.JSONException;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Unbinder;
 import fr.istic.m2il.mmm.fetescience.R;
 import fr.istic.m2il.mmm.fetescience.adpaters.EventAdapter;
-import fr.istic.m2il.mmm.fetescience.helpers.DBManagerHelper;
-import fr.istic.m2il.mmm.fetescience.helpers.GsonHelper;
-import fr.istic.m2il.mmm.fetescience.helpers.PreferencesManagerHelper;
 import fr.istic.m2il.mmm.fetescience.loaders.AsyncEventLoader;
 import fr.istic.m2il.mmm.fetescience.models.Event;
-import fr.istic.m2il.mmm.fetescience.utils.Utils;
+import fr.istic.m2il.mmm.fetescience.models.Path;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -44,17 +53,18 @@ import fr.istic.m2il.mmm.fetescience.utils.Utils;
 public class EventListFragment extends Fragment implements AdapterView.OnItemSelectedListener, SearchView.OnQueryTextListener, LoaderManager.LoaderCallbacks<List<Event>> {
 
     private static final String TAG = EventListFragment.class.getSimpleName();
-    private RecyclerView recyclerView;
+
+    @BindView(R.id.event_recycler_view) RecyclerView recyclerView;
+    @BindView(R.id.progressBar_cyclic) ProgressBar progressBar;
+    @BindView(R.id.search_bar) SearchView searchView;
+    @BindView(R.id.key_words_filter) Spinner filterSpinner;
+    private Unbinder unbinder;
+
     private EventAdapter eventAdapter;
     private List<Event> events = new ArrayList<>();
     private List<Event> cachedEvents = new ArrayList<>();
-    private List<String> keys = new ArrayList<>();
-    private SearchView searchView;
-    private Spinner filterSpinner;
-    private ProgressBar progressBar;
     private int selectedFilter = 0;
     private String currentQuery;
-    private PreferencesManagerHelper preferencesManagerHelper;
 
     private OnEventListFragmentInteractionListener mListener;
 
@@ -62,17 +72,24 @@ public class EventListFragment extends Fragment implements AdapterView.OnItemSel
         // Required empty public constructor
     }
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_event_list, container, false);
-        recyclerView = view.findViewById(R.id.event_recycler_view);
-        searchView = view.findViewById(R.id.search_bar);
-        progressBar = view.findViewById(R.id.progressBar_cyclic);
+
+        Iconify.with(new FontAwesomeModule())
+                .with(new EntypoModule())
+                .with(new TypiconsModule())
+                .with(new MaterialModule())
+                .with(new MaterialCommunityModule())
+                .with(new MeteoconsModule())
+                .with(new WeathericonsModule())
+                .with(new SimpleLineIconsModule())
+                .with(new IoniconsModule());
+
+        unbinder = ButterKnife.bind(this, view);
+
         recyclerView.setVisibility(View.GONE);
-        filterSpinner = view.findViewById(R.id.key_words_filter);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
                 R.array.query_filters, android.R.layout.simple_spinner_item);
@@ -95,9 +112,9 @@ public class EventListFragment extends Fragment implements AdapterView.OnItemSel
         return view;
     }
 
-    public void onItemSelected(Event item) {
+    public void onItemSelected(Event event) {
         if (mListener != null) {
-            mListener.onItemSelected(item);
+            mListener.onItemSelected(event);
         }
     }
 
@@ -221,6 +238,27 @@ public class EventListFragment extends Fragment implements AdapterView.OnItemSel
 
         eventAdapter.swapData(filteredEvents);
         return true;
+    }
+
+    @OnClick(R.id.share_path_btn)
+    public void sharePath(View view){
+        List<Path> paths = new ArrayList<>();
+        for(int i=0; i < recyclerView.getChildCount(); i++){
+            if(((CheckBox)recyclerView.getChildAt(i).findViewById(R.id.event_checkbox)).isChecked()){
+                Path path = new Path();
+                path.getEvents().add(events.get(i));
+            }
+        }
+
+    }
+
+    @OnClick(R.id.share_path_btn)
+    public void activateEventsCheckBox(View view){
+        for(int i=0; i < recyclerView.getChildCount(); i++){
+            ((CheckBox)recyclerView.getChildAt(i).findViewById(R.id.event_checkbox)).setVisibility(View.VISIBLE);
+
+
+        }
     }
 
 
