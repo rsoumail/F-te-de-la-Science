@@ -1,6 +1,7 @@
 package fr.istic.m2il.mmm.fetescience.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
@@ -23,6 +25,7 @@ import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONException;
@@ -32,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.istic.m2il.mmm.fetescience.R;
+import fr.istic.m2il.mmm.fetescience.activities.EventMapActivity;
 import fr.istic.m2il.mmm.fetescience.adpaters.EventAdapter;
 import fr.istic.m2il.mmm.fetescience.helpers.DBManagerHelper;
 import fr.istic.m2il.mmm.fetescience.helpers.GsonHelper;
@@ -60,6 +64,7 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
     private int selectedFilter = 0;
     private String currentQuery;
     private PreferencesManagerHelper preferencesManagerHelper;
+    private EventMapActivity ema;
 
     private OnFragmentInteractionListener mListener;
     private GoogleMap mMap;
@@ -69,7 +74,9 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
         super();
     }
 
-
+    public void setEMA(EventMapActivity ema){
+        this.ema = ema;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -80,12 +87,12 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
         return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
+    /*// TODO: Rename method, update argument and hook method into UI event
+    public void onButtonPressed(Event e) {
         if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+            mListener.void onItemSelected(e);
         }
-    }
+    }*/
 
     @Override
     public void onAttach(Context context) {
@@ -131,8 +138,7 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void onItemSelected(Event item);
     }
 
     @Override
@@ -166,7 +172,8 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
                 mMap.addMarker(new MarkerOptions()
                         .title(event.getTitre_fr())
                         .snippet(event.getDescription_fr())
-                        .position(pEvent));
+                        .position(pEvent))
+                        .setTag(event);
 
             }
         }
@@ -174,5 +181,13 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
         // on se fixe sur le dernier evt vu
         // à garder pour la fin ?
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pEvent, 6));
+
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                Event e = (Event) marker.getTag();
+                ema.onItemSelected(e);
+            }
+        });
     }
 }

@@ -16,10 +16,12 @@ import javax.annotation.Nullable;
 
 import butterknife.BindView;
 import fr.istic.m2il.mmm.fetescience.R;
+import fr.istic.m2il.mmm.fetescience.fragments.EventFragment;
+import fr.istic.m2il.mmm.fetescience.fragments.EventListFragment;
 import fr.istic.m2il.mmm.fetescience.fragments.EventMapFragment;
 import fr.istic.m2il.mmm.fetescience.models.Event;
 
-public class EventMapActivity extends AppCompatActivity implements EventMapFragment.OnFragmentInteractionListener {
+public class EventMapActivity extends AppCompatActivity implements EventMapFragment.OnFragmentInteractionListener, EventFragment.OnEventFragmentInteractionListener {
 
     private GoogleMap mMap;
     @Nullable
@@ -37,6 +39,7 @@ public class EventMapActivity extends AppCompatActivity implements EventMapFragm
         fragmentManager = getSupportFragmentManager();
 
         EventMapFragment eventMapFragment = new EventMapFragment();
+        eventMapFragment.setEMA(this);
         eventMapFragment.getMapAsync(eventMapFragment);
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.map_event, eventMapFragment);
@@ -46,7 +49,18 @@ public class EventMapActivity extends AppCompatActivity implements EventMapFragm
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
+    public void onItemSelected(Event item) {
+        EventFragment eventFragment = new EventFragment();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.map_event, eventFragment);
+        fragmentTransaction.addToBackStack("event_info");
+        fragmentTransaction.commit();
+        fragmentManager.executePendingTransactions();
+        //eventFragment.update(item);
+    }
+
+    @Override
+    public void onEventInteraction(Uri uri) {
 
     }
 }
