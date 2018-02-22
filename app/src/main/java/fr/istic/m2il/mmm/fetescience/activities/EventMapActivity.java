@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -50,13 +51,14 @@ public class EventMapActivity extends AppCompatActivity implements EventMapFragm
 
     @Override
     public void onItemSelected(Event item) {
+        Log.i("TEST " , item.getDates());
         EventFragment eventFragment = new EventFragment();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.map_event, eventFragment);
         fragmentTransaction.addToBackStack("event_info");
         fragmentTransaction.commit();
         fragmentManager.executePendingTransactions();
-        //eventFragment.update(item);
+        eventFragment.update(item);
     }
 
     @Override
