@@ -7,11 +7,11 @@ import java.util.List;
  * Created by Ramadan Soumaila on 29/12/17.
  */
 
-public class Circuit {
+public class Path {
 
     private List<Event> events;
 
-    public Circuit(){
+    public Path(){
         events = new ArrayList<>();
     }
 

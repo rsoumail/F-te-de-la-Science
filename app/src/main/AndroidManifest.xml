@@ -39,7 +39,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activities.SignUpActivity" />
         <activity android:name=".activities.EventActivity" />
         <activity android:name=".activities.EventMapActivity"></activity>
 

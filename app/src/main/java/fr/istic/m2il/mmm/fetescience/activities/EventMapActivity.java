@@ -1,16 +1,18 @@
 package fr.istic.m2il.mmm.fetescience.activities;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.FrameLayout;
 
-import com.google.android.gms.maps.GoogleMap;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.annotation.Nullable;
 
@@ -23,15 +25,13 @@ import fr.istic.m2il.mmm.fetescience.models.Event;
 
 public class EventMapActivity extends AppCompatActivity implements EventMapFragment.OnFragmentInteractionListener, EventFragment.OnEventFragmentInteractionListener {
 
-    private GoogleMap mMap;
     @Nullable
     @BindView(R.id.map_event) FrameLayout frameLayout;
     FragmentManager fragmentManager;
+
     
     //private MyLocationOverlay myLocation = null;
-    private List<Event> events = new ArrayList<>();
 
-    //@OverrideAppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_map);
@@ -43,7 +43,7 @@ public class EventMapActivity extends AppCompatActivity implements EventMapFragm
         eventMapFragment.getMapAsync(eventMapFragment);
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.map_event, eventMapFragment);
-        fragmentTransaction.addToBackStack("mapEvent");
+        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
         fragmentManager.executePendingTransactions();
     }
@@ -60,8 +60,33 @@ public class EventMapActivity extends AppCompatActivity implements EventMapFragm
     }
 
     @Override
-    public void onEventInteraction(Uri uri) {
+    public void onEventInteraction(Uri uri) {}
 
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_events:
+                Intent intent = new Intent(EventMapActivity.this, EventActivity.class);
+                startActivity(intent);
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
 
