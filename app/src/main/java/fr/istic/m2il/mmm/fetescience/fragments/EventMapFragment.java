@@ -53,8 +53,7 @@ import fr.istic.m2il.mmm.fetescience.utils.Utils;
 public class EventMapFragment extends SupportMapFragment implements OnMapReadyCallback, LoaderManager.LoaderCallbacks<List<Event>> {
 
     private static final String TAG = EventListFragment.class.getSimpleName();
-    private RecyclerView recyclerView;
-    private EventAdapter eventAdapter;
+
     private List<Event> events = new ArrayList<>();
     private List<Event> cachedEvents = new ArrayList<>();
     private List<String> keys = new ArrayList<>();
@@ -181,9 +180,8 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                Event e = (Event) marker.getTag();
-                EventMapActivity ema = (EventMapActivity) getActivity();
-                ema.onItemSelected(e);
+                Event event = (Event) marker.getTag();
+                ((EventMapFragment.OnFragmentInteractionListener)getActivity()).onItemSelected(event);
             }
         });
     }

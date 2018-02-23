@@ -97,7 +97,45 @@ public class Event implements Parcelable {
     private Integer nb_evenements;
 
 
+    private Boolean checked = false;
 
+    private Integer votantsNumber;
+
+    private Integer fillingRate;
+
+    private Double rating;
+
+    public Integer getVotantsNumber() {
+        return votantsNumber;
+    }
+
+    public void setVotantsNumber(Integer votantsNumber) {
+        this.votantsNumber = votantsNumber;
+    }
+
+    public Integer getFillingRate() {
+        return fillingRate;
+    }
+
+    public void setFillingRate(Integer fillingRate) {
+        this.fillingRate = fillingRate;
+    }
+
+    public Double getRating() {
+        return rating;
+    }
+
+    public void setRating(Double rating) {
+        this.rating = rating;
+    }
+
+    public Boolean getChecked() {
+        return checked;
+    }
+
+    public void setChecked(Boolean checked) {
+        this.checked = checked;
+    }
 
     public Event() {}
 
@@ -361,5 +399,8 @@ public class Event implements Parcelable {
         dest.writeString(accessibilite_fr);
         dest.writeInt(nb_evenements);
         dest.writeList(geolocalisation);
+        dest.writeInt(votantsNumber);
+        dest.writeInt(fillingRate);
+        dest.writeDouble(rating);
     }
 }

@@ -2,36 +2,38 @@ package fr.istic.m2il.mmm.fetescience.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.Spinner;
+import com.joanzapata.iconify.widget.IconTextView;
 
-
-import org.json.JSONException;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Unbinder;
 import fr.istic.m2il.mmm.fetescience.R;
 import fr.istic.m2il.mmm.fetescience.adpaters.EventAdapter;
-import fr.istic.m2il.mmm.fetescience.helpers.DBManagerHelper;
-import fr.istic.m2il.mmm.fetescience.helpers.GsonHelper;
-import fr.istic.m2il.mmm.fetescience.helpers.PreferencesManagerHelper;
 import fr.istic.m2il.mmm.fetescience.loaders.AsyncEventLoader;
 import fr.istic.m2il.mmm.fetescience.models.Event;
-import fr.istic.m2il.mmm.fetescience.utils.Utils;
+import fr.istic.m2il.mmm.fetescience.models.Path;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -44,17 +46,22 @@ import fr.istic.m2il.mmm.fetescience.utils.Utils;
 public class EventListFragment extends Fragment implements AdapterView.OnItemSelectedListener, SearchView.OnQueryTextListener, LoaderManager.LoaderCallbacks<List<Event>> {
 
     private static final String TAG = EventListFragment.class.getSimpleName();
-    private RecyclerView recyclerView;
+
+    @BindView(R.id.event_recycler_view) RecyclerView recyclerView;
+    @BindView(R.id.progressBar_cyclic) ProgressBar progressBar;
+    @BindView(R.id.search_bar) SearchView searchView;
+    @BindView(R.id.key_words_filter) Spinner filterSpinner;
+    @BindView(R.id.options_path_layout_btn) LinearLayout optionsPathLineaLayoutBtn;
+    @BindView(R.id.edit_path_btn) IconTextView editPathBtn;
+    private Unbinder unbinder;
+
     private EventAdapter eventAdapter;
     private List<Event> events = new ArrayList<>();
     private List<Event> cachedEvents = new ArrayList<>();
-    private List<String> keys = new ArrayList<>();
-    private SearchView searchView;
-    private Spinner filterSpinner;
-    private ProgressBar progressBar;
     private int selectedFilter = 0;
     private String currentQuery;
-    private PreferencesManagerHelper preferencesManagerHelper;
+
+    private Boolean editPathActivated = false;
 
     private OnEventListFragmentInteractionListener mListener;
 
@@ -62,17 +69,13 @@ public class EventListFragment extends Fragment implements AdapterView.OnItemSel
         // Required empty public constructor
     }
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_event_list, container, false);
-        recyclerView = view.findViewById(R.id.event_recycler_view);
-        searchView = view.findViewById(R.id.search_bar);
-        progressBar = view.findViewById(R.id.progressBar_cyclic);
+        unbinder = ButterKnife.bind(this, view);
+
         recyclerView.setVisibility(View.GONE);
-        filterSpinner = view.findViewById(R.id.key_words_filter);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
                 R.array.query_filters, android.R.layout.simple_spinner_item);
@@ -82,22 +85,28 @@ public class EventListFragment extends Fragment implements AdapterView.OnItemSel
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         eventAdapter = new EventAdapter(getActivity().getApplication().getApplicationContext(), events);
+
+        Log.i(TAG, "Edit Path Activated Value " + this.editPathActivated);
+        eventAdapter.setShareActivated(this.editPathActivated);
+
+        eventAdapter.setShareActivated(this.editPathActivated);
         eventAdapter.setOnEventClickListener(event -> {
             onItemSelected(event);
         });
 
         recyclerView.setAdapter(eventAdapter);
 
-        getLoaderManager().initLoader(0, null, this).forceLoad();
-
+        if(cachedEvents.isEmpty()){
+            getLoaderManager().initLoader(0, null, this).forceLoad();
+        }
 
         searchView.setOnQueryTextListener(this);
         return view;
     }
 
-    public void onItemSelected(Event item) {
+    public void onItemSelected(Event event) {
         if (mListener != null) {
-            mListener.onItemSelected(item);
+            mListener.onItemSelected(event);
         }
     }
 
@@ -116,6 +125,30 @@ public class EventListFragment extends Fragment implements AdapterView.OnItemSel
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Log.i(TAG, "instance Call ");
+        if(savedInstanceState != null)
+            this.editPathActivated = savedInstanceState.getBoolean("editPathActivated");
+        Log.i(TAG, "Edit Path Activated Value " + this.editPathActivated);
+        eventAdapter.setShareActivated(this.editPathActivated);
+        if(this.editPathActivated){
+            for(int i=0; i < recyclerView.getChildCount(); i++){
+                if(recyclerView.getChildAt(i).findViewById(R.id.event_checkbox).getVisibility() == View.INVISIBLE)
+                    recyclerView.getChildAt(i).findViewById(R.id.event_checkbox).setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        /*Log.v(TAG, "In EventListFragment on save instance state ");
+        outState.putBoolean("editPathActivated", this.editPathActivated);*/
     }
 
     private void loadData(){
@@ -221,6 +254,36 @@ public class EventListFragment extends Fragment implements AdapterView.OnItemSel
 
         eventAdapter.swapData(filteredEvents);
         return true;
+    }
+
+    @OnClick(R.id.share_path_btn)
+    public void sharePath(View view){
+        List<Path> paths = new ArrayList<>();
+        for(int i=0; i < recyclerView.getChildCount(); i++){
+            if(((CheckBox)recyclerView.getChildAt(i).findViewById(R.id.event_checkbox)).isChecked()){
+                Path path = new Path();
+                path.getEvents().add(events.get(i));
+            }
+        }
+
+    }
+
+    @OnClick(R.id.itinerary_path_btn)
+    public void showPathItinerary(View view){
+
+    }
+
+    @OnClick(R.id.edit_path_btn)
+    public void activateEventsCheckBox(View view){
+        editPathBtn.setVisibility(View.GONE);
+        this.editPathActivated = true;
+        optionsPathLineaLayoutBtn.setVisibility(View.VISIBLE);
+        Log.i(TAG, "Current Child Count " + recyclerView.getChildCount());
+        for(int i=0; i < recyclerView.getChildCount(); i++){
+            if(recyclerView.getChildAt(i).findViewById(R.id.event_checkbox).getVisibility() == View.INVISIBLE)
+                recyclerView.getChildAt(i).findViewById(R.id.event_checkbox).setVisibility(View.VISIBLE);
+        }
+        eventAdapter.setShareActivated(this.editPathActivated);
     }
 
 

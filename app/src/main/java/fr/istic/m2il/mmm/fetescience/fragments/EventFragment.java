@@ -14,22 +14,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
-import com.joanzapata.iconify.Iconify;
-import com.joanzapata.iconify.fonts.EntypoModule;
-import com.joanzapata.iconify.fonts.FontAwesomeModule;
-import com.joanzapata.iconify.fonts.IoniconsModule;
-import com.joanzapata.iconify.fonts.MaterialCommunityModule;
-import com.joanzapata.iconify.fonts.MaterialModule;
-import com.joanzapata.iconify.fonts.MeteoconsModule;
-import com.joanzapata.iconify.fonts.SimpleLineIconsModule;
-import com.joanzapata.iconify.fonts.TypiconsModule;
-import com.joanzapata.iconify.fonts.WeathericonsModule;
 import com.joanzapata.iconify.widget.IconTextView;
 import com.squareup.picasso.Picasso;
 
@@ -47,31 +36,19 @@ import fr.istic.m2il.mmm.fetescience.utils.Utils;
 
 public class EventFragment extends Fragment {
 
-    @BindView(R.id.title)
-    TextView titleTexteView;
-    @BindView(R.id.theme)
-    TextView themeTexteView;
-    @BindView(R.id.description)
-    TextView descriptionTexteView;
-    @BindView(R.id.date_debut)
-    TextView dateStartTexteView;
-    @BindView(R.id.date_fin)
-    TextView dateEndTexteView;
-    @BindView(R.id.adress)
-    TextView addressTextView;
-    @BindView(R.id.animation)
-    TextView animationTextView;
-    @BindView(R.id.hour)
-    TextView hourTextView;
-    @BindView(R.id.organisateur)
-    TextView organisatorTextView;
-    @BindView(R.id.lien)
-    TextView linkTextView;
-    @BindView(R.id.image)
-    ImageView imageImageView;
-    @BindView(R.id.add_to_agenda_btn)
-    IconTextView agendaButtonView;
+    @BindView(R.id.title) TextView titleTexteView;
+    @BindView(R.id.theme) TextView themeTexteView;
+    @BindView(R.id.description) TextView descriptionTexteView;
+    @BindView(R.id.date_debut) TextView dateStartTexteView;
+    @BindView(R.id.date_fin) TextView dateEndTexteView;
+    @BindView(R.id.adress) TextView addressTextView;
+    @BindView(R.id.event_rating_bar) RatingBar eventRatingBar;
+    @BindView(R.id.animation) TextView animationTextView;
+    @BindView(R.id.image) ImageView imageImageView;
+    @BindView(R.id.add_to_agenda_btn) IconTextView agendaButtonView;
     @BindView(R.id.share_facebook_btn) IconTextView shareFacebookBtn;
+
+
     private Unbinder unbinder;
     private OnEventFragmentInteractionListener mListener;
     private Event event;
@@ -84,22 +61,11 @@ public class EventFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Iconify
-                .with(new FontAwesomeModule())
-                .with(new EntypoModule())
-                .with(new TypiconsModule())
-                .with(new MaterialModule())
-                .with(new MaterialCommunityModule())
-                .with(new MeteoconsModule())
-                .with(new WeathericonsModule())
-                .with(new SimpleLineIconsModule())
-                .with(new IoniconsModule());
 
         View view = inflater.inflate(R.layout.fragment_event_info, container, false);
         unbinder = ButterKnife.bind(this, view);
@@ -107,9 +73,9 @@ public class EventFragment extends Fragment {
     }
 
     // TODO: Rename method, update argument and hook method into UI event
-    public void onEventIntercation(Uri uri) {
+    public void onEventIntercation(Event event) {
         if (mListener != null) {
-            mListener.onEventInteraction(uri);
+            mListener.onEventInteraction(event);
         }
     }
 
@@ -119,12 +85,9 @@ public class EventFragment extends Fragment {
             Picasso.with(getContext()).load(item.getImage()).into(imageImageView);
         }
 
-        if (item.getOrganisateur() != null)
-            organisatorTextView.setText(item.getOrganisateur());
         if (item.getType_d_animation() != null)
             animationTextView.setText(item.getType_d_animation().toUpperCase());
-        if (item.getHoraires_detailles_fr() != null)
-            hourTextView.setText(item.getHoraires_detailles_fr());
+
         if (item.getAdresse() != null)
             addressTextView.setText(item.getAdresse());
         if (item.getTitre_fr() != null)
@@ -137,13 +100,11 @@ public class EventFragment extends Fragment {
             dateStartTexteView.setText("Du " + item.getDate_debut() + " au");
         if (item.getDate_fin() != null)
             dateEndTexteView.setText(item.getDate_fin());
-        if (item.getLien() != null)
-            linkTextView.setText(item.getLien());
     }
 
-    @OnClick(R.id.lien)
-    public void openBrowser(View view) {
-        Intent i = new Intent("android.intent.action.VIEW", Uri.parse(linkTextView.getText().toString()));
+    @OnClick(R.id.open_browser_btn)
+    public void openEventOnBrowser() {
+        Intent i = new Intent("android.intent.action.VIEW", Uri.parse(event.getLien()));
         startActivity(i);
     }
 
@@ -182,6 +143,7 @@ public class EventFragment extends Fragment {
         startActivity(browserIntent);
     }
 
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -211,7 +173,7 @@ public class EventFragment extends Fragment {
      */
     public interface OnEventFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onEventInteraction(Uri uri);
+        void onEventInteraction(Event event);
     }
 
     @Override

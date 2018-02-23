@@ -3,10 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="fr.istic.m2il.mmm.fetescience.activities.EventActivity"
+    tools:context="fr.istic.m2il.mmm.fetescience.activities.PathActivity"
     >
     <FrameLayout
-        android:id="@+id/normal_event_list"
+        android:id="@+id/normal_path_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </FrameLayout>
