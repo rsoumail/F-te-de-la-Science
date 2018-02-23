@@ -59,6 +59,7 @@ public class EventFragment extends Fragment {
     private Unbinder unbinder;
     private OnEventFragmentInteractionListener mListener;
     private Event event;
+    private Event fEvent;
 
     private static final String TAG = EventFragment.class.getSimpleName();
 
@@ -76,6 +77,26 @@ public class EventFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_event_info, container, false);
         unbinder = ButterKnife.bind(this, view);
+        database.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.hasChild("events")){
+                    for (DataSnapshot snapshot : dataSnapshot.child("events").getChildren()){
+                        Event fEvent = snapshot.getValue(Event.class);
+                        if(event.getId() == fEvent.getId()){
+                            eventRatingBar.setRating(fEvent.getRating());
+                            break;
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         return view;
     }
 
@@ -153,27 +174,24 @@ public class EventFragment extends Fragment {
     @OnClick(R.id.event_rate_btn)
     public void rate(){
         Float rate = new Float(eventRatingBar.getRating());
-        database.child("fete-de-la-science").addValueEventListener(new ValueEventListener() {
+        database.addListenerForSingleValueEvent(new ValueEventListener() {
             Boolean eventExistOnFireBase = false;
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(eventExistOnFireBase){
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        String fEventkey = dataSnapshot.getKey();
-                        Event fEvent = snapshot.getValue(Event.class);
-                        if(event.getId() == fEvent.getId()){
-                            event.setRating((rate + fEvent.getRating() * fEvent.getVotantsNumber()) / (fEvent.getVotantsNumber() + 1));
-                            event.setVotantsNumber(fEvent.getVotantsNumber() + 1);
-                            database.child("events").child(fEventkey).setValue(event);
-                            eventExistOnFireBase = true;
-                            Log.i(TAG, "Event's info With Key " + fEventkey + " and Id " + event.getId() + " Was Updated");
-                            break;
-                        }
+                for (DataSnapshot snapshot :dataSnapshot.child("events").getChildren()) {
+                    String fEventkey = snapshot.getKey();
+                    Event fEvent = snapshot.getValue(Event.class);
+                    if(event.getId() == fEvent.getId()){
+                        event.setRating((rate + fEvent.getRating() * fEvent.getVotantsNumber()) / (fEvent.getVotantsNumber() + 1));
+                        event.setVotantsNumber(fEvent.getVotantsNumber() + 1);
+                        database.child("events").child(fEventkey).setValue(event);
+                        eventExistOnFireBase = true;
+                        Log.i(TAG, "Event's info With Key " + fEventkey + " and Id " + event.getId() + " Was Updated");
+                        break ;
                     }
-
                 }
-                else {
+                if(eventExistOnFireBase == false){
                     event.setRating(rate);
                     event.setVotantsNumber(1);
                     database.child("events").push().setValue(event);
@@ -187,23 +205,6 @@ public class EventFragment extends Fragment {
 
             }
         });
-
-        /*database.child("events").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                List events = new ArrayList<>();
-                for (DataSnapshot noteDataSnapshot : dataSnapshot.getChildren()) {
-                    Event event = noteDataSnapshot.getValue(Event.class);
-                    events.add(event);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });*/
-        Log.i(TAG, "Rate value " + rate);
     }
 
 
