@@ -20,11 +20,15 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.joanzapata.iconify.widget.IconTextView;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
 import butterknife.BindView;
@@ -148,7 +152,57 @@ public class EventFragment extends Fragment {
 
     @OnClick(R.id.event_rate_btn)
     public void rate(){
-        Integer rate = new Integer(eventRatingBar.getMeasuredState());
+        Float rate = new Float(eventRatingBar.getRating());
+        database.child("fete-de-la-science").addValueEventListener(new ValueEventListener() {
+            Boolean eventExistOnFireBase = false;
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(eventExistOnFireBase){
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        String fEventkey = dataSnapshot.getKey();
+                        Event fEvent = snapshot.getValue(Event.class);
+                        if(event.getId() == fEvent.getId()){
+                            event.setRating((rate + fEvent.getRating() * fEvent.getVotantsNumber()) / (fEvent.getVotantsNumber() + 1));
+                            event.setVotantsNumber(fEvent.getVotantsNumber() + 1);
+                            database.child("events").child(fEventkey).setValue(event);
+                            eventExistOnFireBase = true;
+                            Log.i(TAG, "Event's info With Key " + fEventkey + " and Id " + event.getId() + " Was Updated");
+                            break;
+                        }
+                    }
+
+                }
+                else {
+                    event.setRating(rate);
+                    event.setVotantsNumber(1);
+                    database.child("events").push().setValue(event);
+                    Log.i(TAG, "Event's info with Id " + event.getId() + " Was Added");
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        /*database.child("events").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                List events = new ArrayList<>();
+                for (DataSnapshot noteDataSnapshot : dataSnapshot.getChildren()) {
+                    Event event = noteDataSnapshot.getValue(Event.class);
+                    events.add(event);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });*/
         Log.i(TAG, "Rate value " + rate);
     }
 

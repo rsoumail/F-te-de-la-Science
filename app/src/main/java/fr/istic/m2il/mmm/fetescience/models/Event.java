@@ -103,7 +103,7 @@ public class Event implements Parcelable {
 
     private Integer fillingRate;
 
-    private Double rating;
+    private Float rating;
 
     protected Event(Parcel in) {
         id = in.readInt();
@@ -150,7 +150,7 @@ public class Event implements Parcelable {
         if (in.readByte() == 0) {
             rating = null;
         } else {
-            rating = in.readDouble();
+            rating = in.readFloat();
         }
     }
 
@@ -182,11 +182,11 @@ public class Event implements Parcelable {
         this.fillingRate = fillingRate;
     }
 
-    public Double getRating() {
+    public Float getRating() {
         return rating;
     }
 
-    public void setRating(Double rating) {
+    public void setRating(Float rating) {
         this.rating = rating;
     }
 
