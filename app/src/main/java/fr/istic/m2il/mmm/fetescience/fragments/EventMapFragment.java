@@ -73,7 +73,7 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
 
     private OnFragmentInteractionListener mListener;
     private GoogleMap mMap;
-    private boolean itineraire = true;
+    private boolean itineraire = false;
 
     public EventMapFragment() {
         // Required empty public constructor
@@ -175,25 +175,8 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
 
         for (Event event : events){
 
-            // on récupère la liste de la localistion de l'evt
-            // et on créé le latlng
-            List<Double> locEvent = event.getGeolocalisation();
-
-            // on vérifie que l'evenement possède une localisation précise
-            if(locEvent != null){
-
-                //Log.v("event name est passé",event.getTitre_fr());
-
-                // on récupère la localisation
-                pEvent = new LatLng(locEvent.get(0),locEvent.get(1));
-
-                // on créé le nouveau marker
-                mMap.addMarker(new MarkerOptions()
-                        .title(event.getTitre_fr())
-                        .snippet(event.getDescription_fr())
-                        .position(pEvent))
-                        .setTag(event);
-            }
+            // on ajoute le marker sur la map
+            addMarker(event);
         }
 
         // on se fixe sur le dernier evt vu
@@ -210,24 +193,79 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
         });
     }
 
+    public void addMarker(Event event){
+
+        // on récupère la liste de la localistion de l'evt
+        // et on créé le latlng
+        List<Double> locEvent = event.getGeolocalisation();
+
+        // on vérifie que l'evenement possède une localisation précise
+        if(locEvent != null){
+
+            //Log.v("event name est passé",event.getTitre_fr());
+
+            // on récupère la localisation
+            LatLng pEvent = new LatLng(locEvent.get(0),locEvent.get(1));
+
+            // on créé le nouveau marker
+            mMap.addMarker(new MarkerOptions()
+                    .title(event.getTitre_fr())
+                    .snippet(event.getDescription_fr())
+                    .position(pEvent))
+                    .setTag(event);
+        }
+    }
+
     /**
      * fonction qui permet de créer l'itinéraire à partir
      * d'une liste d'evenements
      */
     public void createRoute(){
 
-        AsyncTaskMap laTache = new AsyncTaskMap();
-        PolylineOptions rectLine = null;
-        try {
-            rectLine = laTache.execute(new LatLng(0,0),new LatLng(0,0)).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        Polyline polylin = mMap.addPolyline(rectLine);
+        List<Double> geo;
+        Event eventPred = null;
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(48.8534,2.3488), 6));
+        // à chaque event, nous allons créer
+        for (Event event : events){
+
+            // création de l'Async task
+            AsyncTaskMap laTache = new AsyncTaskMap();
+
+            // la première fois on utilise notre position
+            // les autres fois les events récupérés
+            // on récupère le point de départ de l'itinéraire
+            if(eventPred != null){
+                geo = eventPred.getGeolocalisation();
+                LatLng latlng1 = new LatLng(geo.get(0),geo.get(1));
+                laTache.setDepart(latlng1);
+            }
+            else {
+                LatLng latlng1 = new LatLng(48.11198, -1.67429);
+                laTache.setDepart(latlng1);
+            }
+
+            // on récupère le point d'arrive de l'itinéraire
+            geo = event.getGeolocalisation();
+            LatLng latlng2 = new LatLng(geo.get(0),geo.get(1));
+            laTache.setDepart(latlng2);
+
+            eventPred = event;
+            PolylineOptions rectLine = null;
+            try {
+                rectLine = laTache.execute().get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+
+            // on ajoute l'itineraire à la map
+            mMap.addPolyline(rectLine);
+
+            // on positionne sur la map
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(48.8534,2.3488), 6));
+
+        }
 
     }
 }

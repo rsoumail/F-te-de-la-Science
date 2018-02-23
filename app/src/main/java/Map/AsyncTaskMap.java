@@ -18,14 +18,23 @@ import java.util.ArrayList;
 
 public class AsyncTaskMap extends AsyncTask<LatLng, LatLng, PolylineOptions> {
 
+    private LatLng depart;
+    private LatLng arrive;
+
+    public void setDepart(LatLng latLng){
+        depart = latLng;
+    }
+
+    public void setArrive(LatLng latLng){
+        arrive = latLng;
+    }
+
     @Override
     protected PolylineOptions doInBackground(LatLng ... params) {
 
         GMapV2Direction md = new GMapV2Direction();
-        Document doc = md.getDocument(new LatLng(48.8534,2.3488), new LatLng(48.11198, -1.67429),
+        Document doc = md.getDocument(depart, arrive,
                 GMapV2Direction.MODE_DRIVING);
-
-        Log.v("pitié",doc.toString());
 
         ArrayList<LatLng> directionPoint = md.getDirection(doc);
         PolylineOptions rectLine = new PolylineOptions().width(3).color(
