@@ -107,6 +107,10 @@ public class Event implements Parcelable {
 
     private Float rating;
 
+    private Integer nb_places_disponibles = new Integer(0);
+
+    private Integer nb_places_maximum = new Integer(0);
+
     protected Event(Parcel in) {
         id = in.readInt();
         apercu = in.readString();
@@ -154,6 +158,16 @@ public class Event implements Parcelable {
         } else {
             rating = in.readFloat();
         }
+        if(in.readByte() == 0){
+            nb_places_disponibles = null;
+        } else {
+            nb_places_disponibles = in.readInt();
+        }
+        if(in.readByte() == 0){
+            nb_places_maximum = null;
+        } else {
+            nb_places_maximum = in.readInt();
+        }
     }
 
     public static final Creator<Event> CREATOR = new Creator<Event>() {
@@ -198,6 +212,22 @@ public class Event implements Parcelable {
 
     public void setChecked(Boolean checked) {
         this.checked = checked;
+    }
+
+    public Integer getNb_places_disponibles(){
+        return nb_places_disponibles;
+    }
+
+    public void setNb_places_disponibles(Integer nb_places_disponibles){
+        this.nb_places_disponibles = nb_places_disponibles;
+    }
+
+    public Integer getNb_places_maximum(){
+        return nb_places_maximum;
+    }
+
+    public void setNb_places_maximum(Integer nb_places_maximum){
+        this.nb_places_maximum = nb_places_maximum;
     }
 
     public Event() {}
@@ -423,6 +453,8 @@ public class Event implements Parcelable {
         fireBaseEvent.put("rating", this.rating);
         fireBaseEvent.put("fillingRate", this.fillingRate);
         fireBaseEvent.put("votersNumber", this.votersNumber);
+        fireBaseEvent.put("nb_places_disponibles", this.nb_places_disponibles);
+        fireBaseEvent.put("nb_places_maximum", this.nb_places_maximum);
 
         return fireBaseEvent;
     }
@@ -475,5 +507,7 @@ public class Event implements Parcelable {
         dest.writeInt(votersNumber);
         dest.writeInt(fillingRate);
         dest.writeDouble(rating);
+        dest.writeInt(nb_places_disponibles);
+        dest.writeInt(nb_places_maximum);
     }
 }
