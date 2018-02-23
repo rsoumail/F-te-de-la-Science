@@ -1,7 +1,6 @@
 package fr.istic.m2il.mmm.fetescience.fragments;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -12,18 +11,29 @@ import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+
+import com.joanzapata.iconify.Iconify;
+import com.joanzapata.iconify.fonts.EntypoModule;
+import com.joanzapata.iconify.fonts.FontAwesomeModule;
+import com.joanzapata.iconify.fonts.IoniconsModule;
+import com.joanzapata.iconify.fonts.MaterialCommunityModule;
+import com.joanzapata.iconify.fonts.MaterialModule;
+import com.joanzapata.iconify.fonts.MeteoconsModule;
+import com.joanzapata.iconify.fonts.SimpleLineIconsModule;
+import com.joanzapata.iconify.fonts.TypiconsModule;
+import com.joanzapata.iconify.fonts.WeathericonsModule;
+import com.joanzapata.iconify.widget.IconTextView;
 import com.squareup.picasso.Picasso;
 
-import java.util.Calendar;
+import java.util.List;
 import java.util.TimeZone;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,6 +41,8 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import fr.istic.m2il.mmm.fetescience.R;
 import fr.istic.m2il.mmm.fetescience.models.Event;
+import fr.istic.m2il.mmm.fetescience.models.EventDuration;
+import fr.istic.m2il.mmm.fetescience.utils.Utils;
 
 
 public class EventFragment extends Fragment {
@@ -55,14 +67,11 @@ public class EventFragment extends Fragment {
     TextView organisatorTextView;
     @BindView(R.id.lien)
     TextView linkTextView;
-    @BindView(R.id.dates)
-    TextView datesTextView;
     @BindView(R.id.image)
     ImageView imageImageView;
-    @BindView(R.id.agenda)
-    Button agendaButtonView;
-    @BindView(R.id.imageButton)
-    ImageButton imageButton;
+    @BindView(R.id.add_to_agenda_btn)
+    IconTextView agendaButtonView;
+    @BindView(R.id.share_facebook_btn) IconTextView shareFacebookBtn;
     private Unbinder unbinder;
     private OnEventFragmentInteractionListener mListener;
     private Event event;
@@ -81,6 +90,17 @@ public class EventFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Iconify
+                .with(new FontAwesomeModule())
+                .with(new EntypoModule())
+                .with(new TypiconsModule())
+                .with(new MaterialModule())
+                .with(new MaterialCommunityModule())
+                .with(new MeteoconsModule())
+                .with(new WeathericonsModule())
+                .with(new SimpleLineIconsModule())
+                .with(new IoniconsModule());
+
         View view = inflater.inflate(R.layout.fragment_event_info, container, false);
         unbinder = ButterKnife.bind(this, view);
         return view;
@@ -119,8 +139,6 @@ public class EventFragment extends Fragment {
             dateEndTexteView.setText(item.getDate_fin());
         if (item.getLien() != null)
             linkTextView.setText(item.getLien());
-        if (item.getDates() != null)
-            datesTextView.setText(item.getDates());
     }
 
     @OnClick(R.id.lien)
@@ -129,43 +147,36 @@ public class EventFragment extends Fragment {
         startActivity(i);
     }
 
-    @OnClick(R.id.agenda)
+    @OnClick(R.id.add_to_agenda_btn)
     public void addAllEventsToCalendar() {
-        long calId = 1;
 
+        long calID = 4;
         ContentResolver cr = getActivity().getContentResolver();
-        Calendar begin = Calendar.getInstance();
-        begin.set(2018, 1, 21);
-        Calendar endEvent = Calendar.getInstance();
-        endEvent.set(2018,1,21);
-        long start = begin.getTimeInMillis();
-        long end = endEvent.getTimeInMillis();
-        ContentValues values = new ContentValues();
 
-        values.put(CalendarContract.Events.DTSTART, start);
-        values.put(CalendarContract.Events.DTEND, end);
-        values.put(CalendarContract.Events.TITLE, event.getTitre_fr());
-        values.put(CalendarContract.Events.ALL_DAY, 1);
-        values.put(CalendarContract.Events.EVENT_LOCATION, event.getVille());
-        values.put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().getDisplayName());
-        values.put(CalendarContract.Events.CALENDAR_ID, calId);
-        values.put(CalendarContract.Events.DESCRIPTION, "The description of agenda");
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            cr.insert(CalendarContract.Events.CONTENT_URI, values);
-            Log.i(TAG, "Enregistrer");
+        List<EventDuration> dates = Utils.parseDates(this.event);
+        if (ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.WRITE_CALENDAR}, 0);
+            return;
 
+        } else {
+            for(EventDuration d: dates){
+                ContentValues values = new ContentValues();
+                values.put(CalendarContract.Events.DTSTART, d.getStart().getTimeInMillis());
+                values.put(CalendarContract.Events.DTEND, d.getEnd().getTimeInMillis());
+                values.put(CalendarContract.Events.TITLE, event.getTitre_fr());
+                values.put(CalendarContract.Events.ALL_DAY, false);
+                values.put(CalendarContract.Events.EVENT_LOCATION, event.getVille());
+                values.put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().getDisplayName());
+                values.put(CalendarContract.Events.CALENDAR_ID, calID);
+                values.put(CalendarContract.Events.DESCRIPTION, event.getDescription_fr());
+                cr.insert(CalendarContract.Events.CONTENT_URI, values);
+            }
+            Toast.makeText(this.getActivity(), "Evénement ajouté", Toast.LENGTH_SHORT).show();
         }
 
     }
 
-    @OnClick(R.id.imageButton)
+    @OnClick(R.id.share_facebook_btn)
     public void openFacebook(){
         Intent browserIntent = new Intent(Intent.ACTION_VIEW,Uri.parse("http://www.facebook.com/"));
         startActivity(browserIntent);

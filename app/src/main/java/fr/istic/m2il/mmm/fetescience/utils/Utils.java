@@ -37,7 +37,8 @@ public class Utils {
             Calendar end = Calendar.getInstance();
             String[] detailHour = detailsHours[index].split("-");
             String[] hours = detailHour[1].trim().split("\\u00e0");
-            begin.set(Integer.parseInt(dParts[0]), Integer.parseInt(dParts[1]) - 1, Integer.parseInt(dParts[2]), Integer.parseInt(hours[0].split("h")[0]), Integer.parseInt(hours[0].split("h")[1]));
+
+            begin.set(Integer.parseInt(dParts[0]), Integer.parseInt(dParts[1]) - 1, Integer.parseInt(dParts[2]), Integer.parseInt(hours[0].trim().split("h")[0]), Integer.parseInt(hours[0].trim().split("h")[1]));
             end.set(Integer.parseInt(dParts[0]), Integer.parseInt(dParts[1]) - 1, Integer.parseInt(dParts[2]), Integer.parseInt(hours[1].trim().split("h")[0]), Integer.parseInt(hours[1].trim().split("h")[1]));
             EventDuration eventDuration = new EventDuration();
             eventDuration.setStart(begin);
@@ -45,7 +46,6 @@ public class Utils {
             dates.add(eventDuration);
             index++;
         }
-
         Log.i(TAG, "Dates size " + datesString.length + "Details Hours size " + detailsHours.length);
         return dates;
     }
