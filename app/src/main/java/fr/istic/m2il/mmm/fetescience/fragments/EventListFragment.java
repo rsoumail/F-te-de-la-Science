@@ -3,6 +3,7 @@ package fr.istic.m2il.mmm.fetescience.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -278,7 +279,8 @@ public class EventListFragment extends Fragment implements AdapterView.OnItemSel
                 chosedEvents.add(event);
         }
         Intent intent = new Intent(getActivity(), EventMapActivity.class);
-        //intent.putParcelableArrayListExtra("events", chosedEvents);
+        intent.putParcelableArrayListExtra("events", (ArrayList) chosedEvents);
+        startActivity(intent);
     }
 
     @OnClick(R.id.edit_path_btn)
