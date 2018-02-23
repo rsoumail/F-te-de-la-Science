@@ -26,8 +26,6 @@ import fr.istic.m2il.mmm.fetescience.models.Event;
 
 public class EventMapActivity extends AppCompatActivity implements EventMapFragment.OnFragmentInteractionListener, EventFragment.OnEventFragmentInteractionListener {
 
-    @Nullable
-    @BindView(R.id.map_event) FrameLayout frameLayout;
     FragmentManager fragmentManager;
 
     
@@ -40,22 +38,20 @@ public class EventMapActivity extends AppCompatActivity implements EventMapFragm
         fragmentManager = getSupportFragmentManager();
 
         EventMapFragment eventMapFragment = new EventMapFragment();
-        eventMapFragment.setEMA(this);
         eventMapFragment.getMapAsync(eventMapFragment);
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.map_event, eventMapFragment);
-        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.addToBackStack("event_map");
         fragmentTransaction.commit();
         fragmentManager.executePendingTransactions();
     }
 
     @Override
     public void onItemSelected(Event item) {
-        Log.i("TEST " , item.getDates());
         EventFragment eventFragment = new EventFragment();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.map_event, eventFragment);
-        fragmentTransaction.addToBackStack("event_info");
+        fragmentTransaction.addToBackStack("event_info_from_map");
         fragmentTransaction.commit();
         fragmentManager.executePendingTransactions();
         eventFragment.update(item);

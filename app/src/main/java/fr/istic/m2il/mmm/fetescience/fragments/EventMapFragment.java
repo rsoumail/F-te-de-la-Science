@@ -64,7 +64,6 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
     private int selectedFilter = 0;
     private String currentQuery;
     private PreferencesManagerHelper preferencesManagerHelper;
-    private EventMapActivity ema;
 
     private OnFragmentInteractionListener mListener;
     private GoogleMap mMap;
@@ -72,10 +71,6 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
     public EventMapFragment() {
         // Required empty public constructor
         super();
-    }
-
-    public void setEMA(EventMapActivity ema){
-        this.ema = ema;
     }
 
     @Override
@@ -98,6 +93,7 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
+            Log.v("je passe", "ou pas ?");
             mListener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
@@ -186,6 +182,7 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
             @Override
             public void onInfoWindowClick(Marker marker) {
                 Event e = (Event) marker.getTag();
+                EventMapActivity ema = (EventMapActivity) getActivity();
                 ema.onItemSelected(e);
             }
         });
