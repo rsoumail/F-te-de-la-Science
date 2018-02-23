@@ -9,4 +9,10 @@
             android:src="@drawable/ic_events"/>
     </item>
 
+    <item>
+        <bitmap
+            android:gravity="bottom"
+            android:src="@drawable/ic_fds_logo_text"/>
+    </item>
+
 </layer-list>

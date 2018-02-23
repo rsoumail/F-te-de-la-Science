@@ -1,35 +1,26 @@
 package fr.istic.m2il.mmm.fetescience.activities;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
+import java.util.List;
 
-
-import javax.annotation.Nullable;
-
-import butterknife.BindView;
 import fr.istic.m2il.mmm.fetescience.R;
 import fr.istic.m2il.mmm.fetescience.fragments.EventFragment;
-import fr.istic.m2il.mmm.fetescience.fragments.EventListFragment;
 import fr.istic.m2il.mmm.fetescience.fragments.EventMapFragment;
 import fr.istic.m2il.mmm.fetescience.models.Event;
 
 public class EventMapActivity extends AppCompatActivity implements EventMapFragment.OnFragmentInteractionListener, EventFragment.OnEventFragmentInteractionListener {
 
-    @Nullable
-    @BindView(R.id.map_event) FrameLayout frameLayout;
     FragmentManager fragmentManager;
-
+    private List<Event> events;
     
     //private MyLocationOverlay myLocation = null;
 
@@ -37,32 +28,39 @@ public class EventMapActivity extends AppCompatActivity implements EventMapFragm
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_map);
 
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            events = extras.getParcelableArrayList("events");
+        }
+
         fragmentManager = getSupportFragmentManager();
 
+        if(savedInstanceState != null){
+            return;
+        }
+
         EventMapFragment eventMapFragment = new EventMapFragment();
-        eventMapFragment.setEMA(this);
         eventMapFragment.getMapAsync(eventMapFragment);
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.map_event, eventMapFragment);
-        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.addToBackStack("event_map");
         fragmentTransaction.commit();
         fragmentManager.executePendingTransactions();
     }
 
     @Override
-    public void onItemSelected(Event item) {
-        Log.i("TEST " , item.getDates());
+    public void onItemSelected(Event event) {
         EventFragment eventFragment = new EventFragment();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.map_event, eventFragment);
-        fragmentTransaction.addToBackStack("event_info");
+        fragmentTransaction.addToBackStack("event_info_from_map");
         fragmentTransaction.commit();
         fragmentManager.executePendingTransactions();
-        eventFragment.update(item);
+        eventFragment.update(event);
     }
 
     @Override
-    public void onEventInteraction(Uri uri) {}
+    public void onEventInteraction(Event event) {}
 
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();

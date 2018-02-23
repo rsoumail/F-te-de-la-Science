@@ -52,9 +52,8 @@ import fr.istic.m2il.mmm.fetescience.utils.Utils;
  */
 public class EventMapFragment extends SupportMapFragment implements OnMapReadyCallback, LoaderManager.LoaderCallbacks<List<Event>> {
 
-    private static final String TAG = EventListFragment.class.getSimpleName();
-    private RecyclerView recyclerView;
-    private EventAdapter eventAdapter;
+    private static final String TAG = EventMapFragment.class.getSimpleName();
+
     private List<Event> events = new ArrayList<>();
     private List<Event> cachedEvents = new ArrayList<>();
     private List<String> keys = new ArrayList<>();
@@ -64,7 +63,6 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
     private int selectedFilter = 0;
     private String currentQuery;
     private PreferencesManagerHelper preferencesManagerHelper;
-    private EventMapActivity ema;
 
     private OnFragmentInteractionListener mListener;
     private GoogleMap mMap;
@@ -72,10 +70,6 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
     public EventMapFragment() {
         // Required empty public constructor
         super();
-    }
-
-    public void setEMA(EventMapActivity ema){
-        this.ema = ema;
     }
 
     @Override
@@ -87,17 +81,17 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
         return view;
     }
 
-    /*// TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Event e) {
+    public void onEventClicked(Event e) {
         if (mListener != null) {
-            mListener.void onItemSelected(e);
+            mListener.onItemSelected(e);
         }
-    }*/
+    }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
+            Log.v("je passe", "ou pas ?");
             mListener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
@@ -124,22 +118,10 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
 
     @Override
     public void onLoaderReset(Loader<List<Event>> loader) {
-        //eventAdapter.swapData(null);
+
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        void onItemSelected(Event item);
-    }
+
 
     @Override
     public void onMapReady(GoogleMap map) {
@@ -154,10 +136,8 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
 
         for (Event event : events){
 
-            //Log.v("event name","hello");
-
-            // on récupère la liste de la localistion de l'evt
-            // et on créé le latlng
+            /* on récupère la liste de la localistion de l'evt
+            et on créé le latlng */
             List<Double> locEvent = event.getGeolocalisation();
 
             // on vérifie que l'evenement possède une localisation précise
@@ -182,12 +162,31 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
         // à garder pour la fin ?
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pEvent, 6));
 
-        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-            @Override
-            public void onInfoWindowClick(Marker marker) {
-                Event e = (Event) marker.getTag();
-                ema.onItemSelected(e);
-            }
+        mMap.setOnInfoWindowClickListener((marker) -> {
+            marker.hideInfoWindow();
+            onEventClicked((Event) marker.getTag());
         });
+
     }
+
+    @Override
+    public void onDestroyView(){
+        super.onDestroyView();
+    }
+
+
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     * <p>
+     * See the Android Training lesson <a href=
+     * "http://developer.android.com/training/basics/fragments/communicating.html"
+     * >Communicating with Other Fragments</a> for more information.
+     */
+    public interface OnFragmentInteractionListener {
+        void onItemSelected(Event item);
+    }
+
 }

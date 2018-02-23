@@ -1,54 +1,52 @@
 package fr.istic.m2il.mmm.fetescience.activities;
 
-
-import android.content.Intent;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+
 import javax.annotation.Nullable;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
 import fr.istic.m2il.mmm.fetescience.R;
-import fr.istic.m2il.mmm.fetescience.fragments.EventFragment;
-import fr.istic.m2il.mmm.fetescience.fragments.EventListFragment;
-import fr.istic.m2il.mmm.fetescience.models.Event;
+import fr.istic.m2il.mmm.fetescience.fragments.PathFragment;
+import fr.istic.m2il.mmm.fetescience.fragments.PathListFragment;
+import fr.istic.m2il.mmm.fetescience.models.Path;
 
-public class EventActivity extends AppCompatActivity implements EventListFragment.OnEventListFragmentInteractionListener, EventFragment.OnEventFragmentInteractionListener {
+public class PathActivity extends AppCompatActivity implements PathListFragment.OnPathListFragmentInteractionListener, PathFragment.OnPathFragmentInteractionListener{
 
     FragmentManager fragmentManager;
-    @Nullable @BindView(R.id.event_large) LinearLayout linearLayout;
+    @Nullable
+    @BindView(R.id.path_large)
+    LinearLayout linearLayout;
     String screenType;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-        setContentView(R.layout.activity_event);
+        setContentView(R.layout.activity_path);
         ButterKnife.bind(this);
-
 
         fragmentManager = getSupportFragmentManager();
 
         if(linearLayout != null){
             screenType = "large";
-            if(findViewById(R.id.large_event_list) != null && findViewById(R.id.large_event_item) != null){
+            if(findViewById(R.id.large_path_list) != null && findViewById(R.id.large_path_item) != null){
                 if(savedInstanceState != null){
                     return;
                 }
 
-                EventListFragment eventListFragment = new EventListFragment();
+                PathListFragment pathListFragment = new PathListFragment();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.large_event_list, eventListFragment);
+                fragmentTransaction.replace(R.id.large_path_list, pathListFragment);
+                fragmentTransaction.addToBackStack("path_list");
                 fragmentTransaction.commit();
                 fragmentManager.executePendingTransactions();
             }
@@ -59,12 +57,14 @@ public class EventActivity extends AppCompatActivity implements EventListFragmen
                 if(savedInstanceState != null){
                     return;
                 }
-                EventListFragment eventListFragment = new EventListFragment();
+                PathListFragment pathListFragment = new PathListFragment();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.normal_event_list, eventListFragment);
+                fragmentTransaction.replace(R.id.normal_path_list, pathListFragment);
+                fragmentTransaction.addToBackStack("path_list");
                 fragmentTransaction.commit();
                 fragmentManager.executePendingTransactions();
             }
+
         }
     }
 
@@ -87,10 +87,10 @@ public class EventActivity extends AppCompatActivity implements EventListFragmen
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
-            case R.id.action_map:
-                Intent intent = new Intent(EventActivity.this, EventMapActivity.class);
+            /*case R.id.action_map:
+                Intent intent = new Intent(PathActivity.this, EventMapActivity.class);
                 startActivity(intent);
-                return true;
+                return true;*/
 
             default:
                 return super.onOptionsItemSelected(item);
@@ -98,25 +98,26 @@ public class EventActivity extends AppCompatActivity implements EventListFragmen
     }
 
     @Override
-    public void onItemSelected(Event item) {
-        EventFragment eventFragment = new EventFragment();
+    public void onPathSelected(Path path) {
+        PathFragment pathFragment = new PathFragment();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         switch (screenType){
             case "large":
-                fragmentTransaction.replace(R.id.large_event_item, eventFragment);
+                fragmentTransaction.replace(R.id.large_path_item, pathFragment);
                 break;
 
             case "normal":
-                fragmentTransaction.replace(R.id.normal_event_list, eventFragment);
+                fragmentTransaction.replace(R.id.normal_path_list, pathFragment);
                 break;
         }
-        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.addToBackStack("path_info");
         fragmentTransaction.commit();
         fragmentManager.executePendingTransactions();
-        eventFragment.update(item);
+        pathFragment.update(path);
     }
 
     @Override
-    public void onEventInteraction(Event event) {
+    public void onPathFragmentUpdate(Path path) {
+
     }
 }

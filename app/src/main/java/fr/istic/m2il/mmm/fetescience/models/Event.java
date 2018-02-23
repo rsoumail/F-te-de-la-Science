@@ -1,5 +1,8 @@
 package fr.istic.m2il.mmm.fetescience.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -13,7 +16,7 @@ import java.util.List;
 
 
 @DatabaseTable(tableName = "event")
-public class Event {
+public class Event implements Parcelable {
 
     @DatabaseField(generatedId = true)
     private int id;
@@ -94,7 +97,106 @@ public class Event {
     private Integer nb_evenements;
 
 
+    private Boolean checked = false;
 
+    private Integer votantsNumber;
+
+    private Integer fillingRate;
+
+    private Double rating;
+
+    protected Event(Parcel in) {
+        id = in.readInt();
+        apercu = in.readString();
+        image = in.readString();
+        ville = in.readString();
+        identifiant = in.readString();
+        description_fr = in.readString();
+        titre_fr = in.readString();
+        thematiques = in.readString();
+        region = in.readString();
+        description_longue_fr = in.readString();
+        type_d_animation = in.readString();
+        horaires_detailles_fr = in.readString();
+        date_debut = in.readString();
+        date_fin = in.readString();
+        nom_du_lieu = in.readString();
+        inscription_necessaire = in.readString();
+        adresse = in.readString();
+        organisateur = in.readString();
+        publics_concernes = in.readString();
+        statut = in.readString();
+        lien = in.readString();
+        dates = in.readString();
+        mots_cles_fr = in.readString();
+        accessibilite_fr = in.readString();
+        if (in.readByte() == 0) {
+            nb_evenements = null;
+        } else {
+            nb_evenements = in.readInt();
+        }
+        byte tmpChecked = in.readByte();
+        checked = tmpChecked == 0 ? null : tmpChecked == 1;
+        if (in.readByte() == 0) {
+            votantsNumber = null;
+        } else {
+            votantsNumber = in.readInt();
+        }
+        if (in.readByte() == 0) {
+            fillingRate = null;
+        } else {
+            fillingRate = in.readInt();
+        }
+        if (in.readByte() == 0) {
+            rating = null;
+        } else {
+            rating = in.readDouble();
+        }
+    }
+
+    public static final Creator<Event> CREATOR = new Creator<Event>() {
+        @Override
+        public Event createFromParcel(Parcel in) {
+            return new Event(in);
+        }
+
+        @Override
+        public Event[] newArray(int size) {
+            return new Event[size];
+        }
+    };
+
+    public Integer getVotantsNumber() {
+        return votantsNumber;
+    }
+
+    public void setVotantsNumber(Integer votantsNumber) {
+        this.votantsNumber = votantsNumber;
+    }
+
+    public Integer getFillingRate() {
+        return fillingRate;
+    }
+
+    public void setFillingRate(Integer fillingRate) {
+        this.fillingRate = fillingRate;
+    }
+
+    public Double getRating() {
+        return rating;
+    }
+
+    public void setRating(Double rating) {
+        this.rating = rating;
+    }
+
+    public Boolean getChecked() {
+        return checked;
+    }
+
+    public void setChecked(Boolean checked) {
+        this.checked = checked;
+    }
 
     public Event() {}
 
@@ -322,5 +424,44 @@ public class Event {
                 ", nom du lieu=" + nom_du_lieu +
                 ", description='" + description_fr + '\'' +
                 '}';
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
+        dest.writeInt(id);
+        dest.writeString(apercu);
+        dest.writeString(image);
+        dest.writeString(ville);
+        dest.writeString(identifiant);
+        dest.writeString(description_fr);
+        dest.writeString(titre_fr);
+        dest.writeString(thematiques);
+        dest.writeString(region);
+        dest.writeString(description_longue_fr);
+        dest.writeString(type_d_animation);
+        dest.writeString(horaires_detailles_fr);
+        dest.writeString(date_debut);
+        dest.writeString(date_fin);
+        dest.writeString(nom_du_lieu);
+        dest.writeString(inscription_necessaire);
+        dest.writeString(adresse);
+        dest.writeString(organisateur);
+        dest.writeString(publics_concernes);
+        dest.writeString(statut);
+        dest.writeString(lien);
+        dest.writeString(dates);
+        dest.writeString(mots_cles_fr);
+        dest.writeString(accessibilite_fr);
+        dest.writeInt(nb_evenements);
+        dest.writeList(geolocalisation);
+        dest.writeInt(votantsNumber);
+        dest.writeInt(fillingRate);
+        dest.writeDouble(rating);
     }
 }
