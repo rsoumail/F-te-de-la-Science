@@ -14,10 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 
-
-<<<<<<< HEAD
 import java.util.List;
-=======
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.EntypoModule;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
@@ -28,7 +25,6 @@ import com.joanzapata.iconify.fonts.MeteoconsModule;
 import com.joanzapata.iconify.fonts.SimpleLineIconsModule;
 import com.joanzapata.iconify.fonts.TypiconsModule;
 import com.joanzapata.iconify.fonts.WeathericonsModule;
->>>>>>> c36a92e10130a0e03a628da5001e1f8999ba95a5
 
 import javax.annotation.Nullable;
 

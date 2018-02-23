@@ -105,6 +105,67 @@ public class Event implements Parcelable {
 
     private Double rating;
 
+    protected Event(Parcel in) {
+        id = in.readInt();
+        apercu = in.readString();
+        image = in.readString();
+        ville = in.readString();
+        identifiant = in.readString();
+        description_fr = in.readString();
+        titre_fr = in.readString();
+        thematiques = in.readString();
+        region = in.readString();
+        description_longue_fr = in.readString();
+        type_d_animation = in.readString();
+        horaires_detailles_fr = in.readString();
+        date_debut = in.readString();
+        date_fin = in.readString();
+        nom_du_lieu = in.readString();
+        inscription_necessaire = in.readString();
+        adresse = in.readString();
+        organisateur = in.readString();
+        publics_concernes = in.readString();
+        statut = in.readString();
+        lien = in.readString();
+        dates = in.readString();
+        mots_cles_fr = in.readString();
+        accessibilite_fr = in.readString();
+        if (in.readByte() == 0) {
+            nb_evenements = null;
+        } else {
+            nb_evenements = in.readInt();
+        }
+        byte tmpChecked = in.readByte();
+        checked = tmpChecked == 0 ? null : tmpChecked == 1;
+        if (in.readByte() == 0) {
+            votantsNumber = null;
+        } else {
+            votantsNumber = in.readInt();
+        }
+        if (in.readByte() == 0) {
+            fillingRate = null;
+        } else {
+            fillingRate = in.readInt();
+        }
+        if (in.readByte() == 0) {
+            rating = null;
+        } else {
+            rating = in.readDouble();
+        }
+    }
+
+    public static final Creator<Event> CREATOR = new Creator<Event>() {
+        @Override
+        public Event createFromParcel(Parcel in) {
+            return new Event(in);
+        }
+
+        @Override
+        public Event[] newArray(int size) {
+            return new Event[size];
+        }
+    };
+
     public Integer getVotantsNumber() {
         return votantsNumber;
     }
