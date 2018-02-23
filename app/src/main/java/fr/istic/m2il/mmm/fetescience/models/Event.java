@@ -8,7 +8,9 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by ismael on 29/12/17.
@@ -99,9 +101,9 @@ public class Event implements Parcelable {
 
     private Boolean checked = false;
 
-    private Integer votantsNumber;
+    private Integer votersNumber = new Integer(0);
 
-    private Integer fillingRate;
+    private Integer fillingRate = new Integer(0);
 
     private Float rating;
 
@@ -138,9 +140,9 @@ public class Event implements Parcelable {
         byte tmpChecked = in.readByte();
         checked = tmpChecked == 0 ? null : tmpChecked == 1;
         if (in.readByte() == 0) {
-            votantsNumber = null;
+            votersNumber = null;
         } else {
-            votantsNumber = in.readInt();
+            votersNumber = in.readInt();
         }
         if (in.readByte() == 0) {
             fillingRate = null;
@@ -166,12 +168,12 @@ public class Event implements Parcelable {
         }
     };
 
-    public Integer getVotantsNumber() {
-        return votantsNumber;
+    public Integer getVotersNumber() {
+        return votersNumber;
     }
 
-    public void setVotantsNumber(Integer votantsNumber) {
-        this.votantsNumber = votantsNumber;
+    public void setVotersNumber(Integer votersNumber) {
+        this.votersNumber = votersNumber;
     }
 
     public Integer getFillingRate() {
@@ -415,6 +417,16 @@ public class Event implements Parcelable {
         this.mots_cles_fr = mots_cles_fr;
     }
 
+    public Map<String, Object> mapToFireBaseEvent(){
+        Map<String, Object> fireBaseEvent = new HashMap<>();
+        fireBaseEvent.put("id", this.id);
+        fireBaseEvent.put("rating", this.rating);
+        fireBaseEvent.put("fillingRate", this.fillingRate);
+        fireBaseEvent.put("votersNumber", this.votersNumber);
+
+        return fireBaseEvent;
+    }
+
     @Override
     public String toString() {
         return "Event{" +
@@ -460,7 +472,7 @@ public class Event implements Parcelable {
         dest.writeString(accessibilite_fr);
         dest.writeInt(nb_evenements);
         dest.writeList(geolocalisation);
-        dest.writeInt(votantsNumber);
+        dest.writeInt(votersNumber);
         dest.writeInt(fillingRate);
         dest.writeDouble(rating);
     }

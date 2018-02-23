@@ -183,9 +183,9 @@ public class EventFragment extends Fragment {
                     String fEventkey = snapshot.getKey();
                     Event fEvent = snapshot.getValue(Event.class);
                     if(event.getId() == fEvent.getId()){
-                        event.setRating((rate + fEvent.getRating() * fEvent.getVotantsNumber()) / (fEvent.getVotantsNumber() + 1));
-                        event.setVotantsNumber(fEvent.getVotantsNumber() + 1);
-                        database.child("events").child(fEventkey).setValue(event);
+                        event.setRating((rate + fEvent.getRating() * fEvent.getVotersNumber()) / (fEvent.getVotersNumber() + 1));
+                        event.setVotersNumber(fEvent.getVotersNumber() + 1);
+                        database.child("events").child(fEventkey).setValue(event.mapToFireBaseEvent());
                         eventExistOnFireBase = true;
                         Log.i(TAG, "Event's info With Key " + fEventkey + " and Id " + event.getId() + " Was Updated");
                         break ;
@@ -193,10 +193,11 @@ public class EventFragment extends Fragment {
                 }
                 if(eventExistOnFireBase == false){
                     event.setRating(rate);
-                    event.setVotantsNumber(1);
-                    database.child("events").push().setValue(event);
+                    event.setVotersNumber(1);
+                    database.child("events").push().setValue(event.mapToFireBaseEvent());
                     Log.i(TAG, "Event's info with Id " + event.getId() + " Was Added");
                 }
+                eventRatingBar.setRating(event.getRating());
 
             }
 
