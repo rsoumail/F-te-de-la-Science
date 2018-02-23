@@ -94,7 +94,45 @@ public class Event {
     private Integer nb_evenements;
 
 
+    private Boolean checked = false;
 
+    private Integer votantsNumber;
+
+    private Integer fillingRate;
+
+    private Double rating;
+
+    public Integer getVotantsNumber() {
+        return votantsNumber;
+    }
+
+    public void setVotantsNumber(Integer votantsNumber) {
+        this.votantsNumber = votantsNumber;
+    }
+
+    public Integer getFillingRate() {
+        return fillingRate;
+    }
+
+    public void setFillingRate(Integer fillingRate) {
+        this.fillingRate = fillingRate;
+    }
+
+    public Double getRating() {
+        return rating;
+    }
+
+    public void setRating(Double rating) {
+        this.rating = rating;
+    }
+
+    public Boolean getChecked() {
+        return checked;
+    }
+
+    public void setChecked(Boolean checked) {
+        this.checked = checked;
+    }
 
     public Event() {}
 

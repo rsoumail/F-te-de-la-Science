@@ -1,248 +1,224 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
 
-    <RelativeLayout
-        android:layout_width="match_parent" android:layout_height="wrap_content">
-
-        <ImageView
-            android:id="@+id/image"
-            android:layout_width="520dp"
-            android:layout_height="250dp"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="5dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="10dp"
-            app:srcCompat="@drawable/common_google_signin_btn_icon_dark_normal_background" />
-
-        <TextView
-            android:id="@+id/adress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="italic"
-            android:textSize="17sp"
-            android:textColor="@color/orange"
-            android:layout_alignLeft="@+id/image"
-            android:layout_below="@+id/image"
-            android:layout_marginTop="10dp"/>
-
-        <TextView
-            android:id="@+id/animation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textColor="@color/black"
-            android:layout_alignLeft="@+id/image"
-            android:layout_below="@+id/adress"
-            android:layout_marginTop="10dp"/>
-
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_alignLeft="@+id/image"
-            android:textStyle="bold"
-            android:textColor="@color/cyan_blue"
-            android:textSize="20sp"
-            android:layout_below="@+id/animation"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <RelativeLayout
-            android:id="@+id/layout_theme"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/image"
-            android:layout_below="@+id/title"
-            android:layout_marginTop="10dp">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
             <TextView
-                android:id="@+id/label_theme"
+                android:id="@+id/animation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:textSize="20sp"
+                android:textColor="@color/black"
+                android:layout_marginTop="10dp"/>
+
+            <ImageView
+                android:id="@+id/image"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_marginTop="10dp"
+                android:layout_below="@+id/animation"
+                app:srcCompat="@drawable/common_google_signin_btn_icon_dark_normal_background" />
+
+            <RelativeLayout
+                android:id="@+id/event_rating_layout"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_below="@+id/image"
+                android:layout_marginTop="5dp"
+                >
+                <RatingBar
+                    android:id="@+id/event_rating_bar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="10dp"
+                    android:numStars="5"
+                    android:stepSize="1.0"/>
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:text="@string/rate_btn_label"/>
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="5dp"
                 android:textStyle="bold"
-                android:textSize="15sp"
                 android:textColor="@color/cyan_blue"
-                android:text="@string/label_theme"/>
-            <TextView
-                android:id="@+id/theme"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/label_theme"
-                android:layout_below="@+id/label_theme"/>
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/layout_period"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/image"
-            android:layout_below="@+id/layout_theme"
-            android:layout_marginTop="10dp">
+                android:textSize="20sp"
+                android:layout_below="@+id/event_rating_layout"/>
 
             <TextView
-                android:id="@+id/label_period"
+                android:id="@+id/adress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:textSize="15sp"
-                android:textColor="#01a9d2"
-                android:text="@string/label_period"
-                />
+                android:textStyle="italic"
+                android:textSize="17sp"
+                android:textColor="@color/orange"
+                android:layout_marginLeft="5dp"
+                android:layout_below="@+id/title"
+                android:layout_marginTop="10dp"/>
 
-            <LinearLayout
+
+            <RelativeLayout
+                android:id="@+id/layout_theme"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/linearLayout"
-                android:layout_below="@+id/label_period"
-                android:layout_marginTop="5dp">
+                android:layout_marginLeft="5dp"
+                android:layout_below="@+id/adress"
+                android:layout_marginTop="10dp">
                 <TextView
-                    android:id="@+id/date_debut"
+                    android:id="@+id/label_theme"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textSize="15sp"
+                    android:textColor="@color/cyan_blue"
+                    android:text="@string/label_theme"/>
+                <TextView
+                    android:id="@+id/theme"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/label_theme"
+                    android:layout_below="@+id/label_theme"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/layout_period"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_below="@+id/layout_theme"
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:id="@+id/label_period"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textSize="15sp"
+                    android:textColor="#01a9d2"
+                    android:text="@string/label_period"
                     />
-                <TextView
-                    android:id="@+id/date_fin"
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignLeft="@+id/date_debut"
-                    android:layout_alignStart="@+id/date_debut"
-                    android:layout_marginLeft="5dp"/>
-            </LinearLayout>
+                    android:id="@+id/linearLayout"
+                    android:layout_below="@+id/label_period"
+                    android:layout_marginTop="5dp">
+                    <TextView
+                        android:id="@+id/date_debut"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        />
+                    <TextView
+                        android:id="@+id/date_fin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@+id/date_debut"
+                        android:layout_alignStart="@+id/date_debut"
+                        android:layout_marginLeft="5dp"/>
+                </LinearLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/layout_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_below="@+id/layout_period"
+                android:layout_marginTop="10dp">
+                <TextView
+                    android:id="@+id/label_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textSize="15sp"
+                    android:textColor="#01a9d2"
+                    android:text="@string/label_description"/>
+                <TextView
+                    android:id="@+id/description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/label_description"
+                    android:layout_marginTop="10dp" />
+
+
+            </RelativeLayout>
         </RelativeLayout>
+    </ScrollView>
 
-        <RelativeLayout
-            android:id="@+id/layout_hour"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/image"
-            android:layout_below="@+id/layout_period"
-            android:layout_marginTop="10dp">
-            <TextView
-                android:id="@+id/label_hour"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:textSize="15sp"
-                android:textColor="#01a9d2"
-                android:text="@string/label_hour"/>
-            <TextView
-                android:id="@+id/hour"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/label_hour"
-                android:layout_below="@+id/label_hour"/>
-        </RelativeLayout>
+    <com.joanzapata.iconify.widget.IconTextView
+        android:id="@+id/open_browser_btn"
+        android:text="{fa-chrome}"
+        android:shadowColor="#22000000"
+        android:shadowDx="3"
+        android:shadowDy="3"
+        android:shadowRadius="1"
+        android:textSize="40sp"
+        android:textColor="@color/cyan_blue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="14dp"
+        android:layout_marginRight="14dp"
+        android:clickable="true" />
 
-        <RelativeLayout
-            android:id="@+id/layout_organisateur"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/image"
-            android:layout_below="@+id/layout_hour"
-            android:layout_marginTop="10dp">
-            <TextView
-                android:id="@+id/label_organisateur"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:textSize="15sp"
-                android:textColor="#01a9d2"
-                android:text="@string/label_organisateur"/>
-            <TextView
-                android:id="@+id/organisateur"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/label_organisateur"
-                android:layout_marginTop="10dp" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/layout_lien"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/image"
-            android:layout_below="@+id/layout_organisateur"
-            android:layout_marginTop="10dp">
-            <TextView
-                android:id="@+id/label_lien"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:textSize="15sp"
-                android:textColor="#01a9d2"
-                android:text="@string/label_lien"/>
-            <TextView
-                android:id="@+id/lien"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/label_lien"
-                android:layout_marginTop="10dp" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/layout_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/image"
-            android:layout_below="@+id/layout_lien"
-            android:layout_marginTop="10dp">
-            <TextView
-                android:id="@+id/label_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:textSize="15sp"
-                android:textColor="#01a9d2"
-                android:text="@string/label_description"/>
-            <TextView
-                android:id="@+id/description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/label_description"
-                android:layout_marginTop="10dp" />
+    <com.joanzapata.iconify.widget.IconTextView
+        android:id="@+id/add_to_agenda_btn"
+        android:text="{fa-calendar}"
+        android:shadowColor="#22000000"
+        android:shadowDx="3"
+        android:shadowDy="3"
+        android:shadowRadius="1"
+        android:textSize="40sp"
+        android:textColor="#01a9d2"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="14dp"
+        android:layout_marginRight="14dp"
+        android:clickable="true"
+        />
 
 
-        </RelativeLayout>
-        <com.joanzapata.iconify.widget.IconTextView
-            android:id="@+id/add_to_agenda_btn"
-            android:text="{fa-calendar}"
-            android:shadowColor="#22000000"
-            android:shadowDx="3"
-            android:shadowDy="3"
-            android:shadowRadius="1"
-            android:textSize="40sp"
-            android:textColor="#01a9d2"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginBottom="14dp"
-            android:layout_marginRight="14dp"
-            android:clickable="true"
-            android:layout_below="@+id/layout_description"/>
-
-
-        <com.joanzapata.iconify.widget.IconTextView
-            android:id="@+id/share_facebook_btn"
-            android:text="{fa-facebook-square}"
-            android:shadowColor="#22000000"
-            android:shadowDx="3"
-            android:shadowDy="3"
-            android:shadowRadius="1"
-            android:textSize="40sp"
-            android:textColor="#01a9d2"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginBottom="14dp"
-            android:layout_marginLeft="14dp"
-            android:clickable="true"
-            android:layout_below="@+id/layout_description"/>
-
-    </RelativeLayout>
-
-</ScrollView>
+    <com.joanzapata.iconify.widget.IconTextView
+        android:id="@+id/share_facebook_btn"
+        android:text="{fa-facebook-square}"
+        android:shadowColor="#22000000"
+        android:shadowDx="3"
+        android:shadowDy="3"
+        android:shadowRadius="1"
+        android:textSize="40sp"
+        android:textColor="#01a9d2"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="14dp"
+        android:layout_marginLeft="14dp"
+        android:clickable="true"
+        />
+</RelativeLayout>

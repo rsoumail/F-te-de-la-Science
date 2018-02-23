@@ -79,8 +79,8 @@
     </android.support.v7.widget.RecyclerView>
 
     <com.joanzapata.iconify.widget.IconTextView
-        android:id="@+id/share_path_btn"
-        android:text="{fa-share-alt}"
+        android:id="@+id/edit_path_btn"
+        android:text="{fa-edit}"
         android:shadowColor="#22000000"
         android:shadowDx="3"
         android:shadowDy="3"
@@ -95,5 +95,48 @@
         android:layout_marginBottom="14dp"
         android:layout_marginRight="14dp"
         android:clickable="true" />
+
+
+    <LinearLayout
+        android:id="@+id/options_path_layout_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="14dp"
+        android:visibility="gone"
+        >
+
+        <com.joanzapata.iconify.widget.IconTextView
+            android:id="@+id/share_path_btn"
+            android:text="{fa-share-alt}"
+            android:shadowColor="#22000000"
+            android:shadowDx="3"
+            android:shadowDy="3"
+            android:shadowRadius="1"
+            android:textSize="40sp"
+            android:textColor="@color/cyan_blue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="150dp"
+            android:clickable="true" />
+
+        <com.joanzapata.iconify.widget.IconTextView
+            android:id="@+id/itinerary_path_btn"
+            android:text="{fa-map}"
+            android:shadowColor="#22000000"
+            android:shadowDx="3"
+            android:shadowDy="3"
+            android:shadowRadius="1"
+            android:textSize="40sp"
+            android:textColor="@color/cyan_blue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="50dp"
+            android:clickable="true" />
+    </LinearLayout>
 
 </RelativeLayout>

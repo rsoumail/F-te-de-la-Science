@@ -2,32 +2,25 @@ package fr.istic.m2il.mmm.fetescience.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.Spinner;
-
-import com.joanzapata.iconify.Iconify;
-import com.joanzapata.iconify.fonts.EntypoModule;
-import com.joanzapata.iconify.fonts.FontAwesomeModule;
-import com.joanzapata.iconify.fonts.IoniconsModule;
-import com.joanzapata.iconify.fonts.MaterialCommunityModule;
-import com.joanzapata.iconify.fonts.MaterialModule;
-import com.joanzapata.iconify.fonts.MeteoconsModule;
-import com.joanzapata.iconify.fonts.SimpleLineIconsModule;
-import com.joanzapata.iconify.fonts.TypiconsModule;
-import com.joanzapata.iconify.fonts.WeathericonsModule;
+import com.joanzapata.iconify.widget.IconTextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +51,8 @@ public class EventListFragment extends Fragment implements AdapterView.OnItemSel
     @BindView(R.id.progressBar_cyclic) ProgressBar progressBar;
     @BindView(R.id.search_bar) SearchView searchView;
     @BindView(R.id.key_words_filter) Spinner filterSpinner;
+    @BindView(R.id.options_path_layout_btn) LinearLayout optionsPathLineaLayoutBtn;
+    @BindView(R.id.edit_path_btn) IconTextView editPathBtn;
     private Unbinder unbinder;
 
     private EventAdapter eventAdapter;
@@ -65,6 +60,8 @@ public class EventListFragment extends Fragment implements AdapterView.OnItemSel
     private List<Event> cachedEvents = new ArrayList<>();
     private int selectedFilter = 0;
     private String currentQuery;
+
+    private Boolean editPathActivated = false;
 
     private OnEventListFragmentInteractionListener mListener;
 
@@ -76,17 +73,6 @@ public class EventListFragment extends Fragment implements AdapterView.OnItemSel
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_event_list, container, false);
-
-        Iconify.with(new FontAwesomeModule())
-                .with(new EntypoModule())
-                .with(new TypiconsModule())
-                .with(new MaterialModule())
-                .with(new MaterialCommunityModule())
-                .with(new MeteoconsModule())
-                .with(new WeathericonsModule())
-                .with(new SimpleLineIconsModule())
-                .with(new IoniconsModule());
-
         unbinder = ButterKnife.bind(this, view);
 
         recyclerView.setVisibility(View.GONE);
@@ -99,14 +85,20 @@ public class EventListFragment extends Fragment implements AdapterView.OnItemSel
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         eventAdapter = new EventAdapter(getActivity().getApplication().getApplicationContext(), events);
+
+        Log.i(TAG, "Edit Path Activated Value " + this.editPathActivated);
+        eventAdapter.setShareActivated(this.editPathActivated);
+
+        eventAdapter.setShareActivated(this.editPathActivated);
         eventAdapter.setOnEventClickListener(event -> {
             onItemSelected(event);
         });
 
         recyclerView.setAdapter(eventAdapter);
 
-        getLoaderManager().initLoader(0, null, this).forceLoad();
-
+        if(cachedEvents.isEmpty()){
+            getLoaderManager().initLoader(0, null, this).forceLoad();
+        }
 
         searchView.setOnQueryTextListener(this);
         return view;
@@ -133,6 +125,30 @@ public class EventListFragment extends Fragment implements AdapterView.OnItemSel
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Log.i(TAG, "instance Call ");
+        if(savedInstanceState != null)
+            this.editPathActivated = savedInstanceState.getBoolean("editPathActivated");
+        Log.i(TAG, "Edit Path Activated Value " + this.editPathActivated);
+        eventAdapter.setShareActivated(this.editPathActivated);
+        if(this.editPathActivated){
+            for(int i=0; i < recyclerView.getChildCount(); i++){
+                if(recyclerView.getChildAt(i).findViewById(R.id.event_checkbox).getVisibility() == View.INVISIBLE)
+                    recyclerView.getChildAt(i).findViewById(R.id.event_checkbox).setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        /*Log.v(TAG, "In EventListFragment on save instance state ");
+        outState.putBoolean("editPathActivated", this.editPathActivated);*/
     }
 
     private void loadData(){
@@ -252,13 +268,22 @@ public class EventListFragment extends Fragment implements AdapterView.OnItemSel
 
     }
 
-    @OnClick(R.id.share_path_btn)
+    @OnClick(R.id.itinerary_path_btn)
+    public void showPathItinerary(View view){
+
+    }
+
+    @OnClick(R.id.edit_path_btn)
     public void activateEventsCheckBox(View view){
+        editPathBtn.setVisibility(View.GONE);
+        this.editPathActivated = true;
+        optionsPathLineaLayoutBtn.setVisibility(View.VISIBLE);
+        Log.i(TAG, "Current Child Count " + recyclerView.getChildCount());
         for(int i=0; i < recyclerView.getChildCount(); i++){
-            ((CheckBox)recyclerView.getChildAt(i).findViewById(R.id.event_checkbox)).setVisibility(View.VISIBLE);
-
-
+            if(recyclerView.getChildAt(i).findViewById(R.id.event_checkbox).getVisibility() == View.INVISIBLE)
+                recyclerView.getChildAt(i).findViewById(R.id.event_checkbox).setVisibility(View.VISIBLE);
         }
+        eventAdapter.setShareActivated(this.editPathActivated);
     }
 
 

@@ -4,20 +4,25 @@ import android.content.Context;
 import android.database.Cursor;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.joanzapata.iconify.widget.IconTextView;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnCheckedChanged;
+import butterknife.OnClick;
 import fr.istic.m2il.mmm.fetescience.R;
 import fr.istic.m2il.mmm.fetescience.listeners.OnEventClickListener;
 import fr.istic.m2il.mmm.fetescience.models.Event;
@@ -28,9 +33,14 @@ import fr.istic.m2il.mmm.fetescience.models.Event;
 
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
 
+    private static final String TAG = EventAdapter.class.getSimpleName();
+
     private Context context;
     private List<Event> events;
+    private List<Boolean> checkboxsChecked = new ArrayList<>();
+    private List<Event> eventsCheked = new ArrayList<>();
     private OnEventClickListener onEventClickListener;
+    private Boolean shareActivated = false;
 
     public EventAdapter(Context context, List<Event> events) {
         this.context = context;
@@ -56,7 +66,11 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         if(event.getThematiques() != null){
             holder.themeTextView.setText(event.getThematiques().length() >= 40 ? event.getThematiques().substring(0,39) + " ..." : event.getThematiques());
         }
+
+        holder.eventCheckBox.setChecked(event.getChecked());
         holder.bind(event, onEventClickListener);
+
+
     }
 
     @Override
@@ -77,6 +91,10 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         notifyDataSetChanged();
     }
 
+    public void setShareActivated(Boolean shareActivated) {
+        this.shareActivated = shareActivated;
+    }
+
     class EventViewHolder extends RecyclerView.ViewHolder{
 
         @BindView(R.id.event_cardview_container)CardView cardView;
@@ -89,15 +107,23 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         public EventViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            if(EventAdapter.this.shareActivated && eventCheckBox.getVisibility() != View.VISIBLE)
+                eventCheckBox.setVisibility(View.VISIBLE);
         }
 
         public void bind(final Event event, final OnEventClickListener onEventClickListener){
-            cardView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onEventClickListener.onEventClick(event);
-                }
+            cardView.setOnClickListener((view) -> {
+                onEventClickListener.onEventClick(event);
             });
+
+            eventCheckBox.setOnCheckedChangeListener( (buttonView, isCheched) -> {
+                Log.i(TAG, "Event Checkbox Value " + isCheched);
+                event.setChecked(isCheched);
+            });
+
         }
+
+
+
     }
 }
