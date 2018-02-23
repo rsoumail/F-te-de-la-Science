@@ -58,14 +58,16 @@ public class EventMapActivity extends AppCompatActivity implements EventMapFragm
 
         setContentView(R.layout.activity_event_map);
 
+        EventMapFragment eventMapFragment = new EventMapFragment();
+
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             events = extras.getParcelableArrayList("events");
+
         }
 
         fragmentManager = getSupportFragmentManager();
 
-        EventMapFragment eventMapFragment = new EventMapFragment();
         eventMapFragment.getMapAsync(eventMapFragment);
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.map_event, eventMapFragment);
@@ -113,6 +115,10 @@ public class EventMapActivity extends AppCompatActivity implements EventMapFragm
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public List<Event> getEvents(){
+        return events;
     }
 }
 

@@ -2,6 +2,7 @@ package fr.istic.m2il.mmm.fetescience.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -27,13 +28,19 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import org.json.JSONException;
+import org.w3c.dom.Document;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
+import Map.AsyncTaskMap;
+import Map.GMapV2Direction;
 import fr.istic.m2il.mmm.fetescience.R;
 import fr.istic.m2il.mmm.fetescience.activities.EventMapActivity;
 import fr.istic.m2il.mmm.fetescience.adpaters.EventAdapter;
@@ -66,10 +73,15 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
 
     private OnFragmentInteractionListener mListener;
     private GoogleMap mMap;
+    private boolean itineraire = true;
 
     public EventMapFragment() {
         // Required empty public constructor
         super();
+    }
+
+    public void setItineraire(boolean value){
+        itineraire = value;
     }
 
     @Override
@@ -113,8 +125,18 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
 
     @Override
     public void onLoadFinished(Loader<List<Event>> loader, List<Event> data) {
-        events = data;
-        addMarkers();
+        // cas normal
+        // affichage de tous les evenements
+        if(!itineraire){
+            events = data;
+            addMarkers();
+        }
+        // cas intineraire
+        // affichage des éléments de l'itineraire
+        else {
+            events = ((EventMapActivity) getActivity()).getEvents();
+            createRoute();
+        }
     }
 
     @Override
@@ -142,14 +164,16 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
         mMap = map;
     }
 
+    /**
+     * fonction qui permet d'ajouter les marqueurs
+     * sur la totalité des évenements de l'application
+     */
     public void addMarkers(){
 
         // init sur Paris
         LatLng pEvent = new LatLng(48.8534,2.3488);
 
         for (Event event : events){
-
-            //Log.v("event name","hello");
 
             // on récupère la liste de la localistion de l'evt
             // et on créé le latlng
@@ -169,7 +193,6 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
                         .snippet(event.getDescription_fr())
                         .position(pEvent))
                         .setTag(event);
-
             }
         }
 
@@ -177,6 +200,7 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
         // à garder pour la fin ?
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pEvent, 6));
 
+        // on ajoute le listener qui permet d'accéder au différent event en détail
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
@@ -184,5 +208,26 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
                 ((EventMapFragment.OnFragmentInteractionListener)getActivity()).onItemSelected(event);
             }
         });
+    }
+
+    /**
+     * fonction qui permet de créer l'itinéraire à partir
+     * d'une liste d'evenements
+     */
+    public void createRoute(){
+
+        AsyncTaskMap laTache = new AsyncTaskMap();
+        PolylineOptions rectLine = null;
+        try {
+            rectLine = laTache.execute(new LatLng(0,0),new LatLng(0,0)).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        Polyline polylin = mMap.addPolyline(rectLine);
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(48.8534,2.3488), 6));
+
     }
 }
