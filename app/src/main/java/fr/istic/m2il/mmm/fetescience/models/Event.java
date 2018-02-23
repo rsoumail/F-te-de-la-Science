@@ -1,5 +1,8 @@
 package fr.istic.m2il.mmm.fetescience.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -13,7 +16,7 @@ import java.util.List;
 
 
 @DatabaseTable(tableName = "event")
-public class Event {
+public class Event implements Parcelable {
 
     @DatabaseField(generatedId = true)
     private int id;
@@ -322,5 +325,41 @@ public class Event {
                 ", nom du lieu=" + nom_du_lieu +
                 ", description='" + description_fr + '\'' +
                 '}';
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
+        dest.writeInt(id);
+        dest.writeString(apercu);
+        dest.writeString(image);
+        dest.writeString(ville);
+        dest.writeString(identifiant);
+        dest.writeString(description_fr);
+        dest.writeString(titre_fr);
+        dest.writeString(thematiques);
+        dest.writeString(region);
+        dest.writeString(description_longue_fr);
+        dest.writeString(type_d_animation);
+        dest.writeString(horaires_detailles_fr);
+        dest.writeString(date_debut);
+        dest.writeString(date_fin);
+        dest.writeString(nom_du_lieu);
+        dest.writeString(inscription_necessaire);
+        dest.writeString(adresse);
+        dest.writeString(organisateur);
+        dest.writeString(publics_concernes);
+        dest.writeString(statut);
+        dest.writeString(lien);
+        dest.writeString(dates);
+        dest.writeString(mots_cles_fr);
+        dest.writeString(accessibilite_fr);
+        dest.writeInt(nb_evenements);
+        dest.writeList(geolocalisation);
     }
 }

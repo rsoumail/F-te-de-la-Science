@@ -15,6 +15,8 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 
+import java.util.List;
+
 import javax.annotation.Nullable;
 
 import butterknife.BindView;
@@ -27,13 +29,18 @@ import fr.istic.m2il.mmm.fetescience.models.Event;
 public class EventMapActivity extends AppCompatActivity implements EventMapFragment.OnFragmentInteractionListener, EventFragment.OnEventFragmentInteractionListener {
 
     FragmentManager fragmentManager;
-
+    private List<Event> events;
     
     //private MyLocationOverlay myLocation = null;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_map);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            events = extras.getParcelableArrayList("events");
+        }
 
         fragmentManager = getSupportFragmentManager();
 
