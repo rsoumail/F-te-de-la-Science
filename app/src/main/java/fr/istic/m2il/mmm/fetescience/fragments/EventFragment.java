@@ -27,8 +27,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.joanzapata.iconify.widget.IconTextView;
 import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
 import butterknife.BindView;
@@ -42,6 +40,8 @@ import fr.istic.m2il.mmm.fetescience.utils.Utils;
 
 
 public class EventFragment extends Fragment {
+
+    private static final String TAG = EventFragment.class.getSimpleName();
 
     @BindView(R.id.title) TextView titleTexteView;
     @BindView(R.id.theme) TextView themeTexteView;
@@ -60,8 +60,6 @@ public class EventFragment extends Fragment {
     private OnEventFragmentInteractionListener mListener;
     private Event event;
     private Event fEvent;
-
-    private static final String TAG = EventFragment.class.getSimpleName();
 
     DatabaseReference database;
 

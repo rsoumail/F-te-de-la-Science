@@ -32,11 +32,8 @@ public class EventActivity extends AppCompatActivity implements EventListFragmen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         setContentView(R.layout.activity_event);
         ButterKnife.bind(this);
-
-
         fragmentManager = getSupportFragmentManager();
 
         if(linearLayout != null){
@@ -88,8 +85,13 @@ public class EventActivity extends AppCompatActivity implements EventListFragmen
 
         switch (item.getItemId()) {
             case R.id.action_map:
-                Intent intent = new Intent(EventActivity.this, EventMapActivity.class);
-                startActivity(intent);
+                Intent intentMap = new Intent(EventActivity.this, EventMapActivity.class);
+                startActivity(intentMap);
+                return true;
+
+            case R.id.action_paths:
+                Intent intentPath = new Intent(EventActivity.this, PathActivity.class);
+                startActivity(intentPath);
                 return true;
 
             default:

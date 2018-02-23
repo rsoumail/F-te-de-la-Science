@@ -8,6 +8,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,6 +65,7 @@ public class PathListFragment extends Fragment implements AdapterView.OnItemSele
         pathAdapter.setOnPathClickListener(path -> {
             onPathSelected(path);
         });
+        Log.i(TAG, "View is created ");
         return view;
     }
 
