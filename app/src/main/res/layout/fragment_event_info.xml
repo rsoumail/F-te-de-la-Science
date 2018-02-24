@@ -56,6 +56,38 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/manager_edit_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone">
+                <RelativeLayout
+                    android:id="@+id/availabel_places_edit_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <NumberPicker
+                        android:id="@+id/available_places_max_edit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                    </NumberPicker>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/filled_places_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:id="@+id/manager_layout"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
