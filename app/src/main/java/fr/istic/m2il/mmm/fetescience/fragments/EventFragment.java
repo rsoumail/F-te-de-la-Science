@@ -59,9 +59,7 @@ public class EventFragment extends Fragment {
     private Unbinder unbinder;
     private OnEventFragmentInteractionListener mListener;
     private Event event;
-    private Event fEvent;
-
-    DatabaseReference database;
+    private DatabaseReference database;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

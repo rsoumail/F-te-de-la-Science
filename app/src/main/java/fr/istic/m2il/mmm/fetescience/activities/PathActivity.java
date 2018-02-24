@@ -48,31 +48,26 @@ public class PathActivity extends AppCompatActivity implements PathListFragment.
                 PathListFragment pathListFragment = new PathListFragment();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.large_path_list, pathListFragment);
-                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
                 fragmentManager.executePendingTransactions();
-                Log.i(TAG, "Large ");
             }
         }
         else {
             screenType = "normal";
-            if(findViewById(R.id.normal_event_list) != null){
+            if(findViewById(R.id.normal_path_list) != null){
                 if(savedInstanceState != null){
                     return;
                 }
                 PathListFragment pathListFragment = new PathListFragment();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.normal_path_list, pathListFragment);
-                fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
                 fragmentManager.executePendingTransactions();
 
-                Log.i(TAG, "Normal ");
+
             }
 
         }
-
-        Log.i(TAG, "Activity was Created ");
     }
 
     @Override
@@ -121,6 +116,7 @@ public class PathActivity extends AppCompatActivity implements PathListFragment.
         fragmentTransaction.commit();
         fragmentManager.executePendingTransactions();
         pathFragment.update(path);
+        Log.i(TAG, "Path Info Loaded ");
     }
 
     @Override

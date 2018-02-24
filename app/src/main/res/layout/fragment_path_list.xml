@@ -40,6 +40,15 @@
         android:layout_marginTop="10dp"
         android:layout_below="@id/path_search_layout"/>
 
+    <TextView
+        android:id="@+id/empty_paths"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/empty_paths"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"/>
+
     <ProgressBar
         android:id="@+id/path_progressBar_cyclic"
         android:layout_width="wrap_content"

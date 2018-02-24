@@ -2,16 +2,21 @@ package fr.istic.m2il.mmm.fetescience.activities;
 
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+
+import com.google.firebase.auth.FirebaseAuth;
+
 import javax.annotation.Nullable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,15 +28,19 @@ import fr.istic.m2il.mmm.fetescience.models.Event;
 
 public class EventActivity extends AppCompatActivity implements EventListFragment.OnEventListFragmentInteractionListener, EventFragment.OnEventFragmentInteractionListener {
 
-    FragmentManager fragmentManager;
+    private static final String TAG = EventActivity.class.getSimpleName();
+
+    private FragmentManager fragmentManager;
     @Nullable @BindView(R.id.event_large) LinearLayout linearLayout;
-    String screenType;
+
+
+    private String screenType;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_event);
         ButterKnife.bind(this);
         fragmentManager = getSupportFragmentManager();

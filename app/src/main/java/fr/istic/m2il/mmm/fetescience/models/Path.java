@@ -1,7 +1,9 @@
 package fr.istic.m2il.mmm.fetescience.models;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Ramadan Soumaila
@@ -9,20 +11,20 @@ import java.util.List;
 
 public class Path {
 
-    private Long authorId;
+    private String authorId;
     private String author;
     private String comment;
-    private List<Event> events;
+    private List<Integer> events;
 
     public Path(){
         events = new ArrayList<>();
     }
 
-    public List<Event> getEvents() {
+    public List<Integer> getEvents() {
         return events;
     }
 
-    public void setEvents(List<Event> events) {
+    public void setEvents(List<Integer> events) {
         this.events = events;
     }
 
@@ -34,11 +36,11 @@ public class Path {
         this.comment = comment;
     }
 
-    public Long getAuthorId() {
+    public String getAuthorId() {
         return authorId;
     }
 
-    public void setAuthorId(Long authorId) {
+    public void setAuthorId(String authorId) {
         this.authorId = authorId;
     }
 
@@ -48,5 +50,15 @@ public class Path {
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+
+    public Map<String, Object> mapToFireBasePath(){
+        Map<String, Object> fPath = new HashMap<>();
+        fPath.put("authorId", this.authorId);
+        fPath.put("author", this.author);
+        fPath.put("comment", this.comment);
+        fPath.put("events", this.events);
+        return fPath;
     }
 }
