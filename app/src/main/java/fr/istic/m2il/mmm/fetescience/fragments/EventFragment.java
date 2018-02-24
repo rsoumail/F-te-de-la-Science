@@ -1,6 +1,7 @@
 package fr.istic.m2il.mmm.fetescience.fragments;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -15,6 +16,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -164,11 +167,25 @@ public class EventFragment extends Fragment {
 
     @OnClick(R.id.share_btn)
     public void share(){
-        Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_TEXT, event.getLien());
-        intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Check out this site!");
-        startActivity(Intent.createChooser(intent, "Share"));
+
+        final Dialog dialog = new Dialog(getContext());
+        dialog.setContentView(R.layout.social_share_dialog);
+        dialog.setTitle("Ajouter un commentaire");
+        EditText commentEditText = dialog.findViewById(R.id.comment_edit);
+        Button validateButton = dialog.findViewById(R.id.validate);
+        Button cancelButton = dialog.findViewById(R.id.cancel);
+        validateButton.setOnClickListener( view -> {
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("text/plain");
+            intent.putExtra(Intent.EXTRA_TEXT, event.getLien());
+            intent.putExtra(android.content.Intent.EXTRA_SUBJECT, commentEditText.getText().toString());
+            dialog.dismiss();
+            startActivity(Intent.createChooser(intent, "Share"));
+        });
+        cancelButton.setOnClickListener(view -> {
+            dialog.dismiss();
+        });
+        dialog.show();
     }
 
     @OnClick(R.id.event_rate_btn)
