@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Bundle;
 
+import com.google.firebase.database.FirebaseDatabase;
+
 import org.json.JSONException;
 
 import java.io.IOException;
@@ -37,6 +39,7 @@ public class SplashActivity extends Activity {
             preferencesManagerHelper.setFirstTimeLaunchToFalse();
 
         }
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

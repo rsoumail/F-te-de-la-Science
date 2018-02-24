@@ -59,7 +59,7 @@ import fr.istic.m2il.mmm.fetescience.utils.Utils;
  */
 public class EventMapFragment extends SupportMapFragment implements OnMapReadyCallback, LoaderManager.LoaderCallbacks<List<Event>> {
 
-    private static final String TAG = EventListFragment.class.getSimpleName();
+    private static final String TAG = EventMapFragment.class.getSimpleName();
 
     private List<Event> events = new ArrayList<>();
     private List<Event> cachedEvents = new ArrayList<>();
@@ -93,18 +93,16 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
         return view;
     }
 
-    /*// TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Event e) {
+    public void onEventClicked(Event e) {
         if (mListener != null) {
-            mListener.void onItemSelected(e);
+            mListener.onItemSelected(e);
         }
-    }*/
+    }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
-            Log.v("je passe", "ou pas ?");
             mListener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
@@ -141,22 +139,10 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
 
     @Override
     public void onLoaderReset(Loader<List<Event>> loader) {
-        //eventAdapter.swapData(null);
+
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        void onItemSelected(Event item);
-    }
+
 
     @Override
     public void onMapReady(GoogleMap map) {
@@ -183,14 +169,11 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
         // à garder pour la fin ?
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pEvent, 6));
 
-        // on ajoute le listener qui permet d'accéder au différent event en détail
-        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-            @Override
-            public void onInfoWindowClick(Marker marker) {
-                Event event = (Event) marker.getTag();
-                ((EventMapFragment.OnFragmentInteractionListener)getActivity()).onItemSelected(event);
-            }
+        mMap.setOnInfoWindowClickListener((marker) -> {
+            marker.hideInfoWindow();
+            onEventClicked((Event) marker.getTag());
         });
+
     }
 
     public void addMarker(Event event){
@@ -201,8 +184,6 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
 
         // on vérifie que l'evenement possède une localisation précise
         if(locEvent != null){
-
-            //Log.v("event name est passé",event.getTitre_fr());
 
             // on récupère la localisation
             LatLng pEvent = new LatLng(locEvent.get(0),locEvent.get(1));
@@ -231,41 +212,66 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
             // création de l'Async task
             AsyncTaskMap laTache = new AsyncTaskMap();
 
-            // la première fois on utilise notre position
-            // les autres fois les events récupérés
-            // on récupère le point de départ de l'itinéraire
-            if(eventPred != null){
-                geo = eventPred.getGeolocalisation();
-                LatLng latlng1 = new LatLng(geo.get(0),geo.get(1));
-                laTache.setDepart(latlng1);
-            }
-            else {
-                LatLng latlng1 = new LatLng(48.11198, -1.67429);
-                laTache.setDepart(latlng1);
-            }
-
-            // on récupère le point d'arrive de l'itinéraire
             geo = event.getGeolocalisation();
-            LatLng latlng2 = new LatLng(geo.get(0),geo.get(1));
-            laTache.setDepart(latlng2);
 
-            eventPred = event;
-            PolylineOptions rectLine = null;
-            try {
-                rectLine = laTache.execute().get();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
+            if(geo != null){
+
+                // la première fois on utilise notre position
+                // les autres fois les events récupérés
+                // on récupère le point de départ de l'itinéraire
+                if(eventPred != null){
+                    List<Double> geo2 = eventPred.getGeolocalisation();
+                    LatLng latlng1 = new LatLng(geo2.get(0),geo2.get(1));
+                    laTache.setDepart(latlng1);
+                }
+                else {
+                    LatLng latlng1 = new LatLng(48.11198, -1.67429);
+                    laTache.setDepart(latlng1);
+                }
+
+                // on récupère le point d'arrive de l'itinéraire
+                //geo = event.getGeolocalisation();
+                LatLng latlng2 = new LatLng(geo.get(0),geo.get(1));
+                laTache.setArrive(latlng2);
+                addMarker(event);
+
+                eventPred = event;
+                PolylineOptions rectLine = null;
+                try {
+                    rectLine = laTache.execute().get();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+
+                // on ajoute l'itineraire à la map
+                mMap.addPolyline(rectLine);
+
+                // on positionne sur la map
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng2, 6));
+
             }
-
-            // on ajoute l'itineraire à la map
-            mMap.addPolyline(rectLine);
-
-            // on positionne sur la map
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(48.8534,2.3488), 6));
-
         }
+    }
 
+    @Override
+    public void onDestroyView(){
+        super.onDestroyView();
+    }
+
+
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     * <p>
+     * See the Android Training lesson <a href=
+     * "http://developer.android.com/training/basics/fragments/communicating.html"
+     * >Communicating with Other Fragments</a> for more information.
+     */
+    public interface OnFragmentInteractionListener {
+        void onItemSelected(Event item);
     }
 }

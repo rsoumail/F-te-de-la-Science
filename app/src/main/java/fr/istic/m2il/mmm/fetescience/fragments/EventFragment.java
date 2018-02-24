@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,8 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.joanzapata.iconify.widget.IconTextView;
 import com.squareup.picasso.Picasso;
 
@@ -54,13 +57,13 @@ public class EventFragment extends Fragment {
     private Event event;
 
     private static final String TAG = EventFragment.class.getSimpleName();
-        // Required empty public constructor
 
-
+    DatabaseReference database;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        database = FirebaseDatabase.getInstance().getReference();
     }
 
     @Override
@@ -141,6 +144,12 @@ public class EventFragment extends Fragment {
     public void openFacebook(){
         Intent browserIntent = new Intent(Intent.ACTION_VIEW,Uri.parse("http://www.facebook.com/"));
         startActivity(browserIntent);
+    }
+
+    @OnClick(R.id.event_rate_btn)
+    public void rate(){
+        Integer rate = new Integer(eventRatingBar.getMeasuredState());
+        Log.i(TAG, "Rate value " + rate);
     }
 
 

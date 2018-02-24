@@ -1,7 +1,9 @@
 package fr.istic.m2il.mmm.fetescience.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -30,6 +32,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import fr.istic.m2il.mmm.fetescience.R;
+import fr.istic.m2il.mmm.fetescience.activities.EventMapActivity;
 import fr.istic.m2il.mmm.fetescience.adpaters.EventAdapter;
 import fr.istic.m2il.mmm.fetescience.loaders.AsyncEventLoader;
 import fr.istic.m2il.mmm.fetescience.models.Event;
@@ -270,7 +273,14 @@ public class EventListFragment extends Fragment implements AdapterView.OnItemSel
 
     @OnClick(R.id.itinerary_path_btn)
     public void showPathItinerary(View view){
-
+        List<Event> chosedEvents = new ArrayList<>();
+        for(Event event: cachedEvents){
+            if(event.getChecked())
+                chosedEvents.add(event);
+        }
+        Intent intent = new Intent(getActivity(), EventMapActivity.class);
+        intent.putParcelableArrayListExtra("events", (ArrayList) chosedEvents);
+        startActivity(intent);
     }
 
     @OnClick(R.id.edit_path_btn)
