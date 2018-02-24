@@ -19,7 +19,8 @@
                 android:layout_alignParentTop="true"
                 android:textSize="20sp"
                 android:textColor="@color/black"
-                android:layout_marginTop="10dp"/>
+                android:layout_marginTop="10dp"
+                android:layout_centerHorizontal="true"/>
 
             <ImageView
                 android:id="@+id/image"
@@ -54,6 +55,14 @@
                     android:text="@string/rate_btn_label"/>
             </RelativeLayout>
 
+            <RelativeLayout
+                android:id="@+id/manager_layout"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_below="@+id/event_rating_layout">
+
+            </RelativeLayout>
+
             <TextView
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
@@ -63,7 +72,7 @@
                 android:textStyle="bold"
                 android:textColor="@color/cyan_blue"
                 android:textSize="20sp"
-                android:layout_below="@+id/event_rating_layout"/>
+                android:layout_below="@+id/manager_layout"/>
 
             <TextView
                 android:id="@+id/adress"

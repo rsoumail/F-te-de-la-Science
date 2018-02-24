@@ -43,7 +43,6 @@ public class EventMapActivity extends AppCompatActivity implements EventMapFragm
         eventMapFragment.getMapAsync(eventMapFragment);
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.map_event, eventMapFragment);
-        fragmentTransaction.addToBackStack("event_map");
         fragmentTransaction.commit();
         fragmentManager.executePendingTransactions();
     }
@@ -53,7 +52,7 @@ public class EventMapActivity extends AppCompatActivity implements EventMapFragm
         EventFragment eventFragment = new EventFragment();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.map_event, eventFragment);
-        fragmentTransaction.addToBackStack("event_info_from_map");
+        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
         fragmentManager.executePendingTransactions();
         eventFragment.update(event);

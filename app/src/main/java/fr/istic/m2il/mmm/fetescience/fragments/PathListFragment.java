@@ -8,6 +8,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,13 @@ import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -35,10 +43,12 @@ public class PathListFragment extends Fragment implements AdapterView.OnItemSele
     @BindView(R.id.path_recycler_view) RecyclerView recyclerView;
     @BindView(R.id.path_search_bar) SearchView searchView;
     @BindView(R.id.path_progressBar_cyclic) ProgressBar progressBar;
+    @BindView(R.id.empty_paths) TextView emptyPathsTextView;
 
     private Unbinder unbinder;
     private List<Path> paths;
     private PathAdapter pathAdapter;
+    private DatabaseReference database;
 
     private OnPathListFragmentInteractionListener mListener;
 
@@ -50,7 +60,8 @@ public class PathListFragment extends Fragment implements AdapterView.OnItemSele
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        database = FirebaseDatabase.getInstance().getReference();
+        paths = new ArrayList<>();
     }
 
     @Override
@@ -64,6 +75,10 @@ public class PathListFragment extends Fragment implements AdapterView.OnItemSele
         pathAdapter.setOnPathClickListener(path -> {
             onPathSelected(path);
         });
+
+        recyclerView.setAdapter(pathAdapter);
+        getLoaderManager().initLoader(0, null, this).forceLoad();
+        Log.i(TAG, "View is created ");
         return view;
     }
 
@@ -107,10 +122,15 @@ public class PathListFragment extends Fragment implements AdapterView.OnItemSele
 
     @Override
     public void onLoadFinished(Loader<List<Path>> loader, List<Path> data) {
-        pathAdapter.swapData(data);
-        //cachedEvents.addAll(data);
         progressBar.setVisibility(View.GONE);
-        recyclerView.setVisibility(View.VISIBLE);
+        Log.i(TAG, "Paths data size " + data.size());
+        if(!data.isEmpty()){
+            pathAdapter.swapData(data);
+            recyclerView.setVisibility(View.VISIBLE);
+        } else {
+            emptyPathsTextView.setVisibility(View.VISIBLE);
+        }
+
     }
 
     @Override

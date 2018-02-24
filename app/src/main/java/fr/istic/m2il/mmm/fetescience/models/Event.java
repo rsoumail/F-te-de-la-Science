@@ -9,7 +9,6 @@ import com.j256.ormlite.table.DatabaseTable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -107,9 +106,9 @@ public class Event implements Parcelable {
 
     private Float rating;
 
-    private Integer nb_places_disponibles = new Integer(0);
+    private Integer availablePlacesNumber = new Integer(0);
 
-    private Integer nb_places_maximum = new Integer(0);
+    private Integer maxAvailablePlaces = new Integer(0);
 
     protected Event(Parcel in) {
         id = in.readInt();
@@ -159,14 +158,14 @@ public class Event implements Parcelable {
             rating = in.readFloat();
         }
         if(in.readByte() == 0){
-            nb_places_disponibles = null;
+            availablePlacesNumber = null;
         } else {
-            nb_places_disponibles = in.readInt();
+            availablePlacesNumber = in.readInt();
         }
         if(in.readByte() == 0){
-            nb_places_maximum = null;
+            maxAvailablePlaces = null;
         } else {
-            nb_places_maximum = in.readInt();
+            maxAvailablePlaces = in.readInt();
         }
     }
 
@@ -214,20 +213,20 @@ public class Event implements Parcelable {
         this.checked = checked;
     }
 
-    public Integer getNb_places_disponibles(){
-        return nb_places_disponibles;
+    public Integer getAvailablePlacesNumber(){
+        return availablePlacesNumber;
     }
 
-    public void setNb_places_disponibles(Integer nb_places_disponibles){
-        this.nb_places_disponibles = nb_places_disponibles;
+    public void setAvailablePlacesNumber(Integer availablePlacesNumber){
+        this.availablePlacesNumber = availablePlacesNumber;
     }
 
-    public Integer getNb_places_maximum(){
-        return nb_places_maximum;
+    public Integer getMaxAvailablePlaces(){
+        return maxAvailablePlaces;
     }
 
-    public void setNb_places_maximum(Integer nb_places_maximum){
-        this.nb_places_maximum = nb_places_maximum;
+    public void setMaxAvailablePlaces(Integer maxAvailablePlaces){
+        this.maxAvailablePlaces = maxAvailablePlaces;
     }
 
     public Event() {}
@@ -453,8 +452,8 @@ public class Event implements Parcelable {
         fireBaseEvent.put("rating", this.rating);
         fireBaseEvent.put("fillingRate", this.fillingRate);
         fireBaseEvent.put("votersNumber", this.votersNumber);
-        fireBaseEvent.put("nb_places_disponibles", this.nb_places_disponibles);
-        fireBaseEvent.put("nb_places_maximum", this.nb_places_maximum);
+        fireBaseEvent.put("availablePlacesNumber", this.availablePlacesNumber);
+        fireBaseEvent.put("maxAvailablePlaces", this.maxAvailablePlaces);
 
         return fireBaseEvent;
     }
@@ -507,7 +506,7 @@ public class Event implements Parcelable {
         dest.writeInt(votersNumber);
         dest.writeInt(fillingRate);
         dest.writeDouble(rating);
-        dest.writeInt(nb_places_disponibles);
-        dest.writeInt(nb_places_maximum);
+        dest.writeInt(availablePlacesNumber);
+        dest.writeInt(maxAvailablePlaces);
     }
 }

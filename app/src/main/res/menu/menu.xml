@@ -19,7 +19,7 @@ tools:context="fr.istic.m2il.mmm.fetescience.activities.EventActivity">
     </item>
 
     <item
-        android:id="@+id/action_path"
+        android:id="@+id/action_paths"
         android:icon="@drawable/ic_path"
         android:title="@string/action_path">
 

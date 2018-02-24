@@ -1,5 +1,6 @@
 package fr.istic.m2il.mmm.fetescience.fragments;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,11 +18,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.joanzapata.iconify.widget.IconTextView;
 
 import java.util.ArrayList;
@@ -67,9 +77,16 @@ public class EventListFragment extends Fragment implements AdapterView.OnItemSel
     private Boolean editPathActivated = false;
 
     private OnEventListFragmentInteractionListener mListener;
+    private DatabaseReference database;
 
     public EventListFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+        database = FirebaseDatabase.getInstance().getReference();
     }
 
     @Override
@@ -154,32 +171,6 @@ public class EventListFragment extends Fragment implements AdapterView.OnItemSel
         outState.putBoolean("editPathActivated", this.editPathActivated);*/
     }
 
-    private void loadData(){
-
-        /*DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("").child("");
-
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                events.clear();
-                keys.clear();
-                for(DataSnapshot c: dataSnapshot.getChildren()){
-                    Log.v("Data ", c.toString());
-                    events.add(c.getValue(Event.class));
-                    keys.add(c.getKey().toString());
-                }
-               eventAdapter.notifyDataSetChanged();
-            }
-
-
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });*/
-    }
-
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         selectedFilter = position;
@@ -260,19 +251,48 @@ public class EventListFragment extends Fragment implements AdapterView.OnItemSel
     }
 
     @OnClick(R.id.share_path_btn)
-    public void sharePath(View view){
-        List<Path> paths = new ArrayList<>();
-        for(int i=0; i < recyclerView.getChildCount(); i++){
-            if(((CheckBox)recyclerView.getChildAt(i).findViewById(R.id.event_checkbox)).isChecked()){
-                Path path = new Path();
-                path.getEvents().add(events.get(i));
+    public void sharePath(){
+        optionsPathLineaLayoutBtn.setVisibility(View.GONE);
+        editPathBtn.setVisibility(View.VISIBLE);
+        this.editPathActivated = false;
+
+        Path path = new Path();
+        final Dialog dialog = new Dialog(getContext());
+        dialog.setContentView(R.layout.share_paths_dialog);
+        dialog.setTitle("Title...");
+
+        EditText authorEditText = dialog.findViewById(R.id.author_edit);
+        EditText commentEditText = dialog.findViewById(R.id.comment_edit);
+        Button validateButton = dialog.findViewById(R.id.validate);
+        Button cancelButton = dialog.findViewById(R.id.cancel);
+        validateButton.setOnClickListener( view -> {
+            path.setAuthor(authorEditText.getText().toString().isEmpty() ? "Anonyme" : authorEditText.getText().toString());
+            path.setComment(commentEditText.getText().toString());
+            dialog.dismiss();
+            for(Event event: cachedEvents){
+                if(event.getChecked())
+                    path.getEvents().add(event.getId());
             }
-        }
+            path.setAuthorId(FirebaseAuth.getInstance().getCurrentUser().getUid());
+            String pathKey = database.child("paths").push().getKey();
+            database.child("paths").child(pathKey).setValue(path.mapToFireBasePath());
+            Toast.makeText(this.getActivity(), "Votre parcours à été bien partagé", Toast.LENGTH_SHORT).show();
+        });
+        cancelButton.setOnClickListener( view -> {
+
+            dialog.dismiss();
+        });
+        dialog.show();
+        eventAdapter.setShareActivated(this.editPathActivated);
+        changeCurrentEventsCheckBoxesState(false);
 
     }
 
     @OnClick(R.id.itinerary_path_btn)
-    public void showPathItinerary(View view){
+    public void showPathItinerary(){
+        optionsPathLineaLayoutBtn.setVisibility(View.GONE);
+        editPathBtn.setVisibility(View.VISIBLE);
+        this.editPathActivated = false;
         List<Event> chosedEvents = new ArrayList<>();
         for(Event event: cachedEvents){
             if(event.getChecked())
@@ -284,16 +304,19 @@ public class EventListFragment extends Fragment implements AdapterView.OnItemSel
     }
 
     @OnClick(R.id.edit_path_btn)
-    public void activateEventsCheckBox(View view){
+    public void activateEventsCheckBox(){
         editPathBtn.setVisibility(View.GONE);
         this.editPathActivated = true;
         optionsPathLineaLayoutBtn.setVisibility(View.VISIBLE);
         Log.i(TAG, "Current Child Count " + recyclerView.getChildCount());
-        for(int i=0; i < recyclerView.getChildCount(); i++){
-            if(recyclerView.getChildAt(i).findViewById(R.id.event_checkbox).getVisibility() == View.INVISIBLE)
-                recyclerView.getChildAt(i).findViewById(R.id.event_checkbox).setVisibility(View.VISIBLE);
-        }
+        changeCurrentEventsCheckBoxesState(true);
         eventAdapter.setShareActivated(this.editPathActivated);
+    }
+
+    private void changeCurrentEventsCheckBoxesState(Boolean activated){
+        for(int i=0; i < recyclerView.getChildCount(); i++){
+            recyclerView.getChildAt(i).findViewById(R.id.event_checkbox).setVisibility(activated ? View.VISIBLE : View.GONE);
+        }
     }
 
 
