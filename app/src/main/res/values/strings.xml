@@ -32,6 +32,8 @@
     <string name="label_description">DESCRIPTION : </string>
     <string name="label_period">PÉRIODE : </string>
     <string name="label_organisateur">ORGANISATEUR(S) : </string>
+    <string name="label_places">NOMBRE DE PLACES DISPONIBLES : </string>
+    <string name="label_placesMax">MAXIMUM DES PLACES : </string>
 
 
     <!-- Strings related to login -->

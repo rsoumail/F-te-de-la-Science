@@ -29,6 +29,8 @@ import com.joanzapata.iconify.widget.IconTextView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 import butterknife.BindView;
@@ -53,8 +55,8 @@ public class EventFragment extends Fragment {
     @BindView(R.id.animation) TextView animationTextView;
     @BindView(R.id.image) ImageView imageImageView;
     @BindView(R.id.add_to_agenda_btn) IconTextView agendaButtonView;
-    @BindView(R.id.share_facebook_btn) IconTextView shareFacebookBtn;
-
+    @BindView(R.id.share_btn) IconTextView shareFacebookBtn;
+    @BindView(R.id.places) TextView placesView;
 
     private Unbinder unbinder;
     private OnEventFragmentInteractionListener mListener;
@@ -165,10 +167,13 @@ public class EventFragment extends Fragment {
 
     }
 
-    @OnClick(R.id.share_facebook_btn)
-    public void openFacebook(){
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW,Uri.parse("http://www.facebook.com/"));
-        startActivity(browserIntent);
+    @OnClick(R.id.share_btn)
+    public void share(){
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TEXT, event.getLien());
+        intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Check out this site!");
+        startActivity(Intent.createChooser(intent, "Share"));
     }
 
     @OnClick(R.id.event_rate_btn)
@@ -207,7 +212,6 @@ public class EventFragment extends Fragment {
             }
         });
     }
-
 
     @Override
     public void onAttach(Context context) {

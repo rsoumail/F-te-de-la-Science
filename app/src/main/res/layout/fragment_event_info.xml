@@ -140,11 +140,55 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/layout_description"
+                android:id="@+id/layout_places"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_below="@+id/layout_period"
+                android:layout_marginTop="10dp">
+                <TextView
+                    android:id="@+id/label_places"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textSize="15sp"
+                    android:textColor="#01a9d2"
+                    android:text="@string/label_places"/>
+                <TextView
+                    android:id="@+id/places"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/label_places"
+                    android:layout_marginTop="10dp" />
+            </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/layout_placesMax"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_below="@+id/layout_places"
+                android:layout_marginTop="10dp">
+                <TextView
+                    android:id="@+id/label_placesMax"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textSize="15sp"
+                    android:textColor="#01a9d2"
+                    android:text="@string/label_placesMax"/>
+                <TextView
+                    android:id="@+id/placesMax"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/label_placesMax"
+                    android:layout_marginTop="10dp" />
+            </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/layout_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_below="@+id/layout_placesMax"
                 android:layout_marginTop="10dp">
                 <TextView
                     android:id="@+id/label_description"
@@ -161,8 +205,8 @@
                     android:layout_below="@+id/label_description"
                     android:layout_marginTop="10dp" />
 
-
             </RelativeLayout>
+
         </RelativeLayout>
     </ScrollView>
 
@@ -205,8 +249,8 @@
 
 
     <com.joanzapata.iconify.widget.IconTextView
-        android:id="@+id/share_facebook_btn"
-        android:text="{fa-facebook-square}"
+        android:id="@+id/share_btn"
+        android:text="{fa-share-alt}"
         android:shadowColor="#22000000"
         android:shadowDx="3"
         android:shadowDy="3"
