@@ -9,7 +9,8 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by ismael on 29/12/17.
@@ -100,11 +101,15 @@ public class Event implements Parcelable {
 
     private Boolean checked = false;
 
-    private Integer votantsNumber;
+    private Integer votersNumber = new Integer(0);
 
-    private Integer fillingRate;
+    private Integer fillingRate = new Integer(0);
 
-    private Double rating;
+    private Float rating;
+
+    private Integer availablePlacesNumber = new Integer(0);
+
+    private Integer maxAvailablePlaces = new Integer(0);
 
     protected Event(Parcel in) {
         id = in.readInt();
@@ -136,28 +141,11 @@ public class Event implements Parcelable {
         arr.add(in.readDouble());
         arr.add(in.readDouble());
         geolocalisation = arr;
-        /*if (in.readByte() == 0) {
-            nb_evenements = null;
-        } else {
-            nb_evenements = in.readInt();
-        }
-        byte tmpChecked = in.readByte();
-        checked = tmpChecked == 0 ? null : tmpChecked == 1;
-        if (in.readByte() == 0) {
-            votantsNumber = null;
-        } else {
-            votantsNumber = in.readInt();
-        }
-        if (in.readByte() == 0) {
-            fillingRate = null;
-        } else {
-            fillingRate = in.readInt();
-        }
-        if (in.readByte() == 0) {
-            rating = null;
-        } else {
-            rating = in.readDouble();
-        }*/
+        votersNumber = in.readInt();
+        fillingRate = in.readInt();
+        rating = in.readFloat();
+        availablePlacesNumber = in.readInt();
+        maxAvailablePlaces = in.readInt();
     }
 
     public static final Creator<Event> CREATOR = new Creator<Event>() {
@@ -172,12 +160,12 @@ public class Event implements Parcelable {
         }
     };
 
-    public Integer getVotantsNumber() {
-        return votantsNumber;
+    public Integer getVotersNumber() {
+        return votersNumber;
     }
 
-    public void setVotantsNumber(Integer votantsNumber) {
-        this.votantsNumber = votantsNumber;
+    public void setVotersNumber(Integer votersNumber) {
+        this.votersNumber = votersNumber;
     }
 
     public Integer getFillingRate() {
@@ -188,11 +176,11 @@ public class Event implements Parcelable {
         this.fillingRate = fillingRate;
     }
 
-    public Double getRating() {
+    public Float getRating() {
         return rating;
     }
 
-    public void setRating(Double rating) {
+    public void setRating(Float rating) {
         this.rating = rating;
     }
 
@@ -202,6 +190,22 @@ public class Event implements Parcelable {
 
     public void setChecked(Boolean checked) {
         this.checked = checked;
+    }
+
+    public Integer getAvailablePlacesNumber(){
+        return availablePlacesNumber;
+    }
+
+    public void setAvailablePlacesNumber(Integer availablePlacesNumber){
+        this.availablePlacesNumber = availablePlacesNumber;
+    }
+
+    public Integer getMaxAvailablePlaces(){
+        return maxAvailablePlaces;
+    }
+
+    public void setMaxAvailablePlaces(Integer maxAvailablePlaces){
+        this.maxAvailablePlaces = maxAvailablePlaces;
     }
 
     public Event() {}
@@ -422,6 +426,18 @@ public class Event implements Parcelable {
         this.mots_cles_fr = mots_cles_fr;
     }
 
+    public Map<String, Object> mapToFireBaseEvent(){
+        Map<String, Object> fireBaseEvent = new HashMap<>();
+        fireBaseEvent.put("id", this.id);
+        fireBaseEvent.put("rating", this.rating);
+        fireBaseEvent.put("fillingRate", this.fillingRate);
+        fireBaseEvent.put("votersNumber", this.votersNumber);
+        fireBaseEvent.put("availablePlacesNumber", this.availablePlacesNumber);
+        fireBaseEvent.put("maxAvailablePlaces", this.maxAvailablePlaces);
+
+        return fireBaseEvent;
+    }
+
     @Override
     public String toString() {
         return "Event{" +
@@ -616,11 +632,43 @@ public class Event implements Parcelable {
             dest.writeDouble(geolocalisation.get(1));
         }
         else {
-            dest.writeString("nothing");
+            dest.writeDouble(0);
+            dest.writeDouble(0);
         }
 
-        //dest.writeInt(votantsNumber);
-        //dest.writeInt(fillingRate);
-        //dest.writeDouble(rating);
+        if(votersNumber != null){
+            dest.writeInt(votersNumber);
+        }
+        else {
+            dest.writeInt(-1);
+        }
+
+        if(fillingRate != null){
+            dest.writeInt(fillingRate);
+        }
+        else {
+            dest.writeInt(-1);
+        }
+
+        if(rating != null){
+            dest.writeFloat(rating);
+        }
+        else {
+            dest.writeFloat(-1);
+        }
+
+        if(availablePlacesNumber != null){
+            dest.writeInt(availablePlacesNumber);
+        }
+        else {
+            dest.writeInt(-1);
+        }
+
+        if(maxAvailablePlaces != null){
+            dest.writeInt(maxAvailablePlaces);
+        }
+        else {
+            dest.writeInt(-1);
+        }
     }
 }

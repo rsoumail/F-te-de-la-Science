@@ -35,10 +35,13 @@ public class EventMapActivity extends AppCompatActivity implements EventMapFragm
         if (extras != null) {
             events = extras.getParcelableArrayList("events");
             eventMapFragment.setItineraire(true);
+            for(Event e : events){
+                Log.v("test event",e.getGeolocalisation().toString());
+            }
         }
 
         fragmentManager = getSupportFragmentManager();
-
+            
         if(savedInstanceState != null){
             return;
         }

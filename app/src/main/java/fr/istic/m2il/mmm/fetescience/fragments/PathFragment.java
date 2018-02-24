@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import fr.istic.m2il.mmm.fetescience.R;
 import fr.istic.m2il.mmm.fetescience.models.Path;
 
@@ -18,6 +20,8 @@ public class PathFragment extends Fragment {
 
     @BindView(R.id.author) TextView authorTextView;
     @BindView(R.id.comment) TextView commentTextView;
+
+    private Unbinder unbinder;
 
     private OnPathFragmentInteractionListener mListener;
 
@@ -33,8 +37,10 @@ public class PathFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_path_info, container, false);
+
+        View view = inflater.inflate(R.layout.fragment_path_info, container, false);
+        unbinder = ButterKnife.bind(this, view);
+        return view;
     }
 
 

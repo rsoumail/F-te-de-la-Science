@@ -20,8 +20,11 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.joanzapata.iconify.widget.IconTextView;
 import com.squareup.picasso.Picasso;
 
@@ -39,6 +42,8 @@ import fr.istic.m2il.mmm.fetescience.utils.Utils;
 
 public class EventFragment extends Fragment {
 
+    private static final String TAG = EventFragment.class.getSimpleName();
+
     @BindView(R.id.title) TextView titleTexteView;
     @BindView(R.id.theme) TextView themeTexteView;
     @BindView(R.id.description) TextView descriptionTexteView;
@@ -49,16 +54,13 @@ public class EventFragment extends Fragment {
     @BindView(R.id.animation) TextView animationTextView;
     @BindView(R.id.image) ImageView imageImageView;
     @BindView(R.id.add_to_agenda_btn) IconTextView agendaButtonView;
-    @BindView(R.id.share_facebook_btn) IconTextView shareFacebookBtn;
-
+    @BindView(R.id.share_btn) IconTextView shareFacebookBtn;
+    @BindView(R.id.places) TextView placesView;
 
     private Unbinder unbinder;
     private OnEventFragmentInteractionListener mListener;
     private Event event;
-
-    private static final String TAG = EventFragment.class.getSimpleName();
-
-    DatabaseReference database;
+    private DatabaseReference database;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -72,6 +74,26 @@ public class EventFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_event_info, container, false);
         unbinder = ButterKnife.bind(this, view);
+        database.addListenerForSingleValueEvent(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.hasChild("events")){
+                    for (DataSnapshot snapshot : dataSnapshot.child("events").getChildren()){
+                        Event fEvent = snapshot.getValue(Event.class);
+                        if(event.getId() == fEvent.getId()){
+                            eventRatingBar.setRating(fEvent.getRating());
+                            break;
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         return view;
     }
 
@@ -140,18 +162,51 @@ public class EventFragment extends Fragment {
 
     }
 
-    @OnClick(R.id.share_facebook_btn)
-    public void openFacebook(){
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW,Uri.parse("http://www.facebook.com/"));
-        startActivity(browserIntent);
+    @OnClick(R.id.share_btn)
+    public void share(){
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TEXT, event.getLien());
+        intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Check out this site!");
+        startActivity(Intent.createChooser(intent, "Share"));
     }
 
     @OnClick(R.id.event_rate_btn)
     public void rate(){
-        Integer rate = new Integer(eventRatingBar.getMeasuredState());
-        Log.i(TAG, "Rate value " + rate);
-    }
+        Float rate = new Float(eventRatingBar.getRating());
+        database.addListenerForSingleValueEvent(new ValueEventListener() {
+            Boolean eventExistOnFireBase = false;
 
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot :dataSnapshot.child("events").getChildren()) {
+                    String fEventkey = snapshot.getKey();
+                    Event fEvent = snapshot.getValue(Event.class);
+                    if(event.getId() == fEvent.getId()){
+                        event.setRating((rate + fEvent.getRating() * fEvent.getVotersNumber()) / (fEvent.getVotersNumber() + 1));
+                        event.setVotersNumber(fEvent.getVotersNumber() + 1);
+                        database.child("events").child(fEventkey).setValue(event.mapToFireBaseEvent());
+                        eventExistOnFireBase = true;
+                        Log.i(TAG, "Event's info With Key " + fEventkey + " and Id " + event.getId() + " Was Updated");
+                        break ;
+                    }
+                }
+                if(eventExistOnFireBase == false){
+                    event.setRating(rate);
+                    event.setVotersNumber(1);
+                    database.child("events").push().setValue(event.mapToFireBaseEvent());
+                    Log.i(TAG, "Event's info with Id " + event.getId() + " Was Added");
+                }
+                eventRatingBar.setRating(event.getRating());
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
 
     @Override
     public void onAttach(Context context) {

@@ -6,6 +6,7 @@
     <string name="search_title">Rechercher</string>
     <string name="title_path">Parcours</string>
     <string name="rate_btn_label">Voter</string>
+    <string name="empty_paths">Aucun Parcours partagés !!! vous pouvez en créer</string>
 
     <!-- String related to menu -->
     <string name="action_settings">Paramètre</string>
@@ -32,6 +33,8 @@
     <string name="label_description">DESCRIPTION : </string>
     <string name="label_period">PÉRIODE : </string>
     <string name="label_organisateur">ORGANISATEUR(S) : </string>
+    <string name="label_places">NOMBRE DE PLACES DISPONIBLES : </string>
+    <string name="label_placesMax">MAXIMUM DES PLACES : </string>
 
 
     <!-- Strings related to login -->

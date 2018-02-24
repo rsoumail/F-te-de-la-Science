@@ -4,6 +4,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,10 +23,11 @@ import fr.istic.m2il.mmm.fetescience.models.Path;
 
 public class PathActivity extends AppCompatActivity implements PathListFragment.OnPathListFragmentInteractionListener, PathFragment.OnPathFragmentInteractionListener{
 
+    private static final String TAG = PathActivity.class.getSimpleName();
+
     FragmentManager fragmentManager;
     @Nullable
-    @BindView(R.id.path_large)
-    LinearLayout linearLayout;
+    @BindView(R.id.path_large) LinearLayout linearLayout;
     String screenType;
 
     @Override
@@ -46,23 +48,23 @@ public class PathActivity extends AppCompatActivity implements PathListFragment.
                 PathListFragment pathListFragment = new PathListFragment();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.large_path_list, pathListFragment);
-                fragmentTransaction.addToBackStack("path_list");
                 fragmentTransaction.commit();
                 fragmentManager.executePendingTransactions();
             }
         }
         else {
             screenType = "normal";
-            if(findViewById(R.id.normal_event_list) != null){
+            if(findViewById(R.id.normal_path_list) != null){
                 if(savedInstanceState != null){
                     return;
                 }
                 PathListFragment pathListFragment = new PathListFragment();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.normal_path_list, pathListFragment);
-                fragmentTransaction.addToBackStack("path_list");
                 fragmentTransaction.commit();
                 fragmentManager.executePendingTransactions();
+
+
             }
 
         }
@@ -110,10 +112,11 @@ public class PathActivity extends AppCompatActivity implements PathListFragment.
                 fragmentTransaction.replace(R.id.normal_path_list, pathFragment);
                 break;
         }
-        fragmentTransaction.addToBackStack("path_info");
+        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
         fragmentManager.executePendingTransactions();
         pathFragment.update(path);
+        Log.i(TAG, "Path Info Loaded ");
     }
 
     @Override
