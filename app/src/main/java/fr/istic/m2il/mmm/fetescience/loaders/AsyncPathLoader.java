@@ -38,6 +38,7 @@ public class AsyncPathLoader extends AsyncTaskLoader<List<Path>> {
                     for(DataSnapshot snapshot: dataSnapshot.child("paths").getChildren()){
                         Path path = snapshot.getValue(Path.class);
                         paths.add(path);
+                        Log.i(TAG, "Loading paths on data change " + paths.size());
                     }
                 }
             }

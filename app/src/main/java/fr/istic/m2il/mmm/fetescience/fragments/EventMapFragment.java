@@ -62,15 +62,6 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
     private static final String TAG = EventMapFragment.class.getSimpleName();
 
     private List<Event> events = new ArrayList<>();
-    private List<Event> cachedEvents = new ArrayList<>();
-    private List<String> keys = new ArrayList<>();
-    private SearchView searchView;
-    private Spinner filterSpinner;
-    private ProgressBar progressBar;
-    private int selectedFilter = 0;
-    private String currentQuery;
-    private PreferencesManagerHelper preferencesManagerHelper;
-
     private OnFragmentInteractionListener mListener;
     private GoogleMap mMap;
     private boolean itineraire = false;

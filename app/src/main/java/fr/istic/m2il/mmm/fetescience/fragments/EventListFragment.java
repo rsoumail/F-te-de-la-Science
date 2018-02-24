@@ -167,8 +167,8 @@ public class EventListFragment extends Fragment implements AdapterView.OnItemSel
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        /*Log.v(TAG, "In EventListFragment on save instance state ");
-        outState.putBoolean("editPathActivated", this.editPathActivated);*/
+        Log.v(TAG, "In EventListFragment on save instance state ");
+        outState.putBoolean("editPathActivated", this.editPathActivated);
     }
 
     @Override

@@ -56,6 +56,10 @@ public class DBManagerHelper {
         }
     }
 
+    public Event findEvent(int id) throws SQLException {
+        return getHelper().getEventDAO().queryForId(id);
+    }
+
     public void deleteAllEvents(List<Event> events){
         try {
             getHelper().getEventDAO().delete(events);
