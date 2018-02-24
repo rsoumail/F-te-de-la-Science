@@ -1,4 +1,4 @@
-package Map;
+package fr.istic.m2il.mmm.fetescience.map;
 
 import android.graphics.Color;
 import android.os.AsyncTask;

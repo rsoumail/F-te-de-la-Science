@@ -39,8 +39,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import Map.AsyncTaskMap;
-import Map.GMapV2Direction;
+import fr.istic.m2il.mmm.fetescience.map.AsyncTaskMap;
+import fr.istic.m2il.mmm.fetescience.map.GMapV2Direction;
 import fr.istic.m2il.mmm.fetescience.R;
 import fr.istic.m2il.mmm.fetescience.activities.EventMapActivity;
 import fr.istic.m2il.mmm.fetescience.adpaters.EventAdapter;
