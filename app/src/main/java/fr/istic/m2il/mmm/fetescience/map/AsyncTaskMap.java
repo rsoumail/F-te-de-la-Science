@@ -2,10 +2,8 @@ package fr.istic.m2il.mmm.fetescience.map;
 
 import android.graphics.Color;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import org.w3c.dom.Document;
@@ -18,23 +16,26 @@ import java.util.ArrayList;
 
 public class AsyncTaskMap extends AsyncTask<LatLng, LatLng, PolylineOptions> {
 
-    private LatLng depart;
-    private LatLng arrive;
+    private LatLng startPoint;
+    private LatLng arrivalPoint;
+    private String mode;
 
-    public void setDepart(LatLng latLng){
-        depart = latLng;
+    public void setStartPoint(LatLng latLng){
+        startPoint = latLng;
     }
 
-    public void setArrive(LatLng latLng){
-        arrive = latLng;
+    public void setArrivalPoint(LatLng latLng){
+        arrivalPoint = latLng;
     }
+
+    public void setMode(String mode){ this.mode = mode;}
 
     @Override
     protected PolylineOptions doInBackground(LatLng ... params) {
 
         GMapV2Direction md = new GMapV2Direction();
-        Document doc = md.getDocument(depart, arrive,
-                GMapV2Direction.MODE_DRIVING);
+        Document doc = md.getDocument(startPoint, arrivalPoint,
+                this.mode);
 
         ArrayList<LatLng> directionPoint = md.getDirection(doc);
         PolylineOptions rectLine = new PolylineOptions().width(3).color(

@@ -1,55 +1,30 @@
 package fr.istic.m2il.mmm.fetescience.fragments;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ProgressBar;
-import android.widget.SearchView;
-import android.widget.Spinner;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-import org.json.JSONException;
-import org.w3c.dom.Document;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import fr.istic.m2il.mmm.fetescience.map.AsyncTaskMap;
-import fr.istic.m2il.mmm.fetescience.map.GMapV2Direction;
-import fr.istic.m2il.mmm.fetescience.R;
-import fr.istic.m2il.mmm.fetescience.activities.EventMapActivity;
-import fr.istic.m2il.mmm.fetescience.adpaters.EventAdapter;
-import fr.istic.m2il.mmm.fetescience.helpers.DBManagerHelper;
-import fr.istic.m2il.mmm.fetescience.helpers.GsonHelper;
-import fr.istic.m2il.mmm.fetescience.helpers.PreferencesManagerHelper;
 import fr.istic.m2il.mmm.fetescience.loaders.AsyncEventLoader;
+import fr.istic.m2il.mmm.fetescience.map.GMapV2Direction;
 import fr.istic.m2il.mmm.fetescience.models.Event;
-import fr.istic.m2il.mmm.fetescience.utils.Utils;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -64,15 +39,20 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
     private List<Event> events = new ArrayList<>();
     private OnFragmentInteractionListener mListener;
     private GoogleMap mMap;
-    private boolean itineraire = false;
+    private boolean itinerary = false;
 
     public EventMapFragment() {
         // Required empty public constructor
         super();
     }
 
-    public void setItineraire(boolean value){
-        itineraire = value;
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            events = getArguments().getParcelableArrayList("events");
+            itinerary = getArguments().getBoolean("itinerary");
+        }
     }
 
     @Override
@@ -116,15 +96,15 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
     public void onLoadFinished(Loader<List<Event>> loader, List<Event> data) {
         // cas normal
         // affichage de tous les evenements
-        if(!itineraire){
+        if(!itinerary){
             events = data;
             addMarkers();
         }
-        // cas intineraire
-        // affichage des éléments de l'itineraire
+        /* cas intineraire
+           affichage des éléments de l'itinerary
+        */
         else {
-            events = ((EventMapActivity) getActivity()).getEvents();
-            createRoute();
+            createRoute(GMapV2Direction.MODE_DRIVING);
         }
     }
 
@@ -192,16 +172,17 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
      * fonction qui permet de créer l'itinéraire à partir
      * d'une liste d'evenements
      */
-    public void createRoute(){
+    public void createRoute(String navigationMode){
 
         List<Double> geo;
-        Event eventPred = null;
+        Event prevEvent = null;
 
         // à chaque event, nous allons créer
         for (Event event : events){
 
             // création de l'Async task
-            AsyncTaskMap laTache = new AsyncTaskMap();
+            AsyncTaskMap asyncTaskMap = new AsyncTaskMap();
+            asyncTaskMap.setMode(navigationMode);
 
             geo = event.getGeolocalisation();
 
@@ -210,33 +191,33 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
                 // la première fois on utilise notre position
                 // les autres fois les events récupérés
                 // on récupère le point de départ de l'itinéraire
-                if(eventPred != null){
-                    List<Double> geo2 = eventPred.getGeolocalisation();
+                if(prevEvent != null){
+                    List<Double> geo2 = prevEvent.getGeolocalisation();
                     LatLng latlng1 = new LatLng(geo2.get(0),geo2.get(1));
-                    laTache.setDepart(latlng1);
+                    asyncTaskMap.setStartPoint(latlng1);
                 }
                 else {
                     LatLng latlng1 = new LatLng(48.11198, -1.67429);
-                    laTache.setDepart(latlng1);
+                    asyncTaskMap.setStartPoint(latlng1);
                 }
 
                 // on récupère le point d'arrive de l'itinéraire
                 //geo = event.getGeolocalisation();
                 LatLng latlng2 = new LatLng(geo.get(0),geo.get(1));
-                laTache.setArrive(latlng2);
+                asyncTaskMap.setArrivalPoint(latlng2);
                 addMarker(event);
 
-                eventPred = event;
+                prevEvent = event;
                 PolylineOptions rectLine = null;
                 try {
-                    rectLine = laTache.execute().get();
+                    rectLine = asyncTaskMap.execute().get();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } catch (ExecutionException e) {
                     e.printStackTrace();
                 }
 
-                // on ajoute l'itineraire à la map
+                // on ajoute l'itinerary à la map
                 mMap.addPolyline(rectLine);
 
                 // on positionne sur la map

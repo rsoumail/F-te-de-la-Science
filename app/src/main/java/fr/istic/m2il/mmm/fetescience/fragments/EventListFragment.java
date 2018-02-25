@@ -90,9 +90,9 @@ public class EventListFragment extends Fragment implements AdapterView.OnItemSel
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_event_list, container, false);
         unbinder = ButterKnife.bind(this, view);
-
         recyclerView.setVisibility(View.GONE);
-
+        this.editPathActivated = false;
+        changeCurrentEventsCheckBoxesState(false);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
                 R.array.query_filters, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

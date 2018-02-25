@@ -3,14 +3,10 @@ package fr.istic.m2il.mmm.fetescience.activities;
 import android.content.Intent;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.ContextMenu;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
+
 import java.util.List;
 
 import fr.istic.m2il.mmm.fetescience.R;
@@ -18,38 +14,39 @@ import fr.istic.m2il.mmm.fetescience.fragments.EventFragment;
 import fr.istic.m2il.mmm.fetescience.fragments.EventMapFragment;
 import fr.istic.m2il.mmm.fetescience.models.Event;
 
-public class EventMapActivity extends AppCompatActivity implements EventMapFragment.OnFragmentInteractionListener, EventFragment.OnEventFragmentInteractionListener {
+public class EventMapActivity extends BaseActivity implements EventMapFragment.OnFragmentInteractionListener, EventFragment.OnEventFragmentInteractionListener {
 
     FragmentManager fragmentManager;
     private List<Event> events;
-    
+
     //private MyLocationOverlay myLocation = null;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_map);
-
         EventMapFragment eventMapFragment = new EventMapFragment();
-
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            events = extras.getParcelableArrayList("events");
-            eventMapFragment.setItineraire(true);
+        Bundle bundle = new Bundle();
+        if(getIntent().getExtras() != null){
+            bundle.putBoolean("itinerary", true);
+            bundle.putParcelableArrayList("events", getIntent().getExtras().getParcelableArrayList("events"));
+            events = getIntent().getExtras().getParcelableArrayList("events");
             for(Event e : events){
                 Log.v("test event",e.getGeolocalisation().toString());
             }
         }
-
+        else {
+            bundle.putBoolean("itinerary", false);
+        }
+        eventMapFragment.setArguments(bundle);
         fragmentManager = getSupportFragmentManager();
-            
+
         if(savedInstanceState != null){
             return;
         }
-        
+
         eventMapFragment.getMapAsync(eventMapFragment);
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.map_event, eventMapFragment);
-        fragmentTransaction.addToBackStack("event_map");
         fragmentTransaction.commit();
         fragmentManager.executePendingTransactions();
     }
@@ -59,7 +56,6 @@ public class EventMapActivity extends AppCompatActivity implements EventMapFragm
         EventFragment eventFragment = new EventFragment();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.map_event, eventFragment);
-        fragmentTransaction.addToBackStack("event_info_from_map");
         fragmentTransaction.commit();
         fragmentManager.executePendingTransactions();
         eventFragment.update(event);
@@ -68,19 +64,6 @@ public class EventMapActivity extends AppCompatActivity implements EventMapFragm
     @Override
     public void onEventInteraction(Event event) {}
 
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
-        return true;
-    }
-
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v,
-                                    ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -93,10 +76,6 @@ public class EventMapActivity extends AppCompatActivity implements EventMapFragm
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    public List<Event> getEvents(){
-        return events;
     }
 }
 
