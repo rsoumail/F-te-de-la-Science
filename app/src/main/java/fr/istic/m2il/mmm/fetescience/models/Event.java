@@ -2,7 +2,6 @@ package fr.istic.m2il.mmm.fetescience.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
@@ -105,9 +104,9 @@ public class Event implements Parcelable {
 
     private Integer fillingRate = new Integer(0);
 
-    private Float rating;
+    private Float rating = new Float(0);
 
-    private Integer availablePlacesNumber = new Integer(0);
+    private Integer fillPlaces = new Integer(0);
 
     private Integer maxAvailablePlaces = new Integer(0);
 
@@ -144,7 +143,7 @@ public class Event implements Parcelable {
         votersNumber = in.readInt();
         fillingRate = in.readInt();
         rating = in.readFloat();
-        availablePlacesNumber = in.readInt();
+        fillPlaces = in.readInt();
         maxAvailablePlaces = in.readInt();
     }
 
@@ -192,12 +191,12 @@ public class Event implements Parcelable {
         this.checked = checked;
     }
 
-    public Integer getAvailablePlacesNumber(){
-        return availablePlacesNumber;
+    public Integer getFillPlaces(){
+        return fillPlaces;
     }
 
-    public void setAvailablePlacesNumber(Integer availablePlacesNumber){
-        this.availablePlacesNumber = availablePlacesNumber;
+    public void setFillPlaces(Integer fillPlaces){
+        this.fillPlaces = fillPlaces;
     }
 
     public Integer getMaxAvailablePlaces(){
@@ -432,7 +431,7 @@ public class Event implements Parcelable {
         fireBaseEvent.put("rating", this.rating);
         fireBaseEvent.put("fillingRate", this.fillingRate);
         fireBaseEvent.put("votersNumber", this.votersNumber);
-        fireBaseEvent.put("availablePlacesNumber", this.availablePlacesNumber);
+        fireBaseEvent.put("fillPlaces", this.fillPlaces);
         fireBaseEvent.put("maxAvailablePlaces", this.maxAvailablePlaces);
 
         return fireBaseEvent;
@@ -657,8 +656,8 @@ public class Event implements Parcelable {
             dest.writeFloat(-1);
         }
 
-        if(availablePlacesNumber != null){
-            dest.writeInt(availablePlacesNumber);
+        if(fillPlaces != null){
+            dest.writeInt(fillPlaces);
         }
         else {
             dest.writeInt(-1);
