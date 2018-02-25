@@ -270,7 +270,7 @@ public class EventFragment extends Fragment {
                     String fEventkey = snapshot.getKey();
                     Event fEvent = snapshot.getValue(Event.class);
                     if(event.getId() == fEvent.getId()){
-                        event.setFillingRate(Integer.parseInt(fillPlacesEditText.getText().toString()));
+                        event.setFillPlaces(Integer.parseInt(fillPlacesEditText.getText().toString()));
                         database.child("events").child(fEventkey).setValue(event.mapToFireBaseEvent());
                         Log.i(TAG, "Event's fill places With Key " + fEventkey + " and Id " + event.getId() + " Was Updated");
                         break ;
