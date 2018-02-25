@@ -64,8 +64,6 @@ public class EventActivity extends BaseActivity implements EventListFragment.OnE
         }
     }
 
-
-
     @Override
     public void onItemSelected(Event item) {
         EventFragment eventFragment = new EventFragment();

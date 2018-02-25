@@ -69,8 +69,13 @@ public class EventMapActivity extends BaseActivity implements EventMapFragment.O
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_events:
-                Intent intent = new Intent(EventMapActivity.this, EventActivity.class);
-                startActivity(intent);
+                Intent eventsIntent = new Intent(EventMapActivity.this, EventActivity.class);
+                startActivity(eventsIntent);
+                return true;
+
+            case R.id.action_paths:
+                Intent pathsIntent = new Intent(EventMapActivity.this, PathActivity.class);
+                startActivity(pathsIntent);
                 return true;
 
             default:

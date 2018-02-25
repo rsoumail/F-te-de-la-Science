@@ -1,5 +1,6 @@
 package fr.istic.m2il.mmm.fetescience.activities;
 
+import android.content.Intent;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -76,10 +77,15 @@ public class PathActivity extends BaseActivity implements PathListFragment.OnPat
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
-            /*case R.id.action_map:
-                Intent intent = new Intent(PathActivity.this, EventMapActivity.class);
-                startActivity(intent);
-                return true;*/
+            case R.id.action_events:
+                Intent eventsIntent = new Intent(PathActivity.this, EventActivity.class);
+                startActivity(eventsIntent);
+                return true;
+
+            case R.id.action_map:
+                Intent pathsIntent = new Intent(PathActivity.this, EventMapActivity.class);
+                startActivity(pathsIntent);
+                return true;
 
             default:
                 return super.onOptionsItemSelected(item);
