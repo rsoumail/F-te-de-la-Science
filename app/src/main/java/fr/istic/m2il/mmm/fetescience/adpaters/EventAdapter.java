@@ -1,7 +1,6 @@
 package fr.istic.m2il.mmm.fetescience.adpaters;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -9,11 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.joanzapata.iconify.widget.IconTextView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -21,8 +18,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnCheckedChanged;
-import butterknife.OnClick;
 import fr.istic.m2il.mmm.fetescience.R;
 import fr.istic.m2il.mmm.fetescience.listeners.OnEventClickListener;
 import fr.istic.m2il.mmm.fetescience.models.Event;
@@ -37,8 +32,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
     private Context context;
     private List<Event> events;
-    private List<Boolean> checkboxsChecked = new ArrayList<>();
-    private List<Event> eventsCheked = new ArrayList<>();
     private OnEventClickListener onEventClickListener;
     private Boolean shareActivated = false;
 
@@ -67,7 +60,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             holder.themeTextView.setText(event.getThematiques().length() >= 40 ? event.getThematiques().substring(0,39) + " ..." : event.getThematiques());
         }
 
-        holder.eventCheckBox.setChecked(event.getChecked());
+        holder.eventCheckBox.setChecked(event.isChecked());
         holder.bind(event, onEventClickListener);
 
 
@@ -84,10 +77,12 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         this.onEventClickListener = onEventClickListener;
     }
 
-    public void swapData(List<Event> data){
-        events.clear(); // add this so that it will clear old data
-        if(data != null)
-            events.addAll(data);
+    public void swapData(List<Event> data, boolean clear){
+        if(clear){
+            events.clear(); // add this so that it will clear old data
+            if(data != null)
+                events.addAll(data);
+        }
         notifyDataSetChanged();
     }
 

@@ -17,11 +17,13 @@ import javax.annotation.Nullable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import fr.istic.m2il.mmm.fetescience.R;
+import fr.istic.m2il.mmm.fetescience.fragments.EventFragment;
 import fr.istic.m2il.mmm.fetescience.fragments.PathFragment;
 import fr.istic.m2il.mmm.fetescience.fragments.PathListFragment;
+import fr.istic.m2il.mmm.fetescience.models.Event;
 import fr.istic.m2il.mmm.fetescience.models.Path;
 
-public class PathActivity extends AppCompatActivity implements PathListFragment.OnPathListFragmentInteractionListener, PathFragment.OnPathFragmentInteractionListener{
+public class PathActivity extends AppCompatActivity implements PathListFragment.OnPathListFragmentInteractionListener, PathFragment.OnPathFragmentInteractionListener, EventFragment.OnEventFragmentInteractionListener{
 
     private static final String TAG = PathActivity.class.getSimpleName();
 
@@ -121,6 +123,30 @@ public class PathActivity extends AppCompatActivity implements PathListFragment.
 
     @Override
     public void onPathFragmentUpdate(Path path) {
+
+    }
+
+    @Override
+    public void onPathEventSelected(Event event) {
+        EventFragment eventFragment = new EventFragment();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        switch (screenType){
+            case "large":
+                fragmentTransaction.replace(R.id.large_path_item, eventFragment);
+                break;
+
+            case "normal":
+                fragmentTransaction.replace(R.id.normal_path_list, eventFragment);
+                break;
+        }
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+        fragmentManager.executePendingTransactions();
+        eventFragment.update(event);
+    }
+
+    @Override
+    public void onEventInteraction(Event event) {
 
     }
 }

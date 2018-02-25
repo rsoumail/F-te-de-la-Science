@@ -1,7 +1,6 @@
 package fr.istic.m2il.mmm.fetescience.fragments;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -15,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -32,11 +30,12 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import fr.istic.m2il.mmm.fetescience.R;
 import fr.istic.m2il.mmm.fetescience.adpaters.PathAdapter;
-import fr.istic.m2il.mmm.fetescience.loaders.AsyncPathLoader;
+import fr.istic.m2il.mmm.fetescience.loaders.AsyncEventLoader;
+import fr.istic.m2il.mmm.fetescience.models.Event;
 import fr.istic.m2il.mmm.fetescience.models.Path;
 
 
-public class PathListFragment extends Fragment implements AdapterView.OnItemSelectedListener, LoaderManager.LoaderCallbacks<List<Path>>{
+public class PathListFragment extends Fragment implements AdapterView.OnItemSelectedListener, LoaderManager.LoaderCallbacks<List<Event>>{
 
     private static final String TAG = PathListFragment.class.getSimpleName();
 
@@ -61,12 +60,12 @@ public class PathListFragment extends Fragment implements AdapterView.OnItemSele
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         database = FirebaseDatabase.getInstance().getReference();
-        paths = new ArrayList<>();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        paths = new ArrayList<>();
         View view = inflater.inflate(R.layout.fragment_path_list, container, false);
         unbinder = ButterKnife.bind(this, view);
         recyclerView.setVisibility(View.GONE);
@@ -77,8 +76,36 @@ public class PathListFragment extends Fragment implements AdapterView.OnItemSele
         });
 
         recyclerView.setAdapter(pathAdapter);
-        getLoaderManager().initLoader(0, null, this).forceLoad();
-        Log.i(TAG, "View is created ");
+
+
+        FirebaseDatabase.getInstance().getReference().addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                Log.i(TAG, "Data Changed ");
+                if(dataSnapshot.hasChild("paths")){
+
+                    for(DataSnapshot snapshot: dataSnapshot.child("paths").getChildren()){
+                        Path path = snapshot.getValue(Path.class);
+                        paths.add(path);
+                    }
+                    progressBar.setVisibility(View.GONE);
+                    if(!paths.isEmpty()){
+                        recyclerView.setVisibility(View.VISIBLE);
+                        pathAdapter.notifyDataSetChanged();
+                    } else {
+                        emptyPathsTextView.setVisibility(View.VISIBLE);
+                    }
+                }
+                //FirebaseDatabase.
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         return view;
     }
 
@@ -116,25 +143,25 @@ public class PathListFragment extends Fragment implements AdapterView.OnItemSele
     }
 
     @Override
-    public Loader<List<Path>> onCreateLoader(int id, Bundle args) {
-        return new AsyncPathLoader(getActivity());
+    public Loader<List<Event>> onCreateLoader(int id, Bundle args) {
+        return new AsyncEventLoader(getActivity());
     }
 
     @Override
-    public void onLoadFinished(Loader<List<Path>> loader, List<Path> data) {
+    public void onLoadFinished(Loader<List<Event>> loader, List<Event> data) {
         progressBar.setVisibility(View.GONE);
         Log.i(TAG, "Paths data size " + data.size());
         if(!data.isEmpty()){
-            pathAdapter.swapData(data);
-            recyclerView.setVisibility(View.VISIBLE);
+            //pathAdapter.swapData(data);
+            //recyclerView.setVisibility(View.VISIBLE);
         } else {
-            emptyPathsTextView.setVisibility(View.VISIBLE);
+          //  emptyPathsTextView.setVisibility(View.VISIBLE);
         }
 
     }
 
     @Override
-    public void onLoaderReset(Loader<List<Path>> loader) {
+    public void onLoaderReset(Loader<List<Event>> loader) {
 
     }
 

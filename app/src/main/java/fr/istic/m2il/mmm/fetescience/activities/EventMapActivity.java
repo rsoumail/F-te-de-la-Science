@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,21 +29,27 @@ public class EventMapActivity extends AppCompatActivity implements EventMapFragm
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_map);
 
+        EventMapFragment eventMapFragment = new EventMapFragment();
+
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             events = extras.getParcelableArrayList("events");
+            eventMapFragment.setItineraire(true);
+            for(Event e : events){
+                Log.v("test event",e.getGeolocalisation().toString());
+            }
         }
 
         fragmentManager = getSupportFragmentManager();
-
+            
         if(savedInstanceState != null){
             return;
         }
-
-        EventMapFragment eventMapFragment = new EventMapFragment();
+        
         eventMapFragment.getMapAsync(eventMapFragment);
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.map_event, eventMapFragment);
+        fragmentTransaction.addToBackStack("event_map");
         fragmentTransaction.commit();
         fragmentManager.executePendingTransactions();
     }
@@ -52,7 +59,7 @@ public class EventMapActivity extends AppCompatActivity implements EventMapFragm
         EventFragment eventFragment = new EventFragment();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.map_event, eventFragment);
-        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.addToBackStack("event_info_from_map");
         fragmentTransaction.commit();
         fragmentManager.executePendingTransactions();
         eventFragment.update(event);
@@ -86,6 +93,10 @@ public class EventMapActivity extends AppCompatActivity implements EventMapFragm
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public List<Event> getEvents(){
+        return events;
     }
 }
 

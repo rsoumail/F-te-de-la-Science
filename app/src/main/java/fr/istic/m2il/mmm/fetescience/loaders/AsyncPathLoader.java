@@ -30,24 +30,7 @@ public class AsyncPathLoader extends AsyncTaskLoader<List<Path>> {
     @Override
     public List<Path> loadInBackground() {
 
-        FirebaseDatabase.getInstance().getReference().addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.hasChild("paths")){
 
-                    for(DataSnapshot snapshot: dataSnapshot.child("paths").getChildren()){
-                        Path path = snapshot.getValue(Path.class);
-                        paths.add(path);
-                        Log.i(TAG, "Loading paths on data change " + paths.size());
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
 
         if(!paths.isEmpty())
             Log.i(TAG, "Loading paths was loaded successful and not empty");

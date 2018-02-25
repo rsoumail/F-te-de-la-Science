@@ -2,6 +2,7 @@ package fr.istic.m2il.mmm.fetescience.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
@@ -135,38 +136,16 @@ public class Event implements Parcelable {
         dates = in.readString();
         mots_cles_fr = in.readString();
         accessibilite_fr = in.readString();
-        if (in.readByte() == 0) {
-            nb_evenements = null;
-        } else {
-            nb_evenements = in.readInt();
-        }
-        byte tmpChecked = in.readByte();
-        checked = tmpChecked == 0 ? null : tmpChecked == 1;
-        if (in.readByte() == 0) {
-            votersNumber = null;
-        } else {
-            votersNumber = in.readInt();
-        }
-        if (in.readByte() == 0) {
-            fillingRate = null;
-        } else {
-            fillingRate = in.readInt();
-        }
-        if (in.readByte() == 0) {
-            rating = null;
-        } else {
-            rating = in.readFloat();
-        }
-        if(in.readByte() == 0){
-            availablePlacesNumber = null;
-        } else {
-            availablePlacesNumber = in.readInt();
-        }
-        if(in.readByte() == 0){
-            maxAvailablePlaces = null;
-        } else {
-            maxAvailablePlaces = in.readInt();
-        }
+        nb_evenements = in.readInt();
+        ArrayList<Double> arr = new ArrayList<Double>();
+        arr.add(in.readDouble());
+        arr.add(in.readDouble());
+        geolocalisation = arr;
+        votersNumber = in.readInt();
+        fillingRate = in.readInt();
+        rating = in.readFloat();
+        availablePlacesNumber = in.readInt();
+        maxAvailablePlaces = in.readInt();
     }
 
     public static final Creator<Event> CREATOR = new Creator<Event>() {
@@ -205,7 +184,7 @@ public class Event implements Parcelable {
         this.rating = rating;
     }
 
-    public Boolean getChecked() {
+    public Boolean isChecked() {
         return checked;
     }
 
@@ -231,11 +210,12 @@ public class Event implements Parcelable {
 
     public Event() {}
 
-    public Event(String apercu, String description_fr, String titre_fr, String thematiques) {
+    public Event(String apercu, String description_fr, String titre_fr, String thematiques, ArrayList<Double> geolocalisation) {
         this.apercu = apercu;
         this.description_fr = description_fr;
         this.titre_fr = titre_fr;
         this.thematiques = thematiques;
+        this.geolocalisation = geolocalisation;
     }
 
     public int getId() {
@@ -478,35 +458,217 @@ public class Event implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
 
         dest.writeInt(id);
-        dest.writeString(apercu);
-        dest.writeString(image);
-        dest.writeString(ville);
-        dest.writeString(identifiant);
-        dest.writeString(description_fr);
-        dest.writeString(titre_fr);
-        dest.writeString(thematiques);
-        dest.writeString(region);
-        dest.writeString(description_longue_fr);
-        dest.writeString(type_d_animation);
-        dest.writeString(horaires_detailles_fr);
-        dest.writeString(date_debut);
-        dest.writeString(date_fin);
-        dest.writeString(nom_du_lieu);
-        dest.writeString(inscription_necessaire);
-        dest.writeString(adresse);
-        dest.writeString(organisateur);
-        dest.writeString(publics_concernes);
-        dest.writeString(statut);
-        dest.writeString(lien);
-        dest.writeString(dates);
-        dest.writeString(mots_cles_fr);
-        dest.writeString(accessibilite_fr);
-        dest.writeInt(nb_evenements);
-        dest.writeList(geolocalisation);
-        dest.writeInt(votersNumber);
-        dest.writeInt(fillingRate);
-        dest.writeDouble(rating);
-        dest.writeInt(availablePlacesNumber);
-        dest.writeInt(maxAvailablePlaces);
+
+        if(apercu != null){
+            dest.writeString(apercu);
+        }
+        else {
+            dest.writeString("nothing");
+        }
+
+        if(image != null){
+            dest.writeString(image);
+        }
+        else {
+            dest.writeString("nothing");
+        }
+
+        if(ville != null){
+            dest.writeString(ville);
+        }
+        else {
+            dest.writeString("nothing");
+        }
+
+        if(identifiant != null){
+            dest.writeString(identifiant);
+        }
+        else {
+            dest.writeString("nothing");
+        }
+
+        if(description_fr != null){
+            dest.writeString(description_fr);
+        }
+        else {
+            dest.writeString("nothing");
+        }
+
+        if(titre_fr != null){
+            dest.writeString(titre_fr);
+        }
+        else {
+            dest.writeString("nothing");
+        }
+
+        if(thematiques != null){
+            dest.writeString(thematiques);
+        }
+        else {
+            dest.writeString("nothing");
+        }
+
+        if(region != null){
+            dest.writeString(region);
+        }
+        else {
+            dest.writeString("nothing");
+        }
+
+        if(description_longue_fr != null){
+            dest.writeString(description_longue_fr);
+        }
+        else {
+            dest.writeString("nothing");
+        }
+
+        if(type_d_animation != null){
+            dest.writeString(type_d_animation);
+        }
+        else {
+            dest.writeString("nothing");
+        }
+
+        if(horaires_detailles_fr != null){
+            dest.writeString(horaires_detailles_fr);
+        }
+        else {
+            dest.writeString("nothing");
+        }
+
+        if(date_debut != null){
+            dest.writeString(date_debut);
+        }
+        else {
+            dest.writeString("nothing");
+        }
+
+        if(date_fin != null){
+            dest.writeString(date_fin);
+        }
+        else {
+            dest.writeString("nothing");
+        }
+
+        if(nom_du_lieu != null){
+            dest.writeString(nom_du_lieu);
+        }
+        else {
+            dest.writeString("nothing");
+        }
+
+        if(inscription_necessaire != null){
+            dest.writeString(inscription_necessaire);
+        }
+        else {
+            dest.writeString("nothing");
+        }
+
+        if(adresse != null){
+            dest.writeString(adresse);
+        }
+        else {
+            dest.writeString("nothing");
+        }
+
+        if(organisateur != null){
+            dest.writeString(organisateur);
+        }
+        else {
+            dest.writeString("nothing");
+        }
+
+        if(publics_concernes != null){
+            dest.writeString(publics_concernes);
+        }
+        else {
+            dest.writeString("nothing");
+        }
+
+        if(statut != null){
+            dest.writeString(statut);
+        }
+        else {
+            dest.writeString("nothing");
+        }
+
+        if(lien != null){
+            dest.writeString(lien);
+        }
+        else {
+            dest.writeString("nothing");
+        }
+
+        if(dates != null){
+            dest.writeString(dates);
+        }
+        else {
+            dest.writeString("nothing");
+        }
+
+        if(mots_cles_fr != null){
+            dest.writeString(mots_cles_fr);
+        }
+        else {
+            dest.writeString("nothing");
+        }
+
+        if(accessibilite_fr != null){
+            dest.writeString(accessibilite_fr);
+        }
+        else {
+            dest.writeString("nothing");
+        }
+
+        if(nb_evenements != null){
+            dest.writeInt(nb_evenements);
+        }
+        else {
+            dest.writeInt(0);
+        }
+
+        if(geolocalisation != null){
+            dest.writeDouble(geolocalisation.get(0));
+            dest.writeDouble(geolocalisation.get(1));
+        }
+        else {
+            dest.writeDouble(0);
+            dest.writeDouble(0);
+        }
+
+        if(votersNumber != null){
+            dest.writeInt(votersNumber);
+        }
+        else {
+            dest.writeInt(-1);
+        }
+
+        if(fillingRate != null){
+            dest.writeInt(fillingRate);
+        }
+        else {
+            dest.writeInt(-1);
+        }
+
+        if(rating != null){
+            dest.writeFloat(rating);
+        }
+        else {
+            dest.writeFloat(-1);
+        }
+
+        if(availablePlacesNumber != null){
+            dest.writeInt(availablePlacesNumber);
+        }
+        else {
+            dest.writeInt(-1);
+        }
+
+        if(maxAvailablePlaces != null){
+            dest.writeInt(maxAvailablePlaces);
+        }
+        else {
+            dest.writeInt(-1);
+        }
     }
 }

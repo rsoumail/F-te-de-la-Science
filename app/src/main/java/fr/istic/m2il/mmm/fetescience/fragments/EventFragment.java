@@ -246,7 +246,7 @@ public class EventFragment extends Fragment {
         dialog.show();
     }
 
-    @OnClick(R.id.manager_edit_layout)
+    /*@OnClick(R.id.manager_edit_layout)
     public void updateToFirebase(){
         final Dialog dialog = new Dialog(getContext());
         //dialog.setContentView(R.id.manager_edit_layout);
@@ -265,7 +265,7 @@ public class EventFragment extends Fragment {
         });
         dialog.show();
     }
-
+*/
     @OnClick(R.id.event_rate_btn)
     public void rate(){
         Float rate = new Float(eventRatingBar.getRating());

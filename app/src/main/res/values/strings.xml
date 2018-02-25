@@ -12,6 +12,20 @@
     <string name="available_places_max_text">Nombre de places Max</string>
     <string name="fill_places">Taux de Remplissage</string>
 
+    <string name="path_info_author_label">Auteur : </string>
+    <string name="path_info_comment_label">Titre parcours : </string>
+
+
+    <string name="share_path_dialog_title">Informations du parcours</string>
+    <string name="share_path_dialog_author_hint">Votre nom</string>
+    <string name="share_path_dialog_comment_hint">Titre du parcours</string>
+
+    <string name="manager_identification_dialog_title">Identification Organisateur</string>
+    <string name="manager_identification_dialog_identifiant_hint">Identifiant de l\'évenement</string>
+
+    <string name="share_social_dialog_title">Informations du Partage</string>
+    <string name="share_social_dialog_comment_hint">Dites quelque chose</string>
+
     <!-- String related to menu -->
     <string name="action_settings">Paramètre</string>
     <string name="action_map">Carte</string>

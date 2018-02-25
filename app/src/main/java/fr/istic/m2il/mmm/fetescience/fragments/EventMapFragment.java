@@ -2,6 +2,7 @@ package fr.istic.m2il.mmm.fetescience.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -27,13 +28,19 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import org.json.JSONException;
+import org.w3c.dom.Document;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
+import fr.istic.m2il.mmm.fetescience.map.AsyncTaskMap;
+import fr.istic.m2il.mmm.fetescience.map.GMapV2Direction;
 import fr.istic.m2il.mmm.fetescience.R;
 import fr.istic.m2il.mmm.fetescience.activities.EventMapActivity;
 import fr.istic.m2il.mmm.fetescience.adpaters.EventAdapter;
@@ -57,10 +64,15 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
     private List<Event> events = new ArrayList<>();
     private OnFragmentInteractionListener mListener;
     private GoogleMap mMap;
+    private boolean itineraire = false;
 
     public EventMapFragment() {
         // Required empty public constructor
         super();
+    }
+
+    public void setItineraire(boolean value){
+        itineraire = value;
     }
 
     @Override
@@ -82,7 +94,6 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
-            Log.v("je passe", "ou pas ?");
             mListener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
@@ -103,8 +114,18 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
 
     @Override
     public void onLoadFinished(Loader<List<Event>> loader, List<Event> data) {
-        events = data;
-        addMarkers();
+        // cas normal
+        // affichage de tous les evenements
+        if(!itineraire){
+            events = data;
+            addMarkers();
+        }
+        // cas intineraire
+        // affichage des éléments de l'itineraire
+        else {
+            events = ((EventMapActivity) getActivity()).getEvents();
+            createRoute();
+        }
     }
 
     @Override
@@ -120,6 +141,10 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
         mMap = map;
     }
 
+    /**
+     * fonction qui permet d'ajouter les marqueurs
+     * sur la totalité des évenements de l'application
+     */
     public void addMarkers(){
 
         // init sur Paris
@@ -127,26 +152,8 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
 
         for (Event event : events){
 
-            /* on récupère la liste de la localistion de l'evt
-            et on créé le latlng */
-            List<Double> locEvent = event.getGeolocalisation();
-
-            // on vérifie que l'evenement possède une localisation précise
-            if(locEvent != null){
-
-                //Log.v("event name est passé",event.getTitre_fr());
-
-                // on récupère la localisation
-                pEvent = new LatLng(locEvent.get(0),locEvent.get(1));
-
-                // on créé le nouveau marker
-                mMap.addMarker(new MarkerOptions()
-                        .title(event.getTitre_fr())
-                        .snippet(event.getDescription_fr())
-                        .position(pEvent))
-                        .setTag(event);
-
-            }
+            // on ajoute le marker sur la map
+            addMarker(event);
         }
 
         // on se fixe sur le dernier evt vu
@@ -158,6 +165,85 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
             onEventClicked((Event) marker.getTag());
         });
 
+    }
+
+    public void addMarker(Event event){
+
+        // on récupère la liste de la localistion de l'evt
+        // et on créé le latlng
+        List<Double> locEvent = event.getGeolocalisation();
+
+        // on vérifie que l'evenement possède une localisation précise
+        if(locEvent != null){
+
+            // on récupère la localisation
+            LatLng pEvent = new LatLng(locEvent.get(0),locEvent.get(1));
+
+            // on créé le nouveau marker
+            mMap.addMarker(new MarkerOptions()
+                    .title(event.getTitre_fr())
+                    .snippet(event.getDescription_fr())
+                    .position(pEvent))
+                    .setTag(event);
+        }
+    }
+
+    /**
+     * fonction qui permet de créer l'itinéraire à partir
+     * d'une liste d'evenements
+     */
+    public void createRoute(){
+
+        List<Double> geo;
+        Event eventPred = null;
+
+        // à chaque event, nous allons créer
+        for (Event event : events){
+
+            // création de l'Async task
+            AsyncTaskMap laTache = new AsyncTaskMap();
+
+            geo = event.getGeolocalisation();
+
+            if(geo != null){
+
+                // la première fois on utilise notre position
+                // les autres fois les events récupérés
+                // on récupère le point de départ de l'itinéraire
+                if(eventPred != null){
+                    List<Double> geo2 = eventPred.getGeolocalisation();
+                    LatLng latlng1 = new LatLng(geo2.get(0),geo2.get(1));
+                    laTache.setDepart(latlng1);
+                }
+                else {
+                    LatLng latlng1 = new LatLng(48.11198, -1.67429);
+                    laTache.setDepart(latlng1);
+                }
+
+                // on récupère le point d'arrive de l'itinéraire
+                //geo = event.getGeolocalisation();
+                LatLng latlng2 = new LatLng(geo.get(0),geo.get(1));
+                laTache.setArrive(latlng2);
+                addMarker(event);
+
+                eventPred = event;
+                PolylineOptions rectLine = null;
+                try {
+                    rectLine = laTache.execute().get();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+
+                // on ajoute l'itineraire à la map
+                mMap.addPolyline(rectLine);
+
+                // on positionne sur la map
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng2, 6));
+
+            }
+        }
     }
 
     @Override
@@ -179,5 +265,4 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
     public interface OnFragmentInteractionListener {
         void onItemSelected(Event item);
     }
-
 }
