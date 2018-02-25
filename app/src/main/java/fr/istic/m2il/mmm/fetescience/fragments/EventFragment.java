@@ -1,7 +1,6 @@
 package fr.istic.m2il.mmm.fetescience.fragments;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -43,9 +42,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import fr.istic.m2il.mmm.fetescience.R;
-import fr.istic.m2il.mmm.fetescience.activities.EventActivity;
-import fr.istic.m2il.mmm.fetescience.activities.EventMapActivity;
-import fr.istic.m2il.mmm.fetescience.activities.PathActivity;
 import fr.istic.m2il.mmm.fetescience.models.Event;
 import fr.istic.m2il.mmm.fetescience.models.EventDuration;
 import fr.istic.m2il.mmm.fetescience.utils.Utils;
@@ -124,15 +120,6 @@ public class EventFragment extends Fragment {
 
 
         switch (item.getItemId()) {
-            /*case R.id.action_map:
-                Intent intentMap = new Intent(getActivity(), EventMapActivity.class);
-                startActivity(intentMap);
-                return true;*/
-
-            /*case R.id.action_paths:
-                Intent intentPath = new Intent(getActivity(), PathActivity.class);
-                startActivity(intentPath);
-                return true;*/
 
             case R.id.action_manager:
                 final Dialog dialog = new Dialog(getActivity());
@@ -248,26 +235,16 @@ public class EventFragment extends Fragment {
         dialog.show();
     }
 
-    /*@OnClick(R.id.manager_edit_layout)
-    public void updateToFirebase(){
-        final Dialog dialog = new Dialog(getContext());
-        //dialog.setContentView(R.id.manager_edit_layout);
-        EditText availablePlaceMaxEditText = dialog.findViewById(R.id.available_places_max_edit);
-        EditText fillPlacesEditText = dialog.findViewById(R.id.fill_places_edit);
-        Button validateButton = dialog.findViewById(R.id.update_max_places);
-        Button cancelButton = dialog.findViewById(R.id.update_fill_places);
-        validateButton.setOnClickListener( view -> {
-            availablePlaceMaxView.setText(availablePlaceMaxEditText.getText().toString());
-            fillPlaceView.setText(fillPlacesEditText.getText().toString());
-            dialog.dismiss();
-            Log.i(TAG, "AJOUTE DANS LA FIREBASE");
-        });
-        cancelButton.setOnClickListener( view -> {
-            dialog.dismiss();
-        });
-        dialog.show();
+    @OnClick(R.id.manager_update_max_places)
+    public void updateMaxPlacesToFirebase(){
+
     }
-*/
+
+    @OnClick(R.id.manager_update_fill_places)
+    public void udpateFillPlacesToFireBase(){
+
+    }
+
     @OnClick(R.id.event_rate_btn)
     public void rate(){
         Float rate = new Float(eventRatingBar.getRating());
