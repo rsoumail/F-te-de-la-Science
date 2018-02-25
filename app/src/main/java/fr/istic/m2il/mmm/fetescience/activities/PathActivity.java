@@ -1,5 +1,6 @@
 package fr.istic.m2il.mmm.fetescience.activities;
 
+import android.content.Intent;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -23,7 +24,7 @@ import fr.istic.m2il.mmm.fetescience.fragments.PathListFragment;
 import fr.istic.m2il.mmm.fetescience.models.Event;
 import fr.istic.m2il.mmm.fetescience.models.Path;
 
-public class PathActivity extends AppCompatActivity implements PathListFragment.OnPathListFragmentInteractionListener, PathFragment.OnPathFragmentInteractionListener, EventFragment.OnEventFragmentInteractionListener{
+public class PathActivity extends BaseActivity implements PathListFragment.OnPathListFragmentInteractionListener, PathFragment.OnPathFragmentInteractionListener, EventFragment.OnEventFragmentInteractionListener{
 
     private static final String TAG = PathActivity.class.getSimpleName();
 
@@ -73,28 +74,18 @@ public class PathActivity extends AppCompatActivity implements PathListFragment.
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
-        return true;
-    }
-
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v,
-                                    ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
-            /*case R.id.action_map:
-                Intent intent = new Intent(PathActivity.this, EventMapActivity.class);
-                startActivity(intent);
-                return true;*/
+            case R.id.action_events:
+                Intent eventsIntent = new Intent(PathActivity.this, EventActivity.class);
+                startActivity(eventsIntent);
+                return true;
+
+            case R.id.action_map:
+                Intent pathsIntent = new Intent(PathActivity.this, EventMapActivity.class);
+                startActivity(pathsIntent);
+                return true;
 
             default:
                 return super.onOptionsItemSelected(item);

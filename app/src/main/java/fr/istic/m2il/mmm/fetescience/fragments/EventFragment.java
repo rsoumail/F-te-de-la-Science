@@ -122,15 +122,15 @@ public class EventFragment extends Fragment {
 
 
         switch (item.getItemId()) {
-            case R.id.action_map:
+            /*case R.id.action_map:
                 Intent intentMap = new Intent(getActivity(), EventMapActivity.class);
                 startActivity(intentMap);
-                return true;
+                return true;*/
 
-            case R.id.action_paths:
+            /*case R.id.action_paths:
                 Intent intentPath = new Intent(getActivity(), PathActivity.class);
                 startActivity(intentPath);
-                return true;
+                return true;*/
 
             case R.id.action_manager:
                 final Dialog dialog = new Dialog(getActivity());

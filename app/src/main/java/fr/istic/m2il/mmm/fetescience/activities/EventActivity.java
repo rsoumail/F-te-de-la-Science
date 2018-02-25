@@ -1,24 +1,10 @@
 package fr.istic.m2il.mmm.fetescience.activities;
 
-
-import android.app.Dialog;
-import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.ContextMenu;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 
-import com.google.firebase.auth.FirebaseAuth;
 
 import javax.annotation.Nullable;
 import butterknife.BindView;
@@ -27,10 +13,10 @@ import butterknife.ButterKnife;
 import fr.istic.m2il.mmm.fetescience.R;
 import fr.istic.m2il.mmm.fetescience.fragments.EventFragment;
 import fr.istic.m2il.mmm.fetescience.fragments.EventListFragment;
-import fr.istic.m2il.mmm.fetescience.helpers.DBManagerHelper;
+
 import fr.istic.m2il.mmm.fetescience.models.Event;
 
-public class EventActivity extends AppCompatActivity implements EventListFragment.OnEventListFragmentInteractionListener, EventFragment.OnEventFragmentInteractionListener {
+public class EventActivity extends BaseActivity implements EventListFragment.OnEventListFragmentInteractionListener, EventFragment.OnEventFragmentInteractionListener {
 
     private static final String TAG = EventActivity.class.getSimpleName();
 
@@ -77,27 +63,6 @@ public class EventActivity extends AppCompatActivity implements EventListFragmen
             }
         }
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
-        return true;
-    }
-
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v,
-                                    ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
-    }
-
-    /*@Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-
-    }*/
 
     @Override
     public void onItemSelected(Event item) {
