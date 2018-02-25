@@ -6,46 +6,58 @@
     <RelativeLayout
         android:id="@+id/author_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
 
         <TextView
+            android:id="@+id/path_info_author_label"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="@string/path_info_author_label"
+            android:textSize="20sp"
+            android:layout_alignParentLeft="true"/>
 
         <TextView
             android:id="@+id/author"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="10dp"
             android:textColor="@color/black"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:layout_alignLeft="@+id/path_info_author_label"
+            android:layout_marginLeft="75dp"
+            />
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/comment_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/author_layout">
+        android:layout_below="@+id/author_layout"
+        android:layout_marginTop="10dp">
 
         <TextView
+            android:id="@+id/path_info_comment_label"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="@string/path_info_comment_label"
+            android:textSize="20sp"
+            android:layout_alignParentLeft="true"/>
 
         <TextView
             android:id="@+id/comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:textColor="@color/black"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:layout_alignLeft="@+id/path_info_comment_label"
+            android:layout_marginLeft="140dp"/>
     </RelativeLayout>
 
     <View
         android:id="@+id/h_bar"
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:layout_below="@id/search_layout"
+        android:layout_below="@id/comment_layout"
         android:layout_marginTop="10dp"
         android:background="#000000" />
 
@@ -56,5 +68,13 @@
         android:layout_below="@id/h_bar">
 
     </android.support.v7.widget.RecyclerView>
+
+    <View
+        android:id="@+id/b_bar"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_below="@id/path_events_recycler_view"
+        android:layout_marginTop="10dp"
+        android:background="#000000" />
 
 </RelativeLayout>

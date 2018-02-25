@@ -58,6 +58,7 @@
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
 
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/path_recycler_view"
         android:layout_below="@id/h_bar"
@@ -65,4 +66,10 @@
         android:layout_width="match_parent">
 
     </android.support.v7.widget.RecyclerView>
+
+    <View android:id="@+id/b_bar"
+        android:layout_height="1px"
+        android:layout_width="match_parent"
+        android:background="#000000"
+        android:layout_below="@id/path_recycler_view"/>
 </RelativeLayout>

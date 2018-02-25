@@ -184,7 +184,7 @@ public class Event implements Parcelable {
         this.rating = rating;
     }
 
-    public Boolean getChecked() {
+    public Boolean isChecked() {
         return checked;
     }
 

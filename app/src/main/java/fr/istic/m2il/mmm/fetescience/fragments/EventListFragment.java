@@ -4,7 +4,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -19,14 +18,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -109,7 +105,6 @@ public class EventListFragment extends Fragment implements AdapterView.OnItemSel
         Log.i(TAG, "Edit Path Activated Value " + this.editPathActivated);
         eventAdapter.setShareActivated(this.editPathActivated);
 
-        eventAdapter.setShareActivated(this.editPathActivated);
         eventAdapter.setOnEventClickListener(event -> {
             onItemSelected(event);
         });
@@ -188,7 +183,7 @@ public class EventListFragment extends Fragment implements AdapterView.OnItemSel
 
     @Override
     public void onLoadFinished(Loader<List<Event>> loader, List<Event> data) {
-        eventAdapter.swapData(data);
+        eventAdapter.swapData(data, true);
         cachedEvents.addAll(data);
         progressBar.setVisibility(View.GONE);
         recyclerView.setVisibility(View.VISIBLE);
@@ -197,7 +192,7 @@ public class EventListFragment extends Fragment implements AdapterView.OnItemSel
 
     @Override
     public void onLoaderReset(Loader<List<Event>> loader) {
-        eventAdapter.swapData(null);
+        eventAdapter.swapData(null, false);
     }
 
     @Override
@@ -243,10 +238,11 @@ public class EventListFragment extends Fragment implements AdapterView.OnItemSel
             }
         }
         else {
-            filteredEvents.addAll(cachedEvents);
+            events = cachedEvents;
+            filteredEvents.addAll(events);
         }
 
-        eventAdapter.swapData(filteredEvents);
+        eventAdapter.swapData(filteredEvents, true);
         return true;
     }
 
@@ -259,33 +255,41 @@ public class EventListFragment extends Fragment implements AdapterView.OnItemSel
         Path path = new Path();
         final Dialog dialog = new Dialog(getContext());
         dialog.setContentView(R.layout.share_paths_dialog);
-        dialog.setTitle("Title...");
+        dialog.setTitle(R.string.share_path_dialog_title);
 
         EditText authorEditText = dialog.findViewById(R.id.author_edit);
         EditText commentEditText = dialog.findViewById(R.id.comment_edit);
         Button validateButton = dialog.findViewById(R.id.validate);
         Button cancelButton = dialog.findViewById(R.id.cancel);
+
         validateButton.setOnClickListener( view -> {
             path.setAuthor(authorEditText.getText().toString().isEmpty() ? "Anonyme" : authorEditText.getText().toString());
             path.setComment(commentEditText.getText().toString());
             dialog.dismiss();
-            for(Event event: cachedEvents){
-                if(event.getChecked())
+            for(Event event: events){
+                if(event.isChecked()){
                     path.getEvents().add(event.getId());
+                    event.setChecked(false);
+                }
             }
             path.setAuthorId(FirebaseAuth.getInstance().getCurrentUser().getUid());
             String pathKey = database.child("paths").push().getKey();
             database.child("paths").child(pathKey).setValue(path.mapToFireBasePath());
+            eventAdapter.setShareActivated(this.editPathActivated);
+            changeCurrentEventsCheckBoxesState(false);
             Toast.makeText(this.getActivity(), "Votre parcours à été bien partagé", Toast.LENGTH_SHORT).show();
         });
         cancelButton.setOnClickListener( view -> {
-
             dialog.dismiss();
+            for(Event event: events){
+                if(event.isChecked())
+                    event.setChecked(false);
+                Log.i(TAG, "Event state " + event.isChecked());
+            }
+            eventAdapter.setShareActivated(this.editPathActivated);
+            changeCurrentEventsCheckBoxesState(false);
         });
         dialog.show();
-        eventAdapter.setShareActivated(this.editPathActivated);
-        changeCurrentEventsCheckBoxesState(false);
-
     }
 
     @OnClick(R.id.itinerary_path_btn)
@@ -294,8 +298,8 @@ public class EventListFragment extends Fragment implements AdapterView.OnItemSel
         editPathBtn.setVisibility(View.VISIBLE);
         this.editPathActivated = false;
         List<Event> chosedEvents = new ArrayList<>();
-        for(Event event: cachedEvents){
-            if(event.getChecked())
+        for(Event event: events){
+            if(event.isChecked())
                 chosedEvents.add(event);
         }
         Intent intent = new Intent(getActivity(), EventMapActivity.class);
@@ -308,14 +312,13 @@ public class EventListFragment extends Fragment implements AdapterView.OnItemSel
         editPathBtn.setVisibility(View.GONE);
         this.editPathActivated = true;
         optionsPathLineaLayoutBtn.setVisibility(View.VISIBLE);
-        Log.i(TAG, "Current Child Count " + recyclerView.getChildCount());
         changeCurrentEventsCheckBoxesState(true);
         eventAdapter.setShareActivated(this.editPathActivated);
     }
 
     private void changeCurrentEventsCheckBoxesState(Boolean activated){
         for(int i=0; i < recyclerView.getChildCount(); i++){
-            recyclerView.getChildAt(i).findViewById(R.id.event_checkbox).setVisibility(activated ? View.VISIBLE : View.GONE);
+            recyclerView.getChildAt(i).findViewById(R.id.event_checkbox).setVisibility(activated ? View.VISIBLE : View.INVISIBLE);
         }
     }
 
