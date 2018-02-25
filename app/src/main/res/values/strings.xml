@@ -9,12 +9,15 @@
     <string name="empty_paths">Aucun Parcours partagés !!! vous pouvez en créer</string>
     <string name="btn_validate_text">Valider</string>
     <string name="btn_cancel_text">Annuler</string>
+    <string name="available_places_max_text">Nombre de places Max</string>
+    <string name="fill_places">Taux de Remplissage</string>
 
     <!-- String related to menu -->
     <string name="action_settings">Paramètre</string>
     <string name="action_map">Carte</string>
     <string name="action_list">Liste</string>
     <string name="action_path">Parcours</string>
+    <string name="action_manager">Manager</string>
 
     <!-- String related to Filtered queries -->
 

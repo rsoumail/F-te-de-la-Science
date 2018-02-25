@@ -1,6 +1,7 @@
 package fr.istic.m2il.mmm.fetescience.activities;
 
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
@@ -13,6 +14,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -24,6 +27,7 @@ import butterknife.ButterKnife;
 import fr.istic.m2il.mmm.fetescience.R;
 import fr.istic.m2il.mmm.fetescience.fragments.EventFragment;
 import fr.istic.m2il.mmm.fetescience.fragments.EventListFragment;
+import fr.istic.m2il.mmm.fetescience.helpers.DBManagerHelper;
 import fr.istic.m2il.mmm.fetescience.models.Event;
 
 public class EventActivity extends AppCompatActivity implements EventListFragment.OnEventListFragmentInteractionListener, EventFragment.OnEventFragmentInteractionListener {
@@ -89,24 +93,11 @@ public class EventActivity extends AppCompatActivity implements EventListFragmen
         inflater.inflate(R.menu.menu, menu);
     }
 
-    @Override
+    /*@Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId()) {
-            case R.id.action_map:
-                Intent intentMap = new Intent(EventActivity.this, EventMapActivity.class);
-                startActivity(intentMap);
-                return true;
 
-            case R.id.action_paths:
-                Intent intentPath = new Intent(EventActivity.this, PathActivity.class);
-                startActivity(intentPath);
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
+    }*/
 
     @Override
     public void onItemSelected(Event item) {

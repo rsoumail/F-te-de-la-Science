@@ -2,30 +2,30 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent">
 
+
     <RelativeLayout
-        android:id="@+id/share_social_comment_layout"
+        android:id="@+id/active_manager_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/comment_edit_layout">
 
         <TextView
-            android:id="@+id/comment_label"
+            android:id="@+id/event_identifiant_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <EditText
-            android:id="@+id/comment_edit"
+            android:id="@+id/event_identifiant_edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/comment_label"
-            android:inputType="textMultiLine"
-            android:background="@drawable/rounded_edittext"/>
+            android:layout_below="@id/event_identifiant_label"
+            />
 
     </RelativeLayout>
     <RelativeLayout
-        android:id="@+id/social_share_btn_layout"
+        android:id="@+id/active_manager_btn_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/share_social_comment_layout">
+        android:layout_below="@+id/active_manager_layout">
         <Button
             android:id="@+id/validate"
             android:layout_width="wrap_content"

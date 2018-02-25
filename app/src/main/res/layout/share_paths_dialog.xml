@@ -4,12 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!--TextView
-        android:id="@+id/dialog_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"/-->
-
     <RelativeLayout
         android:id="@+id/author_edit_layout"
         android:layout_width="match_parent"
@@ -22,7 +16,8 @@
         <EditText
             android:id="@+id/author_edit"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_edittext"/>
 
     </RelativeLayout>
     <RelativeLayout
@@ -38,7 +33,8 @@
         <EditText
             android:id="@+id/comment_edit"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_edittext"/>
 
     </RelativeLayout>
 
