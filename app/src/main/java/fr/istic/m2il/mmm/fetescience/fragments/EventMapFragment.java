@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -22,6 +23,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -33,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import fr.istic.m2il.mmm.fetescience.R;
 import fr.istic.m2il.mmm.fetescience.map.AsyncTaskMap;
 import fr.istic.m2il.mmm.fetescience.loaders.AsyncEventLoader;
 import fr.istic.m2il.mmm.fetescience.map.GMapV2Direction;
@@ -44,14 +47,16 @@ import fr.istic.m2il.mmm.fetescience.models.Event;
  * {@link EventMapFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  */
-public class EventMapFragment extends SupportMapFragment implements OnMapReadyCallback, LoaderManager.LoaderCallbacks<List<Event>> {
+public class EventMapFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Event>> {
 
     private static final String TAG = EventMapFragment.class.getSimpleName();
 
     private List<Event> events = new ArrayList<>();
     private OnFragmentInteractionListener mListener;
     private GoogleMap mMap;
+    private SupportMapFragment mapFragment;
     private boolean itinerary;
+    private Event event;
 
     private FusedLocationProviderClient mFusedLocationClient;
 
@@ -74,9 +79,18 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
                              Bundle savedInstanceState) {
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
-        View view = super.onCreateView(inflater, container, savedInstanceState);
+        View rootView = inflater.inflate(R.layout.fragment_event_map, container, false);
+
+        if (mapFragment == null) {
+            mapFragment = SupportMapFragment.newInstance();
+            mapFragment.getMapAsync(googleMap -> {
+                mMap = googleMap;
+            });
+        }
+
+        getChildFragmentManager().beginTransaction().replace(R.id.map, mapFragment).commit();
         getLoaderManager().initLoader(0, null, this).forceLoad();
-        return view;
+        return rootView;
     }
 
     public void onEventClicked(Event e) {
@@ -128,51 +142,43 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
 
     }
 
-
-    @Override
-    public void onMapReady(GoogleMap map) {
-        // on initialise la carte pour l'utiliser plus tard
-        mMap = map;
-    }
-
     /**
      * fonction qui permet d'ajouter les marqueurs
      * sur la totalité des évenements de l'application
      */
     public void addMarkers() {
-
         // init sur Paris
         LatLng pEvent = new LatLng(48.8534, 2.3488);
-
         for (Event event : events) {
-
             // on ajoute le marker sur la map
             addMarker(event);
         }
-
         // on se fixe sur le dernier evt vu
         // à garder pour la fin ?
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pEvent, 6));
 
         mMap.setOnInfoWindowClickListener((marker) -> {
             marker.hideInfoWindow();
-            onEventClicked((Event) marker.getTag());
-        });
+            try {
+                new Handler().postDelayed(() -> {
+                    onEventClicked((Event) marker.getTag());
+                }, 100);
 
+                return;
+            } catch (Exception e) {
+                Log.e(TAG, "Exception :: " + e.getMessage());
+            }
+        });
     }
 
     public void addMarker(Event event) {
-
         // on récupère la liste de la localistion de l'evt
         // et on créé le latlng
         List<Double> locEvent = event.getGeolocalisation();
-
         // on vérifie que l'evenement possède une localisation précise
         if (locEvent != null) {
-
             // on récupère la localisation
             LatLng pEvent = new LatLng(locEvent.get(0), locEvent.get(1));
-
             // on créé le nouveau marker
             mMap.addMarker(new MarkerOptions()
                     .title(event.getTitre_fr())
@@ -187,21 +193,15 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
      * d'une liste d'evenements
      */
     public void createRoute(String navigationMode , Location locationUser){
-
         List<Double> geo;
         Event prevEvent = null;
-        Log.i(TAG, "Events's Size " + events.size());
         // à chaque event, nous allons créer
         for (Event event : events) {
-
             // création de l'Async task
             AsyncTaskMap asyncTaskMap = new AsyncTaskMap();
             asyncTaskMap.setMode(navigationMode);
-
             geo = event.getGeolocalisation();
-
             if (geo != null) {
-
                 // la première fois on utilise notre position
                 // les autres fois les events récupérés
                 // on récupère le point de départ de l'itinéraire
@@ -230,13 +230,11 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
                 } catch (ExecutionException e) {
                     e.printStackTrace();
                 }
-
                 // on ajoute l'itinerary à la map
                 mMap.addPolyline(rectLine);
 
                 // on positionne sur la map
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng2, 6));
-
             }
         }
     }
