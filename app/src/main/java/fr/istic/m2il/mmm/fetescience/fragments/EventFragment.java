@@ -1,6 +1,7 @@
 package fr.istic.m2il.mmm.fetescience.fragments;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -14,12 +15,16 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +43,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import fr.istic.m2il.mmm.fetescience.R;
+import fr.istic.m2il.mmm.fetescience.activities.EventActivity;
+import fr.istic.m2il.mmm.fetescience.activities.EventMapActivity;
+import fr.istic.m2il.mmm.fetescience.activities.PathActivity;
 import fr.istic.m2il.mmm.fetescience.models.Event;
 import fr.istic.m2il.mmm.fetescience.models.EventDuration;
 import fr.istic.m2il.mmm.fetescience.utils.Utils;
@@ -59,6 +67,9 @@ public class EventFragment extends Fragment {
     @BindView(R.id.add_to_agenda_btn) IconTextView agendaButtonView;
     @BindView(R.id.share_btn) IconTextView shareFacebookBtn;
     @BindView(R.id.places) TextView placesView;
+    @BindView(R.id.manager_edit_layout) RelativeLayout managerRelativeLayout;
+    @BindView(R.id.available_places_max_text) TextView availablePlaceMaxView;
+    @BindView(R.id.fill_places_text) TextView fillPlaceView;
 
     private Unbinder unbinder;
     private OnEventFragmentInteractionListener mListener;
@@ -69,6 +80,12 @@ public class EventFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         database = FirebaseDatabase.getInstance().getReference();
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
@@ -98,6 +115,47 @@ public class EventFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+
+        switch (item.getItemId()) {
+            case R.id.action_map:
+                Intent intentMap = new Intent(getActivity(), EventMapActivity.class);
+                startActivity(intentMap);
+                return true;
+
+            case R.id.action_paths:
+                Intent intentPath = new Intent(getActivity(), PathActivity.class);
+                startActivity(intentPath);
+                return true;
+
+            case R.id.action_manager:
+                final Dialog dialog = new Dialog(getActivity());
+                dialog.setContentView(R.layout.active_manager_dialog);
+                dialog.setTitle("Identification de l'organisateur");
+                EditText identifiantEditText = dialog.findViewById(R.id.event_identifiant_edit);
+                Button validateButton = dialog.findViewById(R.id.validate);
+                Button cancelButton = dialog.findViewById(R.id.cancel);
+                validateButton.setOnClickListener( view -> {
+                    dialog.dismiss();
+                    if(event.getIdentifiant().equals(identifiantEditText.getText().toString())){
+                        managerRelativeLayout.setVisibility(View.VISIBLE);
+                    }
+                });
+                cancelButton.setOnClickListener(view -> {
+                    dialog.dismiss();
+                });
+                dialog.show();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -160,7 +218,7 @@ public class EventFragment extends Fragment {
                 values.put(CalendarContract.Events.DESCRIPTION, event.getDescription_fr());
                 cr.insert(CalendarContract.Events.CONTENT_URI, values);
             }
-            Toast.makeText(this.getActivity(), "Evénement ajouté", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this.getActivity(), "L'événement a bien été ajouté à votre agenda", Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -188,6 +246,26 @@ public class EventFragment extends Fragment {
         dialog.show();
     }
 
+    /*@OnClick(R.id.manager_edit_layout)
+    public void updateToFirebase(){
+        final Dialog dialog = new Dialog(getContext());
+        //dialog.setContentView(R.id.manager_edit_layout);
+        EditText availablePlaceMaxEditText = dialog.findViewById(R.id.available_places_max_edit);
+        EditText fillPlacesEditText = dialog.findViewById(R.id.fill_places_edit);
+        Button validateButton = dialog.findViewById(R.id.update_max_places);
+        Button cancelButton = dialog.findViewById(R.id.update_fill_places);
+        validateButton.setOnClickListener( view -> {
+            availablePlaceMaxView.setText(availablePlaceMaxEditText.getText().toString());
+            fillPlaceView.setText(fillPlacesEditText.getText().toString());
+            dialog.dismiss();
+            Log.i(TAG, "AJOUTE DANS LA FIREBASE");
+        });
+        cancelButton.setOnClickListener( view -> {
+            dialog.dismiss();
+        });
+        dialog.show();
+    }
+*/
     @OnClick(R.id.event_rate_btn)
     public void rate(){
         Float rate = new Float(eventRatingBar.getRating());

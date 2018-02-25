@@ -57,43 +57,83 @@
 
             <RelativeLayout
                 android:id="@+id/manager_edit_layout"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone">
+                android:visibility="gone"
+                android:layout_below="@+id/event_rating_layout">
                 <RelativeLayout
-                    android:id="@+id/availabel_places_edit_layout"
+                    android:id="@+id/available_places_max_edit_layout"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true">
                     <TextView
+                        android:id="@+id/available_places_max_text"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:text="@string/available_places_max_text"/>
 
-                    <NumberPicker
+                    <EditText
                         android:id="@+id/available_places_max_edit"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-                    </NumberPicker>
-
+                        android:layout_width="25dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_alignRight="@+id/available_places_max_text"
+                        android:inputType="number"
+                        android:background="@drawable/rounded_edittext"/>
                 </RelativeLayout>
 
                 <RelativeLayout
                     android:id="@+id/filled_places_layout"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true">
 
+                    <TextView
+                        android:id="@+id/fill_places_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/fill_places"/>
+
+                    <EditText
+                        android:id="@+id/fill_places_edit"
+                        android:layout_width="25dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignRight="@+id/fill_places_text"
+                        android:inputType="number"
+                        android:layout_marginLeft="5dp"
+                        android:background="@drawable/rounded_edittext"/>
 
                 </RelativeLayout>
 
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/manager_layout"
+                android:id="@+id/manager_btn_layout"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:layout_below="@+id/event_rating_layout">
+                android:layout_below="@+id/manager_edit_layout">
+
+                <Button
+                    android:id="@+id/update_max_places"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:text="@string/btn_validate_text"
+                    android:textColor="@color/cyan_blue"/>
+
+
+                <Button
+                    android:id="@+id/update_fill_places"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:text="@string/btn_cancel_text"
+                    android:textColor="@color/cyan_blue"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"/>
 
             </RelativeLayout>
+
 
             <TextView
                 android:id="@+id/title"
@@ -104,7 +144,7 @@
                 android:textStyle="bold"
                 android:textColor="@color/cyan_blue"
                 android:textSize="20sp"
-                android:layout_below="@+id/manager_layout"/>
+                android:layout_below="@+id/manager_btn_layout"/>
 
             <TextView
                 android:id="@+id/adress"
