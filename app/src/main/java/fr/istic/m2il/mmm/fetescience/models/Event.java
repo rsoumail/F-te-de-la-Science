@@ -102,8 +102,6 @@ public class Event implements Parcelable {
 
     private Integer votersNumber = new Integer(0);
 
-    private Float fillingRate;
-
     private Float rating = new Float(0);
 
     private Integer fillPlaces = new Integer(0);
@@ -141,7 +139,6 @@ public class Event implements Parcelable {
         arr.add(in.readDouble());
         geolocalisation = arr;
         votersNumber = in.readInt();
-        fillingRate = in.readFloat();
         rating = in.readFloat();
         fillPlaces = in.readInt();
         maxAvailablePlaces = in.readInt();
@@ -168,7 +165,7 @@ public class Event implements Parcelable {
     }
 
     public Float getFillingRate() {
-        return fillingRate;
+        return this.maxAvailablePlaces != 0 ? (this.fillPlaces * 1.0f) / this.maxAvailablePlaces : 0;
     }
 
     public Float getRating() {
@@ -425,7 +422,7 @@ public class Event implements Parcelable {
         Map<String, Object> fireBaseEvent = new HashMap<>();
         fireBaseEvent.put("id", this.id);
         fireBaseEvent.put("rating", this.rating);
-        fireBaseEvent.put("fillingRate", (this.fillPlaces * 1.0 / this.maxAvailablePlaces));
+        fireBaseEvent.put("fillingRate", this.maxAvailablePlaces != 0 ? (this.fillPlaces * 1.0 / this.maxAvailablePlaces) : 0);
         fireBaseEvent.put("votersNumber", this.votersNumber);
         fireBaseEvent.put("fillPlaces", this.fillPlaces);
         fireBaseEvent.put("maxAvailablePlaces", this.maxAvailablePlaces);
@@ -633,13 +630,6 @@ public class Event implements Parcelable {
 
         if(votersNumber != null){
             dest.writeInt(votersNumber);
-        }
-        else {
-            dest.writeInt(-1);
-        }
-
-        if(fillingRate != null){
-            dest.writeFloat(fillingRate);
         }
         else {
             dest.writeInt(-1);

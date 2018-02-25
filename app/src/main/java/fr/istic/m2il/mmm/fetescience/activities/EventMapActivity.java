@@ -25,6 +25,7 @@ public class EventMapActivity extends BaseActivity implements EventMapFragment.O
 
     FragmentManager fragmentManager;
     private List<Event> events;
+    private static final String TAG = EventMapActivity.class.getSimpleName();
 
     //private MyLocationOverlay myLocation = null;
 
@@ -34,12 +35,20 @@ public class EventMapActivity extends BaseActivity implements EventMapFragment.O
         setContentView(R.layout.activity_event_map);
         EventMapFragment eventMapFragment = new EventMapFragment();
         Bundle bundle = new Bundle();
-        if(getIntent().getExtras() != null){
+        if(getIntent()!= null &&  getIntent().getExtras() != null){
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+                    ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    ){//Can add more as per requirement
+
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION},
+                        123);
+            }
             bundle.putBoolean("itinerary", true);
             bundle.putParcelableArrayList("events", getIntent().getExtras().getParcelableArrayList("events"));
             events = getIntent().getExtras().getParcelableArrayList("events");
             for(Event e : events){
-                Log.v("test event",e.getGeolocalisation().toString());
+                Log.v(TAG, "event's geolocation" + e.getGeolocalisation().toString());
             }
         }
         else {
@@ -52,15 +61,6 @@ public class EventMapActivity extends BaseActivity implements EventMapFragment.O
             return;
         }
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                ){//Can add more as per requirement
-
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION},
-                    123);
-        }
-        
         eventMapFragment.getMapAsync(eventMapFragment);
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.map_event, eventMapFragment);

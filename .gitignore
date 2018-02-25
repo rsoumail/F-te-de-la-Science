@@ -158,6 +158,12 @@ fabric.properties
 
 ### AndroidStudio Patch ###
 
+
 !/gradle/wrapper/gradle-wrapper.jar
 
 # End of https://www.gitignore.io/api/android,androidstudio
+
+
+## Custom
+app/src/debug/
+app/src/release/

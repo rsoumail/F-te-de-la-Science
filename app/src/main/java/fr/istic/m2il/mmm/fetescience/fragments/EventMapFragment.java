@@ -12,6 +12,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,7 +51,7 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
     private List<Event> events = new ArrayList<>();
     private OnFragmentInteractionListener mListener;
     private GoogleMap mMap;
-    private boolean itinerary = false;
+    private boolean itinerary;
 
     private FusedLocationProviderClient mFusedLocationClient;
 
@@ -189,7 +190,7 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
 
         List<Double> geo;
         Event prevEvent = null;
-
+        Log.i(TAG, "Events's Size " + events.size());
         // à chaque event, nous allons créer
         for (Event event : events) {
 
@@ -251,16 +252,16 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        mFusedLocationClient.getLastLocation()
-                .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        // Got last known location. In some rare situations this can be null.
-                        if (location != null) {
-                            createRoute(GMapV2Direction.MODE_DRIVING, location);
-                        }
-                    }
-                });
+
+        mFusedLocationClient.getLastLocation().addOnSuccessListener((location) -> {
+            if (location != null) {
+                Log.i(TAG, "Location Not null");
+                createRoute(GMapV2Direction.MODE_DRIVING, location);
+            }
+            else {
+                Log.i(TAG, "Location is null");
+            }
+        });
     }
 
     @Override

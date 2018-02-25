@@ -62,12 +62,13 @@ public class EventFragment extends Fragment {
     @BindView(R.id.image) ImageView imageImageView;
     @BindView(R.id.add_to_agenda_btn) IconTextView agendaButtonView;
     @BindView(R.id.share_btn) IconTextView shareFacebookBtn;
-    @BindView(R.id.places) TextView placesView;
     @BindView(R.id.manager_edit_layout) RelativeLayout managerRelativeLayout;
     @BindView(R.id.available_places_max_text) TextView availablePlaceMaxView;
     @BindView(R.id.fill_places_text) TextView fillPlaceView;
     @BindView(R.id.available_places_max_edit) EditText availablePlaceMaxEditText;
     @BindView(R.id.fill_places_edit) EditText fillPlacesEditText;
+    @BindView(R.id.places) TextView placesTextView;
+    @BindView(R.id.placesMax) TextView placesMaxTextView;
 
     private Unbinder unbinder;
     private OnEventFragmentInteractionListener mListener;
@@ -103,6 +104,9 @@ public class EventFragment extends Fragment {
                         Event fEvent = snapshot.getValue(Event.class);
                         if(event.getId() == fEvent.getId()){
                             eventRatingBar.setRating(fEvent.getRating());
+                            placesTextView.setText(fEvent.getFillPlaces().toString());
+                            if(fEvent.getMaxAvailablePlaces() != 0)
+                                placesMaxTextView.setText(fEvent.getMaxAvailablePlaces().toString());
                             break;
                         }
                     }

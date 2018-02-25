@@ -89,15 +89,15 @@ public class PathListFragment extends Fragment implements AdapterView.OnItemSele
                         Path path = snapshot.getValue(Path.class);
                         paths.add(path);
                     }
-                    progressBar.setVisibility(View.GONE);
-                    if(!paths.isEmpty()){
-                        recyclerView.setVisibility(View.VISIBLE);
-                        pathAdapter.notifyDataSetChanged();
-                    } else {
-                        emptyPathsTextView.setVisibility(View.VISIBLE);
-                    }
+
                 }
-                //FirebaseDatabase.
+                progressBar.setVisibility(View.GONE);
+                if(!paths.isEmpty()){
+                    recyclerView.setVisibility(View.VISIBLE);
+                    pathAdapter.notifyDataSetChanged();
+                } else {
+                    emptyPathsTextView.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
