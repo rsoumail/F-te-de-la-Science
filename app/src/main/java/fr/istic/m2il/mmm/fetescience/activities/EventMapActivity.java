@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import java.util.List;
@@ -80,6 +81,17 @@ public class EventMapActivity extends BaseActivity implements EventMapFragment.O
     @Override
     public void onEventInteraction(Event event) {}
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        super.onCreateOptionsMenu(menu);
+        invalidateOptionsMenu();
+        MenuItem itemMap = menu.findItem(R.id.action_map);
+        itemMap.setVisible(false);
+        MenuItem itemManager = menu.findItem(R.id.action_manager);
+        itemManager.setVisible(false);
+        return true;
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

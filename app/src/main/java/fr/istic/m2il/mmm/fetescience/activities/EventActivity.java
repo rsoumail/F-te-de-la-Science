@@ -1,8 +1,11 @@
 package fr.istic.m2il.mmm.fetescience.activities;
 
+import android.content.Intent;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.LinearLayout;
 
 
@@ -34,7 +37,6 @@ public class EventActivity extends BaseActivity implements EventListFragment.OnE
         setContentView(R.layout.activity_event);
         ButterKnife.bind(this);
         fragmentManager = getSupportFragmentManager();
-
         if(linearLayout != null){
             screenType = "large";
             if(findViewById(R.id.large_event_list) != null && findViewById(R.id.large_event_item) != null){
@@ -85,5 +87,36 @@ public class EventActivity extends BaseActivity implements EventListFragment.OnE
 
     @Override
     public void onEventInteraction(Event event) {
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        super.onCreateOptionsMenu(menu);
+        invalidateOptionsMenu();
+        MenuItem item = menu.findItem(R.id.action_events);
+        item.setVisible(false);
+        MenuItem itemManager = menu.findItem(R.id.action_manager);
+        itemManager.setVisible(false);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+
+        switch (item.getItemId()) {
+            case R.id.action_map:
+                Intent mapIntent = new Intent(this, EventMapActivity.class);
+                startActivity(mapIntent);
+                return true;
+
+            case R.id.action_paths:
+                Intent pathsIntent = new Intent(this, PathActivity.class);
+                startActivity(pathsIntent);
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

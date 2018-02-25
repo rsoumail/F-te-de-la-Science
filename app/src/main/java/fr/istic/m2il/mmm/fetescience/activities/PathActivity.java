@@ -74,16 +74,27 @@ public class PathActivity extends BaseActivity implements PathListFragment.OnPat
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        super.onCreateOptionsMenu(menu);
+        invalidateOptionsMenu();
+        MenuItem itemPath = menu.findItem(R.id.action_paths);
+        itemPath.setVisible(false);
+        MenuItem itemManager = menu.findItem(R.id.action_manager);
+        itemManager.setVisible(false);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
             case R.id.action_events:
-                Intent eventsIntent = new Intent(PathActivity.this, EventActivity.class);
+                Intent eventsIntent = new Intent(this, EventActivity.class);
                 startActivity(eventsIntent);
                 return true;
 
             case R.id.action_map:
-                Intent pathsIntent = new Intent(PathActivity.this, EventMapActivity.class);
+                Intent pathsIntent = new Intent(this, EventMapActivity.class);
                 startActivity(pathsIntent);
                 return true;
 
@@ -140,4 +151,6 @@ public class PathActivity extends BaseActivity implements PathListFragment.OnPat
     public void onEventInteraction(Event event) {
 
     }
+
+
 }

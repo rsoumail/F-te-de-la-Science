@@ -86,6 +86,8 @@ public class EventFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
         super.onCreateOptionsMenu(menu, inflater);
+        MenuItem itemManager = menu.findItem(R.id.action_manager);
+        itemManager.setVisible(true);
     }
 
     @Override
