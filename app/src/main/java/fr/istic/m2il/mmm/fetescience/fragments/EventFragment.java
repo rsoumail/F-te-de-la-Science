@@ -66,6 +66,8 @@ public class EventFragment extends Fragment {
     @BindView(R.id.manager_edit_layout) RelativeLayout managerRelativeLayout;
     @BindView(R.id.available_places_max_text) TextView availablePlaceMaxView;
     @BindView(R.id.fill_places_text) TextView fillPlaceView;
+    @BindView(R.id.available_places_max_edit) EditText availablePlaceMaxEditText;
+    @BindView(R.id.fill_places_edit) EditText fillPlacesEditText;
 
     private Unbinder unbinder;
     private OnEventFragmentInteractionListener mListener;
@@ -237,12 +239,50 @@ public class EventFragment extends Fragment {
 
     @OnClick(R.id.manager_update_max_places)
     public void updateMaxPlacesToFirebase(){
+        database.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot :dataSnapshot.child("events").getChildren()) {
+                    String fEventkey = snapshot.getKey();
+                    Event fEvent = snapshot.getValue(Event.class);
+                    if(event.getId() == fEvent.getId()){
+                        event.setMaxAvailablePlaces(Integer.parseInt(availablePlaceMaxEditText.getText().toString()));
+                        database.child("events").child(fEventkey).setValue(event.mapToFireBaseEvent());
+                        Log.i(TAG, "Event's available max places With Key " + fEventkey + " and Id " + event.getId() + " Was Updated");
+                        break ;
+                    }
+                }
+            }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @OnClick(R.id.manager_update_fill_places)
     public void udpateFillPlacesToFireBase(){
+        database.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot :dataSnapshot.child("events").getChildren()) {
+                    String fEventkey = snapshot.getKey();
+                    Event fEvent = snapshot.getValue(Event.class);
+                    if(event.getId() == fEvent.getId()){
+                        event.setFillingRate(Integer.parseInt(fillPlacesEditText.getText().toString()));
+                        database.child("events").child(fEventkey).setValue(event.mapToFireBaseEvent());
+                        Log.i(TAG, "Event's fill places With Key " + fEventkey + " and Id " + event.getId() + " Was Updated");
+                        break ;
+                    }
+                }
+            }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @OnClick(R.id.event_rate_btn)
