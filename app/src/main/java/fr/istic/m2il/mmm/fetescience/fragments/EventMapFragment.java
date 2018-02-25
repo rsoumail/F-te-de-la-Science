@@ -1,10 +1,14 @@
 package fr.istic.m2il.mmm.fetescience.fragments;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -30,6 +34,10 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 
 import org.json.JSONException;
 import org.w3c.dom.Document;
@@ -66,12 +74,14 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
     private GoogleMap mMap;
     private boolean itineraire = false;
 
+    private FusedLocationProviderClient mFusedLocationClient;
+
     public EventMapFragment() {
         // Required empty public constructor
         super();
     }
 
-    public void setItineraire(boolean value){
+    public void setItineraire(boolean value) {
         itineraire = value;
     }
 
@@ -79,6 +89,7 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
         View view = super.onCreateView(inflater, container, savedInstanceState);
         getLoaderManager().initLoader(0, null, this).forceLoad();
         return view;
@@ -116,7 +127,7 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
     public void onLoadFinished(Loader<List<Event>> loader, List<Event> data) {
         // cas normal
         // affichage de tous les evenements
-        if(!itineraire){
+        if (!itineraire) {
             events = data;
             addMarkers();
         }
@@ -124,7 +135,7 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
         // affichage des éléments de l'itineraire
         else {
             events = ((EventMapActivity) getActivity()).getEvents();
-            createRoute();
+            searchCurrentLocationUser();
         }
     }
 
@@ -132,7 +143,6 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
     public void onLoaderReset(Loader<List<Event>> loader) {
 
     }
-
 
 
     @Override
@@ -145,12 +155,12 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
      * fonction qui permet d'ajouter les marqueurs
      * sur la totalité des évenements de l'application
      */
-    public void addMarkers(){
+    public void addMarkers() {
 
         // init sur Paris
-        LatLng pEvent = new LatLng(48.8534,2.3488);
+        LatLng pEvent = new LatLng(48.8534, 2.3488);
 
-        for (Event event : events){
+        for (Event event : events) {
 
             // on ajoute le marker sur la map
             addMarker(event);
@@ -167,17 +177,17 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
 
     }
 
-    public void addMarker(Event event){
+    public void addMarker(Event event) {
 
         // on récupère la liste de la localistion de l'evt
         // et on créé le latlng
         List<Double> locEvent = event.getGeolocalisation();
 
         // on vérifie que l'evenement possède une localisation précise
-        if(locEvent != null){
+        if (locEvent != null) {
 
             // on récupère la localisation
-            LatLng pEvent = new LatLng(locEvent.get(0),locEvent.get(1));
+            LatLng pEvent = new LatLng(locEvent.get(0), locEvent.get(1));
 
             // on créé le nouveau marker
             mMap.addMarker(new MarkerOptions()
@@ -192,32 +202,33 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
      * fonction qui permet de créer l'itinéraire à partir
      * d'une liste d'evenements
      */
-    public void createRoute(){
+    public void createRoute(Location locationUser) {
 
         List<Double> geo;
         Event eventPred = null;
 
         // à chaque event, nous allons créer
-        for (Event event : events){
+        for (Event event : events) {
 
             // création de l'Async task
             AsyncTaskMap laTache = new AsyncTaskMap();
 
             geo = event.getGeolocalisation();
 
-            if(geo != null){
+            if (geo != null) {
 
                 // la première fois on utilise notre position
                 // les autres fois les events récupérés
                 // on récupère le point de départ de l'itinéraire
-                if(eventPred != null){
+                if (eventPred != null) {
                     List<Double> geo2 = eventPred.getGeolocalisation();
-                    LatLng latlng1 = new LatLng(geo2.get(0),geo2.get(1));
+                    LatLng latlng1 = new LatLng(geo2.get(0), geo2.get(1));
                     laTache.setDepart(latlng1);
-                }
-                else {
-                    LatLng latlng1 = new LatLng(48.11198, -1.67429);
+                } else {
+                    LatLng latlng1 = new LatLng(locationUser.getLatitude(), locationUser.getLongitude());
                     laTache.setDepart(latlng1);
+                    //LatLng latlng1 = new LatLng(48.11198, -1.67429);
+                    //laTache.setDepart(latlng1);
                 }
 
                 // on récupère le point d'arrive de l'itinéraire
@@ -244,6 +255,29 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
 
             }
         }
+    }
+
+    public void searchCurrentLocationUser(){
+        // on récupère la localisation de l'utilisateur
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions// here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        mFusedLocationClient.getLastLocation()
+                .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        // Got last known location. In some rare situations this can be null.
+                        if (location != null) {
+                            createRoute(location);
+                        }
+                    }
+                });
     }
 
     @Override
