@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -142,7 +143,7 @@ public class EventListFragment extends Fragment implements AdapterView.OnItemSel
         mListener = null;
     }
 
-    @Override
+    /*@Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Log.i(TAG, "instance Call ");
@@ -156,15 +157,15 @@ public class EventListFragment extends Fragment implements AdapterView.OnItemSel
                     recyclerView.getChildAt(i).findViewById(R.id.event_checkbox).setVisibility(View.VISIBLE);
             }
         }
-    }
+    }*/
 
 
-    @Override
+    /*@Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         Log.v(TAG, "In EventListFragment on save instance state ");
        // outState.putBoolean("editPathActivated", this.editPathActivated);
-    }
+    }*/
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -287,6 +288,7 @@ public class EventListFragment extends Fragment implements AdapterView.OnItemSel
                 Log.i(TAG, "Event state " + event.isChecked());
             }
             eventAdapter.setShareActivated(this.editPathActivated);
+            Log.i(TAG, "Share in fragement " + this.editPathActivated);
             changeCurrentEventsCheckBoxesState(false);
         });
         dialog.show();
@@ -319,6 +321,8 @@ public class EventListFragment extends Fragment implements AdapterView.OnItemSel
     private void changeCurrentEventsCheckBoxesState(Boolean activated){
         for(int i=0; i < recyclerView.getChildCount(); i++){
             recyclerView.getChildAt(i).findViewById(R.id.event_checkbox).setVisibility(activated ? View.VISIBLE : View.INVISIBLE);
+            if(!activated)
+                ((CheckBox)recyclerView.getChildAt(i).findViewById(R.id.event_checkbox)).setChecked(false);
         }
     }
 

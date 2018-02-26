@@ -42,6 +42,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import fr.istic.m2il.mmm.fetescience.R;
+import fr.istic.m2il.mmm.fetescience.helpers.PreferencesManagerHelper;
 import fr.istic.m2il.mmm.fetescience.models.Event;
 import fr.istic.m2il.mmm.fetescience.models.EventDuration;
 import fr.istic.m2il.mmm.fetescience.utils.Utils;
@@ -74,11 +75,13 @@ public class EventFragment extends Fragment {
     private OnEventFragmentInteractionListener mListener;
     private Event event;
     private DatabaseReference database;
+    private PreferencesManagerHelper preferencesManagerHelper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         database = FirebaseDatabase.getInstance().getReference();
+        preferencesManagerHelper = new PreferencesManagerHelper(getActivity());
         setHasOptionsMenu(true);
     }
 
@@ -123,10 +126,7 @@ public class EventFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
-
         switch (item.getItemId()) {
-
             case R.id.action_manager:
                 final Dialog dialog = new Dialog(getActivity());
                 dialog.setContentView(R.layout.active_manager_dialog);
@@ -149,8 +149,6 @@ public class EventFragment extends Fragment {
             default:
                 return super.onOptionsItemSelected(item);
         }
-
-
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -191,10 +189,8 @@ public class EventFragment extends Fragment {
 
     @OnClick(R.id.add_to_agenda_btn)
     public void addAllEventsToCalendar() {
-
         long calID = 4;
         ContentResolver cr = getActivity().getContentResolver();
-
         List<EventDuration> dates = Utils.parseDates(this.event);
         if (ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.WRITE_CALENDAR}, 0);
@@ -215,12 +211,10 @@ public class EventFragment extends Fragment {
             }
             Toast.makeText(this.getActivity(), "L'événement a bien été ajouté à votre agenda", Toast.LENGTH_SHORT).show();
         }
-
     }
 
     @OnClick(R.id.share_btn)
     public void share(){
-
         final Dialog dialog = new Dialog(getContext());
         dialog.setContentView(R.layout.social_share_dialog);
         dialog.setTitle("Ajouter un commentaire");
@@ -253,6 +247,7 @@ public class EventFragment extends Fragment {
                         event.setMaxAvailablePlaces(Integer.parseInt(availablePlaceMaxEditText.getText().toString()));
                         database.child("events").child(fEventkey).setValue(event.mapToFireBaseEvent());
                         Log.i(TAG, "Event's available max places With Key " + fEventkey + " and Id " + event.getId() + " Was Updated");
+                        Toast.makeText(getActivity(), "Le nombre de place maximum à été mis à jour", Toast.LENGTH_SHORT).show();
                         break ;
                     }
                 }
@@ -277,6 +272,7 @@ public class EventFragment extends Fragment {
                         event.setFillPlaces(Integer.parseInt(fillPlacesEditText.getText().toString()));
                         database.child("events").child(fEventkey).setValue(event.mapToFireBaseEvent());
                         Log.i(TAG, "Event's fill places With Key " + fEventkey + " and Id " + event.getId() + " Was Updated");
+                        Toast.makeText(getActivity(), "Le nombre de personnes présentes a bien été mis à jour", Toast.LENGTH_SHORT).show();
                         break ;
                     }
                 }
@@ -291,39 +287,43 @@ public class EventFragment extends Fragment {
 
     @OnClick(R.id.event_rate_btn)
     public void rate(){
-        Float rate = new Float(eventRatingBar.getRating());
-        database.addListenerForSingleValueEvent(new ValueEventListener() {
-            Boolean eventExistOnFireBase = false;
-
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot :dataSnapshot.child("events").getChildren()) {
-                    String fEventkey = snapshot.getKey();
-                    Event fEvent = snapshot.getValue(Event.class);
-                    if(event.getId() == fEvent.getId()){
-                        event.setRating((rate + fEvent.getRating() * fEvent.getVotersNumber()) / (fEvent.getVotersNumber() + 1));
-                        event.setVotersNumber(fEvent.getVotersNumber() + 1);
-                        database.child("events").child(fEventkey).setValue(event.mapToFireBaseEvent());
-                        eventExistOnFireBase = true;
-                        Log.i(TAG, "Event's info With Key " + fEventkey + " and Id " + event.getId() + " Was Updated");
-                        break ;
+        if(!preferencesManagerHelper.isEventAlreadyRates(event.getId())){
+            Float rate = new Float(eventRatingBar.getRating());
+            database.addListenerForSingleValueEvent(new ValueEventListener() {
+                Boolean eventExistOnFireBase = false;
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot snapshot :dataSnapshot.child("events").getChildren()) {
+                        String fEventkey = snapshot.getKey();
+                        Event fEvent = snapshot.getValue(Event.class);
+                        if(event.getId() == fEvent.getId()){
+                            event.setRating((rate + fEvent.getRating() * fEvent.getVotersNumber()) / (fEvent.getVotersNumber() + 1));
+                            event.setVotersNumber(fEvent.getVotersNumber() + 1);
+                            database.child("events").child(fEventkey).setValue(event.mapToFireBaseEvent());
+                            eventExistOnFireBase = true;
+                            Log.i(TAG, "Event's info With Key " + fEventkey + " and Id " + event.getId() + " Was Updated");
+                            break ;
+                        }
                     }
+                    if(eventExistOnFireBase == false){
+                        event.setRating(rate);
+                        event.setVotersNumber(1);
+                        database.child("events").push().setValue(event.mapToFireBaseEvent());
+                        Log.i(TAG, "Event's info with Id " + event.getId() + " Was Added");
+                    }
+                    eventRatingBar.setRating(event.getRating());
+                    Toast.makeText(getActivity(), "Votre vote a bien été pris en compte", Toast.LENGTH_SHORT).show();
+                    preferencesManagerHelper.UpdateEventsRating(event.getId());
                 }
-                if(eventExistOnFireBase == false){
-                    event.setRating(rate);
-                    event.setVotersNumber(1);
-                    database.child("events").push().setValue(event.mapToFireBaseEvent());
-                    Log.i(TAG, "Event's info with Id " + event.getId() + " Was Added");
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
                 }
-                eventRatingBar.setRating(event.getRating());
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+            });
+        } else {
+            Toast.makeText(this.getActivity(), "Vous aviez déjà voter cet évenement", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
