@@ -123,10 +123,7 @@ public class EventFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
-
         switch (item.getItemId()) {
-
             case R.id.action_manager:
                 final Dialog dialog = new Dialog(getActivity());
                 dialog.setContentView(R.layout.active_manager_dialog);
@@ -149,8 +146,6 @@ public class EventFragment extends Fragment {
             default:
                 return super.onOptionsItemSelected(item);
         }
-
-
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -191,10 +186,8 @@ public class EventFragment extends Fragment {
 
     @OnClick(R.id.add_to_agenda_btn)
     public void addAllEventsToCalendar() {
-
         long calID = 4;
         ContentResolver cr = getActivity().getContentResolver();
-
         List<EventDuration> dates = Utils.parseDates(this.event);
         if (ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.WRITE_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.WRITE_CALENDAR}, 0);
@@ -215,12 +208,10 @@ public class EventFragment extends Fragment {
             }
             Toast.makeText(this.getActivity(), "L'événement a bien été ajouté à votre agenda", Toast.LENGTH_SHORT).show();
         }
-
     }
 
     @OnClick(R.id.share_btn)
     public void share(){
-
         final Dialog dialog = new Dialog(getContext());
         dialog.setContentView(R.layout.social_share_dialog);
         dialog.setTitle("Ajouter un commentaire");
@@ -294,7 +285,6 @@ public class EventFragment extends Fragment {
         Float rate = new Float(eventRatingBar.getRating());
         database.addListenerForSingleValueEvent(new ValueEventListener() {
             Boolean eventExistOnFireBase = false;
-
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot :dataSnapshot.child("events").getChildren()) {
@@ -316,7 +306,6 @@ public class EventFragment extends Fragment {
                     Log.i(TAG, "Event's info with Id " + event.getId() + " Was Added");
                 }
                 eventRatingBar.setRating(event.getRating());
-
             }
 
             @Override
