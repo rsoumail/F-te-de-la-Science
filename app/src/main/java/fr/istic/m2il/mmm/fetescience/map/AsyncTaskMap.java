@@ -19,7 +19,8 @@ public class AsyncTaskMap extends AsyncTask<LatLng, LatLng, PolylineOptions> {
     private LatLng startPoint;
     private LatLng arrivalPoint;
     private String mode;
-    private final String COLOR_STRING = "#353d90";
+    private final String COLOR_ROUTE = "#353d90";
+    private final int WIDTH_ROUTE = 10;
 
     public void setStartPoint(LatLng latLng){
         startPoint = latLng;
@@ -34,15 +35,13 @@ public class AsyncTaskMap extends AsyncTask<LatLng, LatLng, PolylineOptions> {
     @Override
     protected PolylineOptions doInBackground(LatLng ... params) {
 
-        // 53 61 144
-
         GMapV2Direction md = new GMapV2Direction();
         Document doc = md.getDocument(startPoint, arrivalPoint,
                 this.mode);
 
         ArrayList<LatLng> directionPoint = md.getDirection(doc);
-        PolylineOptions rectLine = new PolylineOptions().width(10).color(
-                Color.parseColor(COLOR_STRING));
+        PolylineOptions rectLine = new PolylineOptions().width(WIDTH_ROUTE).color(
+                Color.parseColor(COLOR_ROUTE));
 
         for (int i = 0; i < directionPoint.size(); i++) {
             rectLine.add(directionPoint.get(i));
