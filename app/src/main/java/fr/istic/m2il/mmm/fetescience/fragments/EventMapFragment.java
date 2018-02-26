@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -253,9 +254,12 @@ public class EventMapFragment extends SupportMapFragment implements OnMapReadyCa
             return;
         }
 
+        // scotch race condition
+        // le thread attend la bonne connexion au serveur
+        SystemClock.sleep(500);
+
         mFusedLocationClient.getLastLocation().addOnSuccessListener((location) -> {
             if (location != null) {
-                Log.i(TAG, "Location Not null");
                 createRoute(GMapV2Direction.MODE_DRIVING, location);
             }
             else {
