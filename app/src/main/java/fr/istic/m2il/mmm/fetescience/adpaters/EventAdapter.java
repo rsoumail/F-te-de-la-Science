@@ -102,8 +102,14 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         public EventViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            if(EventAdapter.this.shareActivated && eventCheckBox.getVisibility() != View.VISIBLE)
+            if(EventAdapter.this.shareActivated == true)
                 eventCheckBox.setVisibility(View.VISIBLE);
+            if(EventAdapter.this.shareActivated == false){
+                eventCheckBox.setChecked(false);
+                eventCheckBox.setVisibility(View.INVISIBLE);
+            }
+
+            Log.i(TAG, "ShareActive Value " + EventAdapter.this.shareActivated);
         }
 
         public void bind(final Event event, final OnEventClickListener onEventClickListener){
@@ -112,7 +118,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             });
 
             eventCheckBox.setOnCheckedChangeListener( (buttonView, isCheched) -> {
-                Log.i(TAG, "Event Checkbox Value " + isCheched);
                 event.setChecked(isCheched);
             });
 
