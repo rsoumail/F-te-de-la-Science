@@ -32,6 +32,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.maps.android.clustering.ClusterManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +58,7 @@ public class EventMapFragment extends Fragment implements LoaderManager.LoaderCa
     private OnFragmentInteractionListener mListener;
     private GoogleMap mMap;
     private SupportMapFragment mapFragment;
+    private ClusterManager mClusterManager;
     private boolean itinerary;
     private Event event;
 
@@ -89,6 +91,11 @@ public class EventMapFragment extends Fragment implements LoaderManager.LoaderCa
                 MapStyleOptions mapStyleOptions = MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.google_map_style);
                 mMap = googleMap;
                 //mMap.setMapStyle(mapStyleOptions);
+                mClusterManager = new ClusterManager<Event>(getActivity(), mMap);
+                mMap.setOnCameraIdleListener(mClusterManager);
+                mMap.setOnMarkerClickListener(mClusterManager);
+                mMap.setOnInfoWindowClickListener(mClusterManager);        //addPersonItems();
+                mClusterManager.cluster();
             });
         }
 
@@ -154,30 +161,32 @@ public class EventMapFragment extends Fragment implements LoaderManager.LoaderCa
         // init sur Paris
         LatLng pEvent = new LatLng(48.8534, 2.3488);
         for (Event event : events) {
-            // on ajoute le marker sur la map
-            addMarker(event);
+            // on ajoute le marker sur la map par l'intermediaire du cluster manager
+            if(event.getGeolocalisation()!= null)
+                mClusterManager.addItem(event);
         }
-        // on se fixe sur le dernier evt vu
-        // à garder pour la fin ?
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pEvent, 6));
-
-        mMap.setOnInfoWindowClickListener((marker) -> {
-            marker.hideInfoWindow();
+        ClusterManager.OnClusterItemInfoWindowClickListener<Event> listener = (event -> {
             try {
                 new Handler().postDelayed(() -> {
-                    onEventClicked((Event) marker.getTag());
+                    if(event.getTag() != null)
+                        onEventClicked(event);
                 }, 100);
-
-                return;
             } catch (Exception e) {
                 Log.e(TAG, "Exception :: " + e.getMessage());
             }
         });
+
+        mClusterManager.setOnClusterItemInfoWindowClickListener(listener);
+        // on se fixe sur le dernier evt vu
+        // à garder pour la fin ?
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pEvent, 6));
     }
 
     public void addMarker(Event event) {
-        // on récupère la liste de la localistion de l'evt
-        // et on créé le latlng
+        /* on récupère la liste de la localistion de l'evt
+           et on créé le latlng
+        */
         List<Double> locEvent = event.getGeolocalisation();
         // on vérifie que l'evenement possède une localisation précise
         if (locEvent != null) {
@@ -241,6 +250,18 @@ public class EventMapFragment extends Fragment implements LoaderManager.LoaderCa
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng2, 6));
             }
         }
+        mMap.setOnInfoWindowClickListener((marker) -> {
+            marker.hideInfoWindow();
+            try {
+                new Handler().postDelayed(() -> {
+                    onEventClicked((Event) marker.getTag());
+                }, 100);
+
+                return;
+            } catch (Exception e) {
+                Log.e(TAG, "Exception :: " + e.getMessage());
+            }
+        });
     }
 
     public void searchCurrentLocationUser(){
@@ -269,6 +290,7 @@ public class EventMapFragment extends Fragment implements LoaderManager.LoaderCa
             }
             else {
                 Log.i(TAG, "Location is null");
+
             }
         });
     }

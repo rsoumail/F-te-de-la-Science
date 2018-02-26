@@ -3,6 +3,8 @@ package fr.istic.m2il.mmm.fetescience.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.clustering.ClusterItem;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -17,7 +19,7 @@ import java.util.Map;
 
 
 @DatabaseTable(tableName = "event")
-public class Event implements Parcelable {
+public class Event implements Parcelable, ClusterItem {
 
     @DatabaseField(generatedId = true)
     private int id;
@@ -655,5 +657,24 @@ public class Event implements Parcelable {
         else {
             dest.writeInt(-1);
         }
+    }
+
+    @Override
+    public LatLng getPosition() {
+        return new LatLng(this.geolocalisation.get(0), this.geolocalisation.get(1));
+    }
+
+    @Override
+    public String getTitle() {
+        return this.getTitre_fr();
+    }
+
+    @Override
+    public String getSnippet() {
+        return this.getDescription_fr();
+    }
+
+    public Event getTag(){
+        return this;
     }
 }
