@@ -138,6 +138,8 @@ public class EventFragment extends Fragment {
                     dialog.dismiss();
                     if(event.getIdentifiant().equals(identifiantEditText.getText().toString())){
                         managerRelativeLayout.setVisibility(View.VISIBLE);
+                    } else {
+                        Toast.makeText(getActivity(), R.string.add_event_to_agenda_succesful, Toast.LENGTH_SHORT).show();
                     }
                 });
                 cancelButton.setOnClickListener(view -> {
@@ -209,7 +211,7 @@ public class EventFragment extends Fragment {
                 values.put(CalendarContract.Events.DESCRIPTION, event.getDescription_fr());
                 cr.insert(CalendarContract.Events.CONTENT_URI, values);
             }
-            Toast.makeText(this.getActivity(), "L'événement a bien été ajouté à votre agenda", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "L'événement a bien été ajouté à votre agenda", Toast.LENGTH_SHORT).show();
         }
     }
 

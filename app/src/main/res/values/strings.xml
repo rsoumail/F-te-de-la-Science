@@ -1,10 +1,12 @@
 <resources>
     <string name="app_name">Fête de la Science</string>
-    <string name="title_activity_login">Sign in</string>
 
     <string name="title_event">Évenements</string>
     <string name="search_title">Rechercher</string>
     <string name="title_path">Parcours</string>
+
+    <string name="add_event_to_agenda_succesful">L\'événement a bien été ajouté à votre agenda</string>
+
     <string name="rate_btn_label">Voter</string>
     <string name="empty_paths">Aucun Parcours partagés !!! vous pouvez en créer</string>
     <string name="btn_validate_text">Valider</string>
@@ -23,6 +25,7 @@
     <string name="manager_identification_dialog_title">Identification Organisateur</string>
     <string name="manager_identification_dialog_identifiant_hint">Identifiant de l\'évenement</string>
     <string name="manager_update_btn_text">Mettre à jour</string>
+    <string name="manager_wrong_identifiant">L\'identifiant ne correspond pas à celui de l\'évenement</string>
 
     <string name="share_social_dialog_title">Informations du Partage</string>
     <string name="share_social_dialog_comment_hint">Dites quelque chose</string>
@@ -53,7 +56,7 @@
     <string name="label_description">DESCRIPTION : </string>
     <string name="label_period">PÉRIODE : </string>
     <string name="label_organisateur">ORGANISATEUR(S) : </string>
-    <string name="label_places">NOMBRE DE PLACES DISPONIBLES : </string>
+    <string name="label_places">NOMBRE DE VISITEURS : </string>
     <string name="label_placesMax">MAXIMUM DES PLACES : </string>
 
 
