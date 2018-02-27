@@ -12,7 +12,7 @@ import fr.istic.m2il.mmm.fetescience.models.Event;
 import fr.istic.m2il.mmm.fetescience.models.EventDuration;
 
 /**
- * @author ismael
+ * @author Ramadan Soumaila
  */
 
 public class Utils {

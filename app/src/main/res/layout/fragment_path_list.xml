@@ -15,30 +15,14 @@
         android:layout_marginLeft="15dp"
         android:text="@string/title_path"/>
 
-    <RelativeLayout
-        android:id="@+id/path_search_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_below="@id/page_title">
-        <SearchView
-            android:id="@+id/path_search_bar"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_gravity="center"
-            android:queryHint="Rechercher"
-            android:background="@drawable/rounded_edittext"
-            android:layout_toLeftOf="@id/label_filter"
-            />
 
-    </RelativeLayout>
 
     <View android:id="@+id/h_bar"
         android:layout_height="1px"
         android:layout_width="match_parent"
         android:background="#000000"
         android:layout_marginTop="10dp"
-        android:layout_below="@id/path_search_layout"/>
+        android:layout_below="@id/page_title"/>
 
     <TextView
         android:id="@+id/empty_paths"

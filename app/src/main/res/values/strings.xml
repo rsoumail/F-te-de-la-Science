@@ -5,6 +5,8 @@
     <string name="search_title">Rechercher</string>
     <string name="title_path">Parcours</string>
 
+    <string name="show_on_map_btn">Voir l\'itinéraire </string>
+
     <string name="add_event_to_agenda_succesful">L\'événement a bien été ajouté à votre agenda</string>
 
     <string name="rate_btn_label">Voter</string>
@@ -26,6 +28,10 @@
     <string name="manager_identification_dialog_identifiant_hint">Identifiant de l\'évenement</string>
     <string name="manager_update_btn_text">Mettre à jour</string>
     <string name="manager_wrong_identifiant">L\'identifiant ne correspond pas à celui de l\'évenement</string>
+    <string name="manager_identifiant_edit_hint">Identifiant de l\'événement</string>
+    <string name="manager_dialog_title">Identification de l\'organisateur</string>
+    <string name="share_paths_dialog_title">Partage de parcours</string>
+    <string name="share_event_info_dialog_title">Ajout de commentaire</string>
 
     <string name="share_social_dialog_title">Informations du Partage</string>
     <string name="share_social_dialog_comment_hint">Dites quelque chose</string>
@@ -35,7 +41,7 @@
     <string name="action_map">Carte</string>
     <string name="action_list">Liste</string>
     <string name="action_path">Parcours</string>
-    <string name="action_manager">Manager</string>
+    <string name="action_manager">Organisateur</string>
 
     <!-- String related to Filtered queries -->
 

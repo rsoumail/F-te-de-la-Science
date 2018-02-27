@@ -2,11 +2,8 @@ package fr.istic.m2il.mmm.fetescience.fragments;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.os.Handler;
@@ -21,17 +18,13 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.maps.android.clustering.ClusterManager;
 
 import java.util.ArrayList;
@@ -39,9 +32,9 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import fr.istic.m2il.mmm.fetescience.R;
-import fr.istic.m2il.mmm.fetescience.map.AsyncTaskMap;
+import fr.istic.m2il.mmm.fetescience.loaders.AsyncTaskMap;
 import fr.istic.m2il.mmm.fetescience.loaders.AsyncEventLoader;
-import fr.istic.m2il.mmm.fetescience.map.GMapV2Direction;
+import fr.istic.m2il.mmm.fetescience.services.GMapV2Direction;
 import fr.istic.m2il.mmm.fetescience.models.Event;
 
 /**
@@ -90,7 +83,11 @@ public class EventMapFragment extends Fragment implements LoaderManager.LoaderCa
             mapFragment.getMapAsync(googleMap -> {
                 MapStyleOptions mapStyleOptions = MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.google_map_style);
                 mMap = googleMap;
-                //mMap.setMapStyle(mapStyleOptions);
+                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
+                mMap.setMyLocationEnabled(true);
+                mMap.setMapStyle(mapStyleOptions);
                 mClusterManager = new ClusterManager<Event>(getActivity(), mMap);
                 mMap.setOnCameraIdleListener(mClusterManager);
                 mMap.setOnMarkerClickListener(mClusterManager);

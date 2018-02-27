@@ -1,4 +1,4 @@
-package fr.istic.m2il.mmm.fetescience.map;
+package fr.istic.m2il.mmm.fetescience.loaders;
 
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -9,6 +9,8 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import org.w3c.dom.Document;
 
 import java.util.ArrayList;
+
+import fr.istic.m2il.mmm.fetescience.services.GMapV2Direction;
 
 /**
  * Created by tmerlet on 23/02/18.
