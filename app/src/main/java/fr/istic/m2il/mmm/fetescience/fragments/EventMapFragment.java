@@ -10,11 +10,13 @@ import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -53,13 +55,11 @@ public class EventMapFragment extends Fragment implements LoaderManager.LoaderCa
     private SupportMapFragment mapFragment;
     private ClusterManager mClusterManager;
     private boolean itinerary;
-    private Event event;
 
     private FusedLocationProviderClient mFusedLocationClient;
 
     public EventMapFragment() {
         // Required empty public constructor
-        super();
     }
 
     @Override
@@ -69,6 +69,7 @@ public class EventMapFragment extends Fragment implements LoaderManager.LoaderCa
             events = getArguments().getParcelableArrayList("events");
             itinerary = getArguments().getBoolean("itinerary");
         }
+
     }
 
     @Override
@@ -77,30 +78,29 @@ public class EventMapFragment extends Fragment implements LoaderManager.LoaderCa
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
         View rootView = inflater.inflate(R.layout.fragment_event_map, container, false);
-
+        mClusterManager = new ClusterManager<Event>(getActivity(), mMap);
         if (mapFragment == null) {
             mapFragment = SupportMapFragment.newInstance();
             mapFragment.getMapAsync(googleMap -> {
                 MapStyleOptions mapStyleOptions = MapStyleOptions.loadRawResourceStyle(getActivity(), R.raw.google_map_style);
                 mMap = googleMap;
-                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    return;
-                }
-                mMap.setMyLocationEnabled(true);
                 mMap.setMapStyle(mapStyleOptions);
                 mClusterManager = new ClusterManager<Event>(getActivity(), mMap);
                 mMap.setOnCameraIdleListener(mClusterManager);
                 mMap.setOnMarkerClickListener(mClusterManager);
-                mMap.setOnInfoWindowClickListener(mClusterManager);        //addPersonItems();
+                mMap.setOnInfoWindowClickListener(mClusterManager);
                 mClusterManager.cluster();
             });
+            getLoaderManager().initLoader(0, null, this).forceLoad();
+            getChildFragmentManager().beginTransaction().replace(R.id.map, mapFragment).commit();
         }
-
-        getChildFragmentManager().beginTransaction().replace(R.id.map, mapFragment).commit();
-        getLoaderManager().initLoader(0, null, this).forceLoad();
         return rootView;
     }
 
+    /**
+     *
+     * @param e The current event
+     */
     public void onEventClicked(Event e) {
         if (mListener != null) {
             mListener.onItemSelected(e);
@@ -129,12 +129,13 @@ public class EventMapFragment extends Fragment implements LoaderManager.LoaderCa
         return new AsyncEventLoader(getActivity());
     }
 
+
     @Override
     public void onLoadFinished(Loader<List<Event>> loader, List<Event> data) {
         // cas normal
         // affichage de tous les evenements
         if(!itinerary){
-            events = data;
+            this.events = data;
             addMarkers();
         }
         /* cas intineraire
@@ -155,9 +156,8 @@ public class EventMapFragment extends Fragment implements LoaderManager.LoaderCa
      * sur la totalité des évenements de l'application
      */
     public void addMarkers() {
-        // init sur Paris
         LatLng pEvent = new LatLng(48.8534, 2.3488);
-        for (Event event : events) {
+        for (Event event : this.events) {
             // on ajoute le marker sur la map par l'intermediaire du cluster manager
             if(event.getGeolocalisation()!= null)
                 mClusterManager.addItem(event);
@@ -176,7 +176,6 @@ public class EventMapFragment extends Fragment implements LoaderManager.LoaderCa
         mClusterManager.setOnClusterItemInfoWindowClickListener(listener);
         // on se fixe sur le dernier evt vu
         // à garder pour la fin ?
-
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pEvent, 6));
     }
 
@@ -262,17 +261,16 @@ public class EventMapFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     public void searchCurrentLocationUser(){
-        // on récupère la localisation de l'utilisateur
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions// here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            mMap.setMyLocationEnabled(true);
+        } else {
+            Toast.makeText(getActivity(), "Vous devez acceptez pour utiliser toutes les features !", Toast.LENGTH_LONG).show();
+            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED) {
+                mMap.setMyLocationEnabled(true);
+            }
         }
-
         // scotch race condition
         // le thread attend la bonne connexion au serveur
         SystemClock.sleep(300);

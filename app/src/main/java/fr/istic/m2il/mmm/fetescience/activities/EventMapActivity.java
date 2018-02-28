@@ -35,14 +35,6 @@ public class EventMapActivity extends BaseActivity implements EventMapFragment.O
         EventMapFragment eventMapFragment = new EventMapFragment();
         Bundle bundle = new Bundle();
         if(getIntent()!= null &&  getIntent().getExtras() != null){
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
-                    ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    ){//Can add more as per requirement
-
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION},
-                        123);
-            }
             bundle.putBoolean("itinerary", true);
             bundle.putParcelableArrayList("events", getIntent().getExtras().getParcelableArrayList("events"));
             events = getIntent().getExtras().getParcelableArrayList("events");
@@ -52,6 +44,14 @@ public class EventMapActivity extends BaseActivity implements EventMapFragment.O
         }
         else {
             bundle.putBoolean("itinerary", false);
+        }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                ){//Can add more as per requirement
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION},
+                    123);
         }
         eventMapFragment.setArguments(bundle);
         fragmentManager = getSupportFragmentManager();
