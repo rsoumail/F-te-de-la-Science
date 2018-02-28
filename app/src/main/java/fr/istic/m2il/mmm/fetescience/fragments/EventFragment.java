@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -35,6 +36,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.joanzapata.iconify.widget.IconTextView;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
 import butterknife.BindView;
@@ -42,6 +44,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import fr.istic.m2il.mmm.fetescience.R;
+import fr.istic.m2il.mmm.fetescience.activities.EventMapActivity;
 import fr.istic.m2il.mmm.fetescience.helpers.PreferencesManagerHelper;
 import fr.istic.m2il.mmm.fetescience.models.Event;
 import fr.istic.m2il.mmm.fetescience.models.EventDuration;
@@ -128,16 +131,19 @@ public class EventFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_manager:
-                final Dialog dialog = new Dialog(getActivity());
+                Dialog dialog = new Dialog(getActivity());
                 dialog.setContentView(R.layout.active_manager_dialog);
-                dialog.setTitle("Identification de l'organisateur");
-                EditText identifiantEditText = dialog.findViewById(R.id.event_identifiant_edit);
+                TextView dialogTitle = dialog.findViewById(R.id.active_manager_dialog_title);
+                dialogTitle.setText(R.string.manager_dialog_title);
+                EditText identifierEditText = dialog.findViewById(R.id.event_identifiant_edit);
                 Button validateButton = dialog.findViewById(R.id.validate);
                 Button cancelButton = dialog.findViewById(R.id.cancel);
                 validateButton.setOnClickListener( view -> {
                     dialog.dismiss();
-                    if(event.getIdentifiant().equals(identifiantEditText.getText().toString())){
+                    if(event.getIdentifiant().equals(identifierEditText.getText().toString())){
                         managerRelativeLayout.setVisibility(View.VISIBLE);
+                    } else {
+                        Toast.makeText(getActivity(), R.string.manager_wrong_identifiant, Toast.LENGTH_SHORT).show();
                     }
                 });
                 cancelButton.setOnClickListener(view -> {
@@ -187,6 +193,15 @@ public class EventFragment extends Fragment {
         startActivity(i);
     }
 
+    @OnClick(R.id.show_on_map_btn)
+    public void showOnMap(){
+        List<Event> events = new ArrayList<>();
+        events.add(this.event);
+        Intent intent = new Intent(getActivity(), EventMapActivity.class);
+        intent.putParcelableArrayListExtra("events", (ArrayList) events);
+        startActivity(intent);
+    }
+
     @OnClick(R.id.add_to_agenda_btn)
     public void addAllEventsToCalendar() {
         long calID = 4;
@@ -209,15 +224,16 @@ public class EventFragment extends Fragment {
                 values.put(CalendarContract.Events.DESCRIPTION, event.getDescription_fr());
                 cr.insert(CalendarContract.Events.CONTENT_URI, values);
             }
-            Toast.makeText(this.getActivity(), "L'événement a bien été ajouté à votre agenda", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "L'événement a bien été ajouté à votre agenda", Toast.LENGTH_SHORT).show();
         }
     }
 
     @OnClick(R.id.share_btn)
     public void share(){
-        final Dialog dialog = new Dialog(getContext());
+        Dialog dialog = new Dialog(getContext());
         dialog.setContentView(R.layout.social_share_dialog);
-        dialog.setTitle("Ajouter un commentaire");
+        TextView dialogTitle = dialog.findViewById(R.id.social_share_dialog_title);
+        dialogTitle.setText(R.string.share_event_info_dialog_title);
         EditText commentEditText = dialog.findViewById(R.id.comment_edit);
         Button validateButton = dialog.findViewById(R.id.validate);
         Button cancelButton = dialog.findViewById(R.id.cancel);

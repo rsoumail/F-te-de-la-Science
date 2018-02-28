@@ -24,6 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -143,30 +144,6 @@ public class EventListFragment extends Fragment implements AdapterView.OnItemSel
         mListener = null;
     }
 
-    /*@Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        Log.i(TAG, "instance Call ");
-        if(savedInstanceState != null)
-            this.editPathActivated = savedInstanceState.getBoolean("editPathActivated");
-        Log.i(TAG, "Edit Path Activated Value " + this.editPathActivated);
-        eventAdapter.setShareActivated(this.editPathActivated);
-        if(this.editPathActivated){
-            for(int i=0; i < recyclerView.getChildCount(); i++){
-                if(recyclerView.getChildAt(i).findViewById(R.id.event_checkbox).getVisibility() == View.INVISIBLE)
-                    recyclerView.getChildAt(i).findViewById(R.id.event_checkbox).setVisibility(View.VISIBLE);
-            }
-        }
-    }*/
-
-
-    /*@Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        Log.v(TAG, "In EventListFragment on save instance state ");
-       // outState.putBoolean("editPathActivated", this.editPathActivated);
-    }*/
-
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         selectedFilter = position;
@@ -256,8 +233,8 @@ public class EventListFragment extends Fragment implements AdapterView.OnItemSel
         Path path = new Path();
         final Dialog dialog = new Dialog(getContext());
         dialog.setContentView(R.layout.share_paths_dialog);
-        dialog.setTitle(R.string.share_path_dialog_title);
-
+        TextView dialogTitle = dialog.findViewById(R.id.share_paths_dialog_title);
+        dialogTitle.setText(R.string.share_paths_dialog_title);
         EditText authorEditText = dialog.findViewById(R.id.author_edit);
         EditText commentEditText = dialog.findViewById(R.id.comment_edit);
         Button validateButton = dialog.findViewById(R.id.validate);

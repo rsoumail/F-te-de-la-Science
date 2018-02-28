@@ -7,6 +7,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,15 +41,13 @@ public class PathListFragment extends Fragment implements AdapterView.OnItemSele
     private static final String TAG = PathListFragment.class.getSimpleName();
 
     @BindView(R.id.path_recycler_view) RecyclerView recyclerView;
-    @BindView(R.id.path_search_bar) SearchView searchView;
     @BindView(R.id.path_progressBar_cyclic) ProgressBar progressBar;
     @BindView(R.id.empty_paths) TextView emptyPathsTextView;
 
     private Unbinder unbinder;
-    private List<Path> paths;
+    private List<Path> paths = new ArrayList<>();
     private PathAdapter pathAdapter;
     private DatabaseReference database;
-
     private OnPathListFragmentInteractionListener mListener;
 
     public PathListFragment() {

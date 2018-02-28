@@ -1,4 +1,4 @@
-package fr.istic.m2il.mmm.fetescience.map;
+package fr.istic.m2il.mmm.fetescience.services;
 
 import java.io.InputStream;
 import java.util.ArrayList;
