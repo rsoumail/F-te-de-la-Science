@@ -251,7 +251,7 @@ public class EventFragment extends Fragment {
         dialog.show();
     }
 
-    @OnClick(R.id.manager_update_max_places)
+    @OnClick(R.id.manager_update_btn)
     public void updateMaxPlacesToFirebase(){
         database.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -260,10 +260,13 @@ public class EventFragment extends Fragment {
                     String fEventkey = snapshot.getKey();
                     Event fEvent = snapshot.getValue(Event.class);
                     if(event.getId() == fEvent.getId()){
+                        if(!fillPlacesEditText.getText().toString().isEmpty())
+                            event.setFillPlaces(Integer.parseInt(fillPlacesEditText.getText().toString()));
+                        if(!availablePlaceMaxEditText.getText().toString().isEmpty())
                         event.setMaxAvailablePlaces(Integer.parseInt(availablePlaceMaxEditText.getText().toString()));
                         database.child("events").child(fEventkey).setValue(event.mapToFireBaseEvent());
                         Log.i(TAG, "Event's available max places With Key " + fEventkey + " and Id " + event.getId() + " Was Updated");
-                        Toast.makeText(getActivity(), "Le nombre de place maximum à été mis à jour", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Les informations ont été mis à jour", Toast.LENGTH_SHORT).show();
                         break ;
                     }
                 }
@@ -276,30 +279,6 @@ public class EventFragment extends Fragment {
         });
     }
 
-    @OnClick(R.id.manager_update_fill_places)
-    public void udpateFillPlacesToFireBase(){
-        database.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot :dataSnapshot.child("events").getChildren()) {
-                    String fEventkey = snapshot.getKey();
-                    Event fEvent = snapshot.getValue(Event.class);
-                    if(event.getId() == fEvent.getId()){
-                        event.setFillPlaces(Integer.parseInt(fillPlacesEditText.getText().toString()));
-                        database.child("events").child(fEventkey).setValue(event.mapToFireBaseEvent());
-                        Log.i(TAG, "Event's fill places With Key " + fEventkey + " and Id " + event.getId() + " Was Updated");
-                        Toast.makeText(getActivity(), "Le nombre de personnes présentes a bien été mis à jour", Toast.LENGTH_SHORT).show();
-                        break ;
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
 
     @OnClick(R.id.event_rate_btn)
     public void rate(){
